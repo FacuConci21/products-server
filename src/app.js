@@ -12,7 +12,7 @@ app.get("/products", async (req, res) => {
   try {
     const { limit } = req.query;
 
-    const products = await productManager.getProducts();
+    const products = await productManager.getProducts(limit);
 
     res.json({
       products,
@@ -24,13 +24,16 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.get("/products/:pid", (req, res) => {
+app.get("/products/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    res.json({ message: `This route returns the product with id #${pid}` });
+
+    const product = await productManager.getProductById(Number.parseInt(pid));
+
+    res.json({ product });
   } catch (error) {
     res.json({
-      error: JSON.stringify(error),
+      error: error.message,
     });
   }
 });

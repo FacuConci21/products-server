@@ -49,7 +49,7 @@ class ProductManager {
     console.log(`[addProduct] Nuevo producto agregado! #${this._lastId} :D`);
   }
 
-  async getProducts() {
+  async getProducts(limit) {
     const fd = join(this._path, this.#_filename);
 
     if (!fs.existsSync(fd)) {
@@ -62,16 +62,20 @@ class ProductManager {
       this._products.sort((a, b) => a.id - b.id)[this._products.length - 1]
         ?.id || 0;
 
-    return this._products;
+    // Si limit es undefined, slice se extiende hasta el final.
+    return this._products.slice(0, Math.abs(limit));
   }
 
   async getProductById(id) {
+    if (id < 0) {
+      throw new Error(`[getProductById] El id indicado no puede ser negativo.`)
+    }
     await this.getProducts();
 
     const search = this._products.find((product) => product.id === id);
 
     if (!search) {
-      console.error(`[getProductById] Id #${id} not found :(`);
+      throw new Error(`[getProductById] Id #${id} not found :(`);
     }
 
     return search;
