@@ -5,10 +5,10 @@ class ProductManager {
   #_filename = "Products.json";
 
   constructor(path, products = []) {
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path);
-    }
     this._path = join(__dirname, path);
+    if (!fs.existsSync(this._path)) {
+      fs.mkdirSync(this._path);
+    }
     this._products = products;
     this._lastId =
       products.sort((a, b) => a.id - b.id)[products.length - 1]?.id || 0;
