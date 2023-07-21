@@ -62,13 +62,17 @@ class ProductManager {
       this._products.sort((a, b) => a.id - b.id)[this._products.length - 1]
         ?.id || 0;
 
+    // Controlo que Math.abs() no retorne NaN cuando le paso limit=NaN.
+    limit = Object.is(limit, NaN) ? undefined: Math.abs(limit);
     // Si limit es undefined, slice se extiende hasta el final.
-    return this._products.slice(0, Math.abs(limit));
+    const prodSlice = this._products.slice(0, limit);
+
+    return prodSlice;
   }
 
   async getProductById(id) {
     if (id < 0) {
-      throw new Error(`[getProductById] El id indicado no puede ser negativo.`)
+      throw new Error(`[getProductById] El id indicado no puede ser negativo.`);
     }
     await this.getProducts();
 

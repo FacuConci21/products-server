@@ -2,7 +2,10 @@ const express = require("express");
 const ProductManager = require("./ProductManager");
 
 const app = express();
+const appPort = 8080;
 const productManager = new ProductManager("files");
+
+app.set("port", appPort);
 
 app.get("/", (req, res) => {
   res.json({ message: "App is running." });
@@ -12,7 +15,7 @@ app.get("/products", async (req, res) => {
   try {
     const { limit } = req.query;
 
-    const products = await productManager.getProducts(limit);
+    const products = await productManager.getProducts(Number.parseInt(limit));
 
     res.json({
       products,
@@ -38,4 +41,11 @@ app.get("/products/:pid", async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("App running."));
+app.listen(app.get("port"), (error) => {
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  console.log(`La aplicacion se ejecuto en el puerto ${app.get('port')}`);
+});
