@@ -16,8 +16,16 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", (req, res) => {
-  res.status(200).json({ message: "Retorna un solo product" });
+router.get("/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+
+    const product = await productManager.getProductById(Number.parseInt(pid));
+
+    res.status(200).json({ status: "success", payload: product });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
 });
 
 router.post("/", (req, res) => {
