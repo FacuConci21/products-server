@@ -5,7 +5,7 @@ class ProductManager {
   #_filename = "Products.json";
 
   constructor(path, products = []) {
-    this._path = join(__dirname, path);
+    this._path = join(process.cwd(), 'src', path);
     if (!fs.existsSync(this._path)) {
       fs.mkdirSync(this._path);
     }

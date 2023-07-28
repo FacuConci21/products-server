@@ -1,9 +1,19 @@
 const { Router } = require("express");
+const ProductManager = require("./ProductManager");
 
 const router = Router();
+const productManager = new ProductManager("files");
 
-router.get("/", (req, res) => {
-  res.status(200).json({ message: "Retorna todos los products" });
+router.get("/", async (req, res) => {
+  try {
+    const { limit } = req.query;
+
+    const products = await productManager.getProducts(Number.parseInt(limit));
+
+    res.status(200).json({ status: "success", payload: products });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
 });
 
 router.get("/:id", (req, res) => {

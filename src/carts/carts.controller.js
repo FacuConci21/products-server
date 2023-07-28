@@ -1,13 +1,28 @@
 const { Router } = require("express");
+const CartManager = require("./CartsManager");
 
 const router = Router();
+const cartManager = new CartManager("files");
 
-router.get("/", (req, res) => {
-  res.status(200).json({ message: "Retorna todos los carts" });
+router.get("/", async (req, res) => {
+  try {
+    const carts = await cartManager.getCarts();
+    res.status(200).json({ status: "success", payload: carts });
+  } catch (error) {
+    console.error(error);
+    res.status(200).json({ status: "error", message: error.message });
+  }
 });
 
-router.get("/:id", (req, res) => {
-  res.status(200).json({ message: "Retorna un solo cart" });
+router.get("/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const cart = await cartManager.getCartById(Number.parseInt(cid));
+    res.status(200).json({ status: "success", payload: cart });
+  } catch (error) {
+    console.error(error);
+    res.status(200).json({ status: "error", message: error.message });
+  }
 });
 
 router.post("/", (req, res) => {
