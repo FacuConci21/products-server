@@ -28,8 +28,30 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
-  res.status(200).json({ message: "Crea un product" });
+router.post("/", async (req, res) => {
+  try {
+    const { title, description, price, thumbnails, code, stock } = req.body;
+
+    if (!title || !description || !price || !thumbnails || !code || !stock) {
+      throw new Error("[addProduct] faltan uno o mas campos obligatorios >:(");
+    }
+
+    const product = {
+      title,
+      description,
+      price,
+      thumbnails,
+      code,
+      stock,
+    };
+
+    const newProduct = await productManager.addProduct(product);
+    
+    res.status(200).json({ status: "created", payload: product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: error.message });
+  }
 });
 
 router.put("/:id", (req, res) => {

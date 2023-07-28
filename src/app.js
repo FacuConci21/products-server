@@ -6,6 +6,8 @@ const appPort = 8080;
 
 app.set("port", appPort);
 
+app.use(express.json());
+
 router(app);
 
 module.exports = app;

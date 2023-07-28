@@ -88,5 +88,33 @@
     "thumbnail": "Sin imagen",
     "code": "2r3rgg5G30",
     "stock": 50
+  },
+  {
+    "id": 11,
+    "title": "Carretilla",
+    "description": "Carretilla a dos manos.",
+    "price": "50000",
+    "thumbnails": [
+      "public/catalog_carretilla_1.jpg",
+      "public/catalog_carretilla_2.jpg",
+      "public/catalog_carretilla_3.jpg",
+      "public/catalog_carretilla_4.jpg"
+    ],
+    "code": "abc123",
+    "stock": "5"
+  },
+  {
+    "id": 12,
+    "title": "Termo",
+    "description": "Termo de acero inoxidable de origen chino marcha chichulin.",
+    "price": "50000",
+    "thumbnails": [
+      "public/catalogo_termo_inox_1.jpg",
+      "public/catalogo_termo_inox_2.jpg",
+      "public/catalogo_termo_inox_3.jpg",
+      "public/catalogo_termo_inox_4.jpg"
+    ],
+    "code": "bcd123",
+    "stock": "5"
   }
 ]
