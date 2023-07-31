@@ -1,30 +1,26 @@
 [
-  {
-    "id": 1,
-    "title": "producto prueba",
-    "description": "Este es un producto prueba",
-    "price": 23,
-    "thumbnail": "Sin imagen",
-    "code": "2r3rgg5G3",
-    "stock": 5
-  },
+  { "id": 1, "stock": 100, "status": true, "thumbnails": [] },
   {
     "id": 2,
     "title": "producto prueba",
     "description": "Este es un producto prueba",
-    "price": 46,
+    "price": 4600,
     "thumbnail": "Sin imagen",
     "code": "2r3rgg5G6",
-    "stock": 10
+    "stock": 20,
+    "thumbnails": [],
+    "status": false
   },
   {
     "id": 3,
     "title": "producto prueba",
-    "description": "Este es un producto prueba",
-    "price": 69,
+    "description": "Un producto de prueba actualizado.",
+    "price": 700,
     "thumbnail": "Sin imagen",
     "code": "2r3rgg5G9",
-    "stock": 15
+    "stock": 15,
+    "thumbnails": [],
+    "status": true
   },
   {
     "id": 4,
@@ -116,5 +112,18 @@
     ],
     "code": "bcd123",
     "stock": "5"
+  },
+  {
+    "id": 13,
+    "title": "Taza de plastico",
+    "description": "Taza de plastico para el colegio/jardin color verde oscuro apilable.",
+    "price": "2200",
+    "thumbnails": [
+      "public/catalogo_taza_plastico_1.jpg",
+      "public/catalogo_taza_plastico_2.jpg"
+    ],
+    "code": "cde123",
+    "stock": "5",
+    "status": "false"
   }
 ]

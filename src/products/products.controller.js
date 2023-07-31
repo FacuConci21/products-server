@@ -30,9 +30,10 @@ router.get("/:pid", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { title, description, price, thumbnails, code, stock } = req.body;
+    const { title, description, price, thumbnails, code, stock, status } =
+      req.body;
 
-    if (!title || !description || !price || !thumbnails || !code || !stock) {
+    if (!title || !description || !price || !code || !stock) {
       throw new Error("[addProduct] faltan uno o mas campos obligatorios >:(");
     }
 
@@ -40,22 +41,46 @@ router.post("/", async (req, res) => {
       title,
       description,
       price,
-      thumbnails,
+      thumbnails: thumbnails || [],
       code,
       stock,
+      status: status || true,
     };
 
     const newProduct = await productManager.addProduct(product);
-    
-    res.status(200).json({ status: "created", payload: product });
+
+    res.status(200).json({ status: "created", payload: newProduct });
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: "error", message: error.message });
   }
 });
 
-router.put("/:id", (req, res) => {
-  res.status(200).json({ message: "Actualiza un product" });
+router.put("/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+    const { title, description, price, thumbnails, code, stock, status } =
+      req.body;
+
+    const toUpdateProduct = {
+      title,
+      description,
+      price,
+      thumbnails,
+      code,
+      stock,
+      status,
+    };
+
+    const updtProduct = await productManager.updateProduct(
+      Number.parseInt(pid),
+      toUpdateProduct
+    );
+    res.status(200).json({ status: "updated", payload: updtProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: error.message });
+  }
 });
 
 router.delete("/:id", (req, res) => {

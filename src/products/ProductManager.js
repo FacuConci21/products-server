@@ -4,10 +4,10 @@ const join = require("path").join;
 class ProductManager {
   #_filename = "Products.json";
   #_products = [];
-  #_lastId   = 0;
+  #_lastId = 0;
 
   constructor(path) {
-    this._path = join(process.cwd(), 'src', path);
+    this._path = join(process.cwd(), "src", path);
     if (!fs.existsSync(this._path)) {
       fs.mkdirSync(this._path);
     }
@@ -15,8 +15,9 @@ class ProductManager {
   }
 
   async addProduct(pProduct) {
-
-    const search = this.#_products.find((_product) => _product.code === pProduct.code);
+    const search = this.#_products.find(
+      (_product) => _product.code === pProduct.code
+    );
 
     if (search) {
       throw new Error(
@@ -52,9 +53,7 @@ class ProductManager {
       this.#_products.sort((a, b) => a.id - b.id)[this.#_products.length - 1]
         ?.id || 0;
 
-    // Controlo que Math.abs() no retorne NaN cuando le paso limit=NaN.
-    limit = Object.is(limit, NaN) ? undefined: Math.abs(limit);
-    // Si limit es undefined, slice se extiende hasta el final.
+    limit = Object.is(limit, NaN) ? undefined : Math.abs(limit);
     const prodSlice = this.#_products.slice(0, limit);
 
     return prodSlice;
@@ -76,13 +75,6 @@ class ProductManager {
   }
 
   async updateProduct(id, updtProduct) {
-    const { title, description, price, thumbnail, code, stock } = updtProduct;
-
-    if (!title || !description || !price || !thumbnail || !code || !stock) {
-      console.error("[updateProduct] faltan uno o mas campos obligatorios >:(");
-      return;
-    }
-
     await this.getProducts();
 
     const productIndx = this.#_products.findIndex(
@@ -90,8 +82,7 @@ class ProductManager {
     );
 
     if (productIndx < 0) {
-      console.error(`[updateProduct] Id #${id} not found :(`);
-      return;
+      throw new Error(`[updateProduct] Id #${id} not found :(`);
     }
 
     const search = this.#_products.find(
@@ -99,18 +90,24 @@ class ProductManager {
     );
 
     if (search) {
-      console.error(
-        `[updateProduct] Ya existe un producto con el codigo #${code} ingresado :/`
+      throw new Error(
+        `[updateProduct] Ya existe un producto con el codigo #${updtProduct.code} ingresado :/`
       );
-      return;
     }
 
-    this.#_products[productIndx].title = title;
-    this.#_products[productIndx].description = description;
-    this.#_products[productIndx].price = price;
-    this.#_products[productIndx].thumbnail = thumbnail;
-    this.#_products[productIndx].code = code;
-    this.#_products[productIndx].stock = stock;
+    // En esta linea limpio el objeto updtProduct de propiedades undefined
+    // y asi hacer funcionar correctamente Object.assign().
+    updtProduct = JSON.parse(JSON.stringify(updtProduct));
+
+    this.#_products[productIndx] = Object.assign(
+      this.#_products[productIndx],
+      updtProduct
+    );
+
+    // Valor por defecto del campo status
+    if (!this.#_products[productIndx].status) {
+      this.#_products[productIndx].status = true;
+    }
 
     await this.#save();
 
