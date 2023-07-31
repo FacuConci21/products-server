@@ -83,8 +83,15 @@ router.put("/:pid", async (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
-  res.status(200).json({ message: "Elimina un product" });
+router.delete("/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+    const deletedProduct = await productManager.deleteProduct(Number.parseInt(pid));
+    res.status(200).json({ status: "deleted", payload: deletedProduct });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: error.message });
+  }
 });
 
 module.exports = router;

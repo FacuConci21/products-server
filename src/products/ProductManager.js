@@ -118,13 +118,12 @@ class ProductManager {
   async deleteProduct(id) {
     await this.getProducts();
 
-    const productIndx = this.#_products.findIndex(
+    const deleteProduct = this.#_products.find(
       (product) => product.id === id
     );
 
-    if (productIndx < 0) {
-      console.error(`[deleteProduct] Id #${id} not found :(`);
-      return;
+    if (!deleteProduct) {
+      throw new Error(`[deleteProduct] Id #${id} not found :(`);
     }
 
     const filteredProducts = this.#_products.filter(
@@ -135,6 +134,7 @@ class ProductManager {
     await this.#save();
 
     console.log(`[deleteProduct] Id #${id} fue eliminado >:)`);
+    return deleteProduct;
   }
 
   async #save() {
