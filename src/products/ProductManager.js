@@ -74,6 +74,23 @@ class ProductManager {
     return search;
   }
 
+  async getProductsById(ids = []) {
+    await this.getProducts();
+
+    const productsResult = [];
+
+    ids.forEach((productId) => {
+      const search = this.#_products.find(
+        (product) => product.id === productId
+      );
+      if (search) {
+        productsResult.push(search);
+      }
+    });
+
+    return productsResult;
+  }
+
   async updateProduct(id, updtProduct) {
     await this.getProducts();
 
@@ -118,9 +135,7 @@ class ProductManager {
   async deleteProduct(id) {
     await this.getProducts();
 
-    const deleteProduct = this.#_products.find(
-      (product) => product.id === id
-    );
+    const deleteProduct = this.#_products.find((product) => product.id === id);
 
     if (!deleteProduct) {
       throw new Error(`[deleteProduct] Id #${id} not found :(`);
@@ -135,6 +150,16 @@ class ProductManager {
 
     console.log(`[deleteProduct] Id #${id} fue eliminado >:)`);
     return deleteProduct;
+  }
+
+  async inStock(id, stock = 1) {
+    await this.getProducts();
+
+    const product = await this.getProductById(id);
+
+    const inStock = product.stock >= stock;
+
+    return inStock;
   }
 
   async #save() {

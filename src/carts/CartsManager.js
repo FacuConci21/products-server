@@ -1,5 +1,8 @@
 const fs = require("fs");
 const join = require("path").join;
+const ProductsManager = require("../products/ProductManager");
+
+const productsManager = new ProductsManager("files");
 
 class CartManager {
   #_filename = "Carts.json";
@@ -11,6 +14,66 @@ class CartManager {
     if (!fs.existsSync(this._path)) {
       fs.mkdirSync(this._path);
     }
+  }
+
+  async addCart(cart) {
+    await this.getCarts();
+
+    if (!cart.products || cart.products.length === 0) {
+      throw new Error(
+        `[addCart] No se recibio lista de productos o esta vacia`
+      );
+    }
+
+    this.#_lastId++;
+    const newCart = {
+      id: this.#_lastId,
+      ...cart,
+    };
+
+    this.#_carts.push(newCart);
+
+    await this.#save();
+
+    console.log(`[addCart] Nuevo carrito agregado! #${this.#_lastId} :D`);
+
+    return newCart;
+  }
+
+  async addProductCart(cid, product) {
+    await this.getCarts();
+
+    const cartIdx = this.#_carts.findIndex((_cart) => _cart.id === cid);
+
+    if (cartIdx < 0) {
+      throw new Error(`[addProductCart] Carrito con id #${cid} no encontrado.`);
+    }
+
+    const inStock = await productsManager.inStock(product.pid, product.quantity);
+    
+    if (!inStock) {
+      throw new Error(`[addProductCart] El producto #${product.pid} no cuenta con el stock sufiente.`);
+    }
+
+    const productIdx = this.#_carts[cartIdx].products.findIndex(
+      (_prod) => _prod.pid === product.pid
+    );
+
+    if (productIdx >= 0) {
+      this.#_carts[cartIdx].products[productIdx].quantity = product.quantity;
+      console.log(
+        `[addProductCart] Se actualizo la cantidad del producto #${product.pid} al carrito #${cid}`
+      );
+    } else {
+      this.#_carts[cartIdx].products.push(product);
+      console.log(
+        `[addProductCart] Nuevo producto #${product.pid} agregado al carrito #${cid}`
+      );
+    }
+
+    await this.#save();
+
+    return this.#_carts[cartIdx];
   }
 
   async getCarts() {
@@ -36,11 +99,19 @@ class CartManager {
 
     await this.getCarts();
 
-    const search = this.#_carts.filter((cart) => cart.id === id);
+    const search = this.#_carts.find((cart) => cart.id === id);
 
-    if (search.length === 0) {
+    if (!search) {
       throw new Error(`[getCartById] Carrito con id #${id} no encontrado.`);
     }
+
+    const productIds = [];
+
+    search.products.forEach((prodCart) => {
+      productIds.push(prodCart.pid);
+    });
+
+    search.products = await productsManager.getProductsById(productIds);
 
     return search;
   }
