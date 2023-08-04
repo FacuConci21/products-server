@@ -16,6 +16,15 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/home", async (req, res) => {
+  try {
+    res.render('products-home');
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: error.message });
+  }
+});
+
 router.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
