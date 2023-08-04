@@ -1,6 +1,6 @@
 const fs = require("fs");
 const join = require("path").join;
-const ProductsManager = require("../products/ProductManager");
+const ProductsManager = require("./ProductManager");
 
 const productsManager = new ProductsManager("files");
 

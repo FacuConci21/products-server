@@ -1,5 +1,5 @@
-const productsController = require('../products/products.controller')
-const cartsController = require('../carts/carts.controller')
+const productsController = require('../controllers/products.controller')
+const cartsController = require('../controllers/carts.controller')
 
 
 const router = (app) => {
