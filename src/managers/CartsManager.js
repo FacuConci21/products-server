@@ -2,7 +2,7 @@ const fs = require("fs");
 const join = require("path").join;
 const ProductsManager = require("./ProductManager");
 
-const productsManager = new ProductsManager("files");
+const productsManager = new ProductsManager("public/files");
 
 class CartManager {
   #_filename = "Carts.json";

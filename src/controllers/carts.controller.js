@@ -2,7 +2,7 @@ const { Router } = require("express");
 const CartManager = require("../managers/CartsManager");
 
 const router = Router();
-const cartManager = new CartManager("files");
+const cartManager = new CartManager("public/files");
 
 router.get("/:cid", async (req, res) => {
   try {
