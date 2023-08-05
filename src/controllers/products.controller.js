@@ -1,5 +1,7 @@
 const { Router } = require("express");
+const { join } = require("path");
 const ProductManager = require("../managers/ProductManager");
+const uploader = require("../utils/multer");
 
 const router = Router();
 const productManager = new ProductManager("public/files");
@@ -18,7 +20,7 @@ router.get("/", async (req, res) => {
 
 router.get("/home", async (req, res) => {
   try {
-    res.render('products-home');
+    res.render("products-home");
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: "error", message: error.message });
@@ -37,10 +39,9 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", uploader.array("thumbnails"), async (req, res) => {
   try {
-    const { title, description, price, thumbnails, code, stock, status } =
-      req.body;
+    const { title, description, price, code, stock, status } = req.body;
 
     if (!title || !description || !price || !code || !stock) {
       throw new Error("[addProduct] faltan uno o mas campos obligatorios >:(");
@@ -50,11 +51,17 @@ router.post("/", async (req, res) => {
       title,
       description,
       price,
-      thumbnails: thumbnails || [],
       code,
       stock,
       status: status || true,
+      thumbnails: [],
     };
+
+    const thumbnails = req.files;
+
+    thumbnails.forEach((imgfile) => {
+      product.thumbnails.push(join("src", "public", "img", imgfile.filename));
+    });
 
     const newProduct = await productManager.addProduct(product);
 
@@ -95,7 +102,9 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    const deletedProduct = await productManager.deleteProduct(Number.parseInt(pid));
+    const deletedProduct = await productManager.deleteProduct(
+      Number.parseInt(pid)
+    );
     res.status(200).json({ status: "deleted", payload: deletedProduct });
   } catch (error) {
     console.error(error);
