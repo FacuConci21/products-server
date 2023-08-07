@@ -5,7 +5,7 @@ const ProductManager = require("../managers/ProductManager");
 const router = Router();
 const productManager = new ProductManager("public/files");
 
-router.get("/home", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const { limit } = req.query;
 

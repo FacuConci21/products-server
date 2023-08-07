@@ -4,7 +4,7 @@
   "description": "Proyecto del curso de Backend en CoderHouse.",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "node src/server.js"
   },
   "author": "Facundo Conci [GitHub: FacuConci21]",
   "license": "ISC",
