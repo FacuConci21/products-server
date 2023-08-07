@@ -1,14 +1,16 @@
 const app = require("./app");
+const realTimeServer = require("./socket");
 
 function main() {
-  app.listen(app.get("port"), (error) => {
+  const httpServer = app.listen(app.get("port"), (error) => {
     if (error) {
       console.error(error);
       return;
     }
-
     console.log(`La aplicacion se ejecuto en el puerto ${app.get("port")}`);
   });
+
+  realTimeServer(httpServer);
 }
 
 main();
