@@ -23,6 +23,10 @@ function realTimeServer(httpServer) {
     console.log(`Se ha conectado el cliente #${socket.id}`);
 
     emitGetProducts(socket);
+
+    socket.on(EVENTS.PRODUCT_CREATED, () => {
+      emitGetProducts(socket);
+    });
   });
 }
 

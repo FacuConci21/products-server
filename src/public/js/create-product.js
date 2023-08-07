@@ -93,6 +93,7 @@ async function createProduct() {
     console.log("received", resData);
 
     if (resData.status === "created") {
+      socket.emit("product-created");
       accordionItem.innerHTML += `
         <div class="alert alert-secondary" role="alert">
             Producto creado ...
