@@ -20,7 +20,12 @@ router.get("/", async (req, res) => {
 
 router.get("/home", async (req, res) => {
   try {
-    res.render("products-home");
+    const { limit } = req.query;
+
+    const products = await productManager.getProducts(Number.parseInt(limit));
+    // console.log(products);
+
+    res.render("home", {haveProducts: (products.length > 0), products});
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: "error", message: error.message });
@@ -52,7 +57,10 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
       description,
       price,
       code,
-      stock,
+      stock:
+        (typeof stock).toLowerCase() === "number"
+          ? stock
+          : Number.parseInt(stock),
       status: status || true,
       thumbnails: [],
     };

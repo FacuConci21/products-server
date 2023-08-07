@@ -6,27 +6,42 @@
   </div>
 
   <br>
-  <div class="card">
-    <div class="card-header">
-      codigo del producto
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Titulo del producto</h5>
-      <p class="card-text">Descripcion breve del producto que cuente lo que es y lo que incluye.</p>
-      <p class="blockquote-footer">Stock: stock | Precio: $price </p>
 
-      <div>
-        <input type="number" name="quantity" id="">
-        <a href="#" class="btn btn-primary">Agregar al carrito</a>
-      </div>
+  {{#if haveProducts}}
+    <div class="alert alert-success" role="alert">
+      Listado de productos disponibles...
+    </div>
+    {{#each products}}
+      <div class="card">
+        <div class="card-header">
+          {{this.code}}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{this.title}}</h5>
+          <p class="card-text">{{this.description}}</p>
+          <p class="blockquote-footer">Stock: {{this.stock}} | Precio: ${{this.price}} </p>
 
-      <div>
-        <img src="../public/cara-de-placer-meme.png" class="rounded float-end" alt="cara-de-placer-meme">
+          {{!-- <div>
+            <img src="../public/cara-de-placer-meme.png" class="rounded float-end" alt="">
+          </div> --}}
+
+          <div>
+            <input type="number" name="quantity" id="">
+            <a href="#" class="btn btn-primary">Agregar al carrito</a>
+          </div>
+
+
+        </div>
+
+        <div class="card-footer text-body-secondary">
+          Ultima vez actualizado: dd/mm/aaaa
+        </div>
       </div>
+  {{/each}}
+
+  {{else}}
+    <div class="alert alert-danger" role="alert">
+      No se obtuvieron productos desde el servidor 
     </div>
-    
-    <div class="card-footer text-body-secondary">
-      Ultima vez actualizado: dd/mm/aaaa
-    </div>
-  </div>
+  {{/if}}
 </div>

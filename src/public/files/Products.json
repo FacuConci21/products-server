@@ -1,1 +1,162 @@
-[{"id":2,"title":"producto prueba","description":"Este es un producto prueba","price":4600,"thumbnail":"Sin imagen","code":"2r3rgg5G6","stock":20,"thumbnails":[],"status":false},{"id":3,"title":"producto prueba","description":"Un producto de prueba actualizado.","price":700,"thumbnail":"Sin imagen","code":"2r3rgg5G9","stock":15,"thumbnails":[],"status":true},{"id":4,"title":"producto prueba","description":"Este es un producto prueba","price":92,"thumbnail":"Sin imagen","code":"2r3rgg5G12","stock":20},{"id":5,"title":"producto prueba","description":"Este es un producto prueba","price":115,"thumbnail":"Sin imagen","code":"2r3rgg5G15","stock":25},{"id":6,"title":"producto prueba","description":"Este es un producto prueba","price":138,"thumbnail":"Sin imagen","code":"2r3rgg5G18","stock":30},{"id":8,"title":"producto prueba","description":"Este es un producto prueba","price":184,"thumbnail":"Sin imagen","code":"2r3rgg5G24","stock":40},{"id":9,"title":"producto prueba","description":"Este es un producto prueba","price":207,"thumbnail":"Sin imagen","code":"2r3rgg5G27","stock":45},{"id":10,"title":"producto prueba","description":"Este es un producto prueba","price":230,"thumbnail":"Sin imagen","code":"2r3rgg5G30","stock":50},{"id":11,"title":"Carretilla","description":"Carretilla a dos manos.","price":"50000","thumbnails":["public/catalog_carretilla_1.jpg","public/catalog_carretilla_2.jpg","public/catalog_carretilla_3.jpg","public/catalog_carretilla_4.jpg"],"code":"abc123","stock":"5"},{"id":12,"title":"Termo","description":"Termo de acero inoxidable de origen chino marcha chichulin.","price":"50000","thumbnails":["public/catalogo_termo_inox_1.jpg","public/catalogo_termo_inox_2.jpg","public/catalogo_termo_inox_3.jpg","public/catalogo_termo_inox_4.jpg"],"code":"bcd123","stock":"5"},{"id":13,"title":"Taza de plastico","description":"Taza de plastico para el colegio/jardin color verde oscuro apilable.","price":"2200","thumbnails":["public/catalogo_taza_plastico_1.jpg","public/catalogo_taza_plastico_2.jpg"],"code":"cde123","stock":"5","status":"false"},{"id":14,"title":"Taza de plastico","description":"Taza de plastico para el colegio/jardin apilable.","price":"1500","code":"def123","stock":"5","status":"false","thumbnails":["src\\public\\img\\taza de plastico.jpg"]},{"id":15,"title":"Té Inti Zen Canela","description":"Té Inti Zen negro en saquitos Canela, Jengibre y Cardamomo 30 g 15 u","price":"800","code":"efg123","stock":"50","status":"true","thumbnails":["src\\public\\img\\inti zen canela 1.jpeg","src\\public\\img\\inti zen canela 2.jpg"]},{"id":16,"title":"Taladro","description":"Taladro Daewoo inalambrico","price":"39.609\n","code":"fgh123","stock":"10","status":"true","thumbnails":[]}]
+[
+  {
+    "id": 2,
+    "title": "producto prueba",
+    "description": "Este es un producto prueba",
+    "price": 4600,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G6",
+    "stock": 20,
+    "thumbnails": [],
+    "status": false
+  },
+  {
+    "id": 3,
+    "title": "producto prueba",
+    "description": "Un producto de prueba actualizado.",
+    "price": 700,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G9",
+    "stock": 15,
+    "thumbnails": [],
+    "status": true
+  },
+  {
+    "id": 4,
+    "title": "producto prueba",
+    "description": "Este es un producto prueba",
+    "price": 92,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G12",
+    "stock": 20
+  },
+  {
+    "id": 5,
+    "title": "producto prueba",
+    "description": "Este es un producto prueba",
+    "price": 115,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G15",
+    "stock": 25
+  },
+  {
+    "id": 6,
+    "title": "producto prueba",
+    "description": "Este es un producto prueba",
+    "price": 138,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G18",
+    "stock": 30
+  },
+  {
+    "id": 8,
+    "title": "producto prueba",
+    "description": "Este es un producto prueba",
+    "price": 184,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G24",
+    "stock": 40
+  },
+  {
+    "id": 9,
+    "title": "producto prueba",
+    "description": "Este es un producto prueba",
+    "price": 207,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G27",
+    "stock": 45
+  },
+  {
+    "id": 10,
+    "title": "producto prueba",
+    "description": "Este es un producto prueba",
+    "price": 230,
+    "thumbnail": "Sin imagen",
+    "code": "2r3rgg5G30",
+    "stock": 50
+  },
+  {
+    "id": 11,
+    "title": "Carretilla",
+    "description": "Carretilla a dos manos.",
+    "price": "50000",
+    "thumbnails": [
+      "public/catalog_carretilla_1.jpg",
+      "public/catalog_carretilla_2.jpg",
+      "public/catalog_carretilla_3.jpg",
+      "public/catalog_carretilla_4.jpg"
+    ],
+    "code": "abc123",
+    "stock": "5"
+  },
+  {
+    "id": 12,
+    "title": "Termo",
+    "description": "Termo de acero inoxidable de origen chino marcha chichulin.",
+    "price": "50000",
+    "thumbnails": [
+      "public/catalogo_termo_inox_1.jpg",
+      "public/catalogo_termo_inox_2.jpg",
+      "public/catalogo_termo_inox_3.jpg",
+      "public/catalogo_termo_inox_4.jpg"
+    ],
+    "code": "bcd123",
+    "stock": "5"
+  },
+  {
+    "id": 13,
+    "title": "Taza de plastico",
+    "description": "Taza de plastico para el colegio/jardin color verde oscuro apilable.",
+    "price": "2200",
+    "thumbnails": [
+      "public/catalogo_taza_plastico_1.jpg",
+      "public/catalogo_taza_plastico_2.jpg"
+    ],
+    "code": "cde123",
+    "stock": "5",
+    "status": "false"
+  },
+  {
+    "id": 14,
+    "title": "Taza de plastico",
+    "description": "Taza de plastico para el colegio/jardin apilable.",
+    "price": "1500",
+    "code": "def123",
+    "stock": "5",
+    "status": "false",
+    "thumbnails": ["src\\public\\img\\taza de plastico.jpg"]
+  },
+  {
+    "id": 15,
+    "title": "Té Inti Zen Canela",
+    "description": "Té Inti Zen negro en saquitos Canela, Jengibre y Cardamomo 30 g 15 u",
+    "price": "800",
+    "code": "efg123",
+    "stock": "50",
+    "status": "true",
+    "thumbnails": [
+      "src\\public\\img\\inti zen canela 1.jpeg",
+      "src\\public\\img\\inti zen canela 2.jpg"
+    ]
+  },
+  {
+    "id": 16,
+    "title": "Taladro",
+    "description": "Taladro Daewoo inalambrico",
+    "price": "39.609\n",
+    "code": "fgh123",
+    "stock": "10",
+    "status": "true",
+    "thumbnails": []
+  },
+  {
+    "id": 17,
+    "title": "Taladro",
+    "description": "Taladro Daewoo inalambrico",
+    "price": "39.609\n",
+    "code": "ghi123",
+    "stock": 10,
+    "status": "true",
+    "thumbnails": []
+  }
+]
