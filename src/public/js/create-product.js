@@ -83,11 +83,11 @@ async function createProduct() {
     console.log("data sent", obj);
 
     const response = await fetch("/api/products", {
-      headers: {
-        "Content-Type": "application/json",
-      },
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
       method: "Post",
-      body: JSON.stringify(obj),
+      body: data, // JSON.stringify(obj),
     });
     const resData = await response.json();
     console.log("received", resData);

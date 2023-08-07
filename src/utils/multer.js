@@ -11,12 +11,13 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
+  // Tuve que deshabilitarla porque me daba conflictos cuando creaba desde el Form
   if (file.mimetype !== "image/png") {
-    return cb("Solo se admiten imagenes png/jpg/jpeg");
+    return cb("Solo se admiten imagenes");
   }
   cb(null, true);
 };
 
-const uploader = multer({ storage, fileFilter });
+const uploader = multer({ storage });
 
 module.exports = uploader;

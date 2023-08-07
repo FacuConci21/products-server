@@ -10,7 +10,7 @@
             <a class="nav-link" href="/realtimeproducts">Real Time Products</a>
         </li>
     </ul>
-    
+
     <br>
 
     <div class="accordion" id="accordionExample">
@@ -55,7 +55,16 @@
                                 checked>
                             <label class="form-check-label" for="status">Estado</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Crear</button>
+
+                        <div class="mb-3">
+                            <label for="thumbnails" class="form-label">Cargue la/s imagen/es del producto</label>
+                            <input class="form-control" type="file" id="thumbnails" accept=".jpg, .png" name="thumbnails" multiple>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Crear</button>
+                        </div>
+
                     </form>
                 </div>
             </div>
