@@ -40,7 +40,7 @@ class ProductManager {
     return newProduct;
   }
 
-  async getProducts(limit) {
+  async getProducts(limit = NaN) {
     const fd = join(this._path, this.#_filename);
 
     if (!fs.existsSync(fd)) {

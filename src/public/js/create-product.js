@@ -3,16 +3,21 @@ const container = document.getElementById("products-list");
 const createForm = document.getElementById("create-form");
 const accordionItem = document.getElementById("accordion");
 
-async function loadProducts() {
+async function loadProducts(socketData) {
   try {
-    const response = await fetch("/api/products", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "get",
-    });
-    const data = await response.json();
-    const products = data.payload || [];
+    let products;
+    if (!socketData) {
+      const response = await fetch("/api/products", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "get",
+      });
+      const data = await response.json();
+      products = data.payload || [];
+    } else {
+      products = socketData.payload || [];
+    }
 
     if (products.length > 0) {
       console.log("Products loaded ...", products);
@@ -87,13 +92,13 @@ async function createProduct() {
     const resData = await response.json();
     console.log("received", resData);
 
-    if (resData.status === 'created') {
-        accordionItem.innerHTML += `
+    if (resData.status === "created") {
+      accordionItem.innerHTML += `
         <div class="alert alert-secondary" role="alert">
             Producto creado ...
         </div>`;
     } else {
-        accordionItem.innerHTML += `
+      accordionItem.innerHTML += `
         <div class="alert alert-danger" role="alert">
             Parece que algo salio mal...
         </div>`;
@@ -101,6 +106,10 @@ async function createProduct() {
   });
 }
 
+socket.on("get-products", (data) => {
+  console.log("socket data", data);
+  loadProducts(data);
+});
+
 console.log("Client start");
-loadProducts();
 createProduct();
