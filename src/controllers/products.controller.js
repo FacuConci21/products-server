@@ -23,12 +23,13 @@ router.get("/home", async (req, res) => {
     const { limit } = req.query;
 
     const products = await productManager.getProducts(Number.parseInt(limit));
-    // console.log(products);
 
-    res.render("home", {haveProducts: (products.length > 0), products});
+    res.render("home", { haveProducts: products.length > 0, products });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: "error", message: error.message });
+    res
+      .status(500)
+      .render("error", { status: "error", message: error.message });
   }
 });
 

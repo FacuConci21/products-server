@@ -2,4 +2,4 @@
 Proyecto del curso de Backend en CoderHouse.
 
 ## Version
- - v1.0 Primera entrega del proyecto final.
+ - v2.0 Segunda entrega del proyecto final.
