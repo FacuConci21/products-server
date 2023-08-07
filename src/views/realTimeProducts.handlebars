@@ -7,6 +7,57 @@
 
     <br>
 
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item" id="accordion">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Crear un nuevo producto
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                <div class="accordion-body">
+
+                    <form id="create-form">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titulo</label>
+                            <input name="title" type="text" class="form-control" id="title" aria-describedby="emailHelp"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripcion</label>
+                            <input name="description" type="text" class="form-control" id="description"
+                                aria-describedby="emailHelp" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Codigo de producto</label>
+                            <input name="code" type="text" class="form-control" id="code" aria-describedby="emailHelp"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Precio unitario</label>
+                            <input name="price" type="number" class="form-control" id="price"
+                                aria-describedby="emailHelp" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock" class="form-label">Cantidad en stock</label>
+                            <input name="stock" type="number" class="form-control" id="stock"
+                                aria-describedby="emailHelp" required>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="status" name="status"
+                                checked>
+                            <label class="form-check-label" for="status">Estado</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
     <div class="container-fluid" id="products-list">
     </div>
 

@@ -53,9 +53,11 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
 
     const thumbnails = req.files;
 
-    thumbnails.forEach((imgfile) => {
-      product.thumbnails.push(join("src", "public", "img", imgfile.filename));
-    });
+    if (thumbnails) {
+      thumbnails.forEach((imgfile) => {
+        product.thumbnails.push(join("src", "public", "img", imgfile.filename));
+      });
+    }
 
     const newProduct = await productManager.addProduct(product);
 
