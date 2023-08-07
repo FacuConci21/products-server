@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { StatusCodes } = require("http-status-codes");
 const CartManager = require("../managers/CartsManager");
 
 const router = Router();
@@ -10,10 +11,12 @@ router.get("/:cid", async (req, res) => {
 
     const cart = await cartManager.getCartById(Number.parseInt(cid));
 
-    res.status(200).json({ status: "success", payload: cart });
+    res.status(StatusCodes.OK).json({ status: "success", payload: cart });
   } catch (error) {
     console.error(error);
-    res.status(200).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
@@ -25,10 +28,14 @@ router.post("/", async (req, res) => {
 
     const addedCart = await cartManager.addCart(newCart);
 
-    res.status(200).json({ status: "created", payload: addedCart });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: "created", payload: addedCart });
   } catch (error) {
     console.error(error);
-    res.status(200).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
@@ -47,28 +54,36 @@ router.post("/:cid/product/:pid", async (req, res) => {
       newProduct
     );
 
-    res.status(200).json({ status: "created", payload: updatedCart });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: "created", payload: updatedCart });
   } catch (error) {
     console.error(error);
-    res.status(200).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
 router.put("/:id", async (req, res) => {
   try {
-    res.status(200).json({ status: "updated", payload: {} });
+    res.status(StatusCodes.ACCEPTED).json({ status: "updated", payload: {} });
   } catch (error) {
     console.error(error);
-    res.status(200).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
 router.delete("/:id", async (req, res) => {
   try {
-    res.status(200).json({ status: "deleted", payload: {} });
+    res.status(StatusCodes.ACCEPTED).json({ status: "deleted", payload: {} });
   } catch (error) {
     console.error(error);
-    res.status(200).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 

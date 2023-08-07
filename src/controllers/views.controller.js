@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { join } = require("path");
+const { StatusCodes } = require("http-status-codes");
 const ProductManager = require("../managers/ProductManager");
 
 const router = Router();
@@ -15,7 +15,7 @@ router.get("/home", async (req, res) => {
   } catch (error) {
     console.error(error);
     res
-      .status(500)
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .render("error", { status: "error", message: error.message });
   }
 });
@@ -26,14 +26,14 @@ router.get("/realtimeproducts", async (req, res) => {
   } catch (error) {
     console.error(error);
     res
-      .status(500)
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .render("error", { status: "error", message: error.message });
   }
 });
 
 router.get("*", (req, res) => {
   res
-    .status(404)
+    .status(StatusCodes.NOT_FOUND)
     .render("error", { status: "error", message: "Page not found" });
 });
 

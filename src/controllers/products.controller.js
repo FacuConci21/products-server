@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { join } = require("path");
+const { StatusCodes } = require("http-status-codes");
 const ProductManager = require("../managers/ProductManager");
 const uploader = require("../utils/multer");
 
@@ -12,9 +13,11 @@ router.get("/", async (req, res) => {
 
     const products = await productManager.getProducts(Number.parseInt(limit));
 
-    res.status(200).json({ status: "success", payload: products });
+    res.status(StatusCodes.OK).json({ status: "success", payload: products });
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
@@ -24,9 +27,11 @@ router.get("/:pid", async (req, res) => {
 
     const product = await productManager.getProductById(Number.parseInt(pid));
 
-    res.status(200).json({ status: "success", payload: product });
+    res.status(StatusCodes.OK).json({ status: "success", payload: product });
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
@@ -61,10 +66,14 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
 
     const newProduct = await productManager.addProduct(product);
 
-    res.status(200).json({ status: "created", payload: newProduct });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: "created", payload: newProduct });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
@@ -88,10 +97,14 @@ router.put("/:pid", async (req, res) => {
       Number.parseInt(pid),
       toUpdateProduct
     );
-    res.status(200).json({ status: "updated", payload: updtProduct });
+    res
+      .status(StatusCodes.OK)
+      .json({ status: "updated", payload: updtProduct });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
@@ -101,10 +114,14 @@ router.delete("/:pid", async (req, res) => {
     const deletedProduct = await productManager.deleteProduct(
       Number.parseInt(pid)
     );
-    res.status(200).json({ status: "deleted", payload: deletedProduct });
+    res
+      .status(StatusCodes.OK)
+      .json({ status: "deleted", payload: deletedProduct });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: "error", message: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
   }
 });
 
