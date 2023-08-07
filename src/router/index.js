@@ -1,13 +1,11 @@
-const productsController = require('../controllers/products.controller')
-const cartsController = require('../controllers/carts.controller')
-
+const productsController = require("../controllers/products.controller");
+const cartsController = require("../controllers/carts.controller");
+const viewsController = require("../controllers/views.controller");
 
 const router = (app) => {
-    app.use('/api/products', productsController);
-    app.use('/api/carts', cartsController);
-    app.use('*', (req, res) => {
-        res.status(404).render('error', { status: "error", message: 'Page not found' })
-    })
-}
+  app.use("/", viewsController);
+  app.use("/api/products", productsController);
+  app.use("/api/carts", cartsController);
+};
 
 module.exports = router;
