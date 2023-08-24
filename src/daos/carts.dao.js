@@ -4,6 +4,10 @@ class CartsDao {
   async find() {
     return await Carts.find();
   }
+  
+  async findById(cid) {
+    return await Carts.findById(cid).populate('products.pid');
+  }
 
   async create(newCartInfo) {
     return await Carts.create(newCartInfo);

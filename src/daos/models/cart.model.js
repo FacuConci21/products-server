@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongoose").SchemaTypes;
+const Products = require("./products.model");
 
 const collectionName = "cart";
 
@@ -8,8 +9,8 @@ const schema = new mongoose.Schema({
   products: {
     type: [
       {
-        pid: { type: ObjectId, require: true },
-        quantity: { type: Number, require: true },
+        pid: { type: ObjectId, ref: "product" },
+        quantity: { type: Number },
       },
     ],
   },

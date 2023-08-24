@@ -1,15 +1,18 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const CartManager = require("../daos/CartsManager");
+const CartDao = require("../daos/carts.dao");
 
 const router = Router();
-const cartManager = new CartManager("public/files");
+// const cartManager = new CartManager("public/files");
+const cartsDao = new CartDao();
 
 router.get("/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
 
-    const cart = await cartManager.getCartById(Number.parseInt(cid));
+    // const cart = await cartManager.getCartById(Number.parseInt(cid));
+    const cart = await cartsDao.findById(cid);
 
     res.status(StatusCodes.OK).json({ status: "success", payload: cart });
   } catch (error) {
@@ -26,7 +29,8 @@ router.post("/", async (req, res) => {
 
     const newCart = { products: products || [] };
 
-    const addedCart = await cartManager.addCart(newCart);
+    // const addedCart = await cartManager.addCart(newCart);
+    const addedCart = await cartsDao.create(newCart);
 
     res
       .status(StatusCodes.CREATED)
@@ -45,14 +49,17 @@ router.post("/:cid/product/:pid", async (req, res) => {
     const { quantity } = req.query;
 
     const newProduct = {
-      pid: Number.parseInt(pid),
+      pid: pid,
       quantity: Number.parseInt(quantity),
     };
 
-    const updatedCart = await cartManager.addProductCart(
-      Number.parseInt(cid),
-      newProduct
-    );
+    // const updatedCart = await cartManager.addProductCart(Number.parseInt(cid),newProduct);
+
+    const updtCart = await cartsDao.findById(cid);
+    
+    updtCart.products.push(newProduct);
+
+    const updatedCart = await cartsDao.updateOne(cid, updtCart);
 
     res
       .status(StatusCodes.CREATED)
