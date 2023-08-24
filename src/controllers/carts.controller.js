@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
-const CartManager = require("../managers/CartsManager");
+const CartManager = require("../daos/CartsManager");
 
 const router = Router();
 const cartManager = new CartManager("public/files");

@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { join } = require("path");
 const { StatusCodes } = require("http-status-codes");
-const ProductManager = require("../managers/ProductManager");
+const ProductManager = require("../daos/ProductManager");
 const uploader = require("../utils/multer");
 
 const router = Router();

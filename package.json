@@ -4,11 +4,12 @@
   "description": "Proyecto del curso de Backend en CoderHouse.",
   "main": "app.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "nodemon src/server.js"
   },
   "author": "Facundo Conci [GitHub: FacuConci21]",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-handlebars": "^7.1.1",
     "http-status-codes": "^2.2.0",

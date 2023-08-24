@@ -3,6 +3,7 @@ const handlebars = require("express-handlebars");
 const morgan = require("morgan");
 const { join } = require("path");
 const router = require("./router");
+const mongoConnect = require("./utils/mongoose");
 
 const app = express();
 const appPort = 8080;
@@ -19,5 +20,7 @@ app.set("views", join(__dirname, "views"));
 app.set("view engine", "handlebars");
 
 router(app);
+
+mongoConnect();
 
 module.exports = app;

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
-const ProductManager = require("../managers/ProductManager");
+const ProductManager = require("../daos/ProductManager");
 
 const router = Router();
 const productManager = new ProductManager("public/files");
