@@ -9,7 +9,7 @@ const appPort = 8080;
 
 app.set("port", appPort);
 
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, "public")));
