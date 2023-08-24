@@ -2,16 +2,19 @@ const { Router } = require("express");
 const { join } = require("path");
 const { StatusCodes } = require("http-status-codes");
 const ProductManager = require("../daos/ProductManager");
+const ProductsDao = require("../daos/products.dao");
 const uploader = require("../utils/multer");
 
 const router = Router();
 const productManager = new ProductManager("public/files");
+const productsDao = new ProductsDao();
 
 router.get("/", async (req, res) => {
   try {
     const { limit } = req.query;
 
-    const products = await productManager.getProducts(Number.parseInt(limit));
+    // const products = await productManager.getProducts(Number.parseInt(limit));
+    const products = await productsDao.find();
 
     res.status(StatusCodes.OK).json({ status: "success", payload: products });
   } catch (error) {
@@ -25,7 +28,8 @@ router.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
 
-    const product = await productManager.getProductById(Number.parseInt(pid));
+    // const product = await productManager.getProductById(Number.parseInt(pid));
+    const product = await productsDao.findById(pid);
 
     res.status(StatusCodes.OK).json({ status: "success", payload: product });
   } catch (error) {
@@ -43,7 +47,7 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
       throw new Error("[addProduct] faltan uno o mas campos obligatorios >:(");
     }
 
-    const product = {
+    const productInfo = {
       title,
       description,
       price,
@@ -60,11 +64,14 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
 
     if (thumbnails) {
       thumbnails.forEach((imgfile) => {
-        product.thumbnails.push(join("src", "public", "img", imgfile.filename));
+        productInfo.thumbnails.push(
+          join("src", "public", "img", imgfile.filename)
+        );
       });
     }
 
-    const newProduct = await productManager.addProduct(product);
+    // const newProduct = await productManager.addProduct(product);
+    const newProduct = await productsDao.create(productInfo);
 
     res
       .status(StatusCodes.CREATED)
@@ -77,26 +84,34 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
   }
 });
 
-router.put("/:pid", async (req, res) => {
+router.put("/:pid", uploader.array("thumbnails"), async (req, res) => {
   try {
     const { pid } = req.params;
-    const { title, description, price, thumbnails, code, stock, status } =
+    const { title, description, price, code, stock, status } =
       req.body;
 
-    const toUpdateProduct = {
+    const productInfo = {
       title,
       description,
       price,
-      thumbnails,
+      thumbnails : [],
       code,
       stock,
-      status,
+      status: status || true,
     };
+    const thumbnails = req.files;
 
-    const updtProduct = await productManager.updateProduct(
-      Number.parseInt(pid),
-      toUpdateProduct
-    );
+    if (thumbnails) {
+      thumbnails.forEach((imgfile) => {
+        productInfo.thumbnails.push(
+          join("src", "public", "img", imgfile.filename)
+        );
+      });
+    }
+
+    // const updtProduct = await productManager.updateProduct(Number.parseInt(pid),toUpdateProduct);
+    const updtProduct = await productsDao.updateOne(pid,productInfo);
+
     res
       .status(StatusCodes.OK)
       .json({ status: "updated", payload: updtProduct });
@@ -111,9 +126,9 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    const deletedProduct = await productManager.deleteProduct(
-      Number.parseInt(pid)
-    );
+    // const deletedProduct = await productManager.deleteProduct(Number.parseInt(pid));
+    const deletedProduct = await productsDao.delete(pid);
+
     res
       .status(StatusCodes.OK)
       .json({ status: "deleted", payload: deletedProduct });

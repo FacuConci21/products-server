@@ -5,6 +5,10 @@ class ProductsDao {
     return await Products.find();
   }
 
+  async findById(pid) {
+    return await Products.findById(pid);
+  }
+
   async create(newProductInfo) {
     return await Products.create(newProductInfo);
   }

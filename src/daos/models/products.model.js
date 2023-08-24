@@ -4,7 +4,6 @@ const { ObjectId } = require("mongoose").SchemaTypes;
 const collectionName = "product";
 
 const schema = new mongoose.Schema({
-  _id: ObjectId,
   title: {
     type: String,
     required: true,
@@ -31,11 +30,7 @@ const schema = new mongoose.Schema({
     default: true,
   },
   thumbnails: {
-    type: [
-      {
-        thumbnail: String,
-      },
-    ],
+    type: [String],
   },
 });
 
