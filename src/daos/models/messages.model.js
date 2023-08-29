@@ -4,9 +4,13 @@ const { ObjectId } = require("mongoose").SchemaTypes;
 const collectionName = "message";
 
 const schema = new mongoose.Schema({
-    content: {
+    textContent: {
         type: String,
         required: true,
+    },
+    user: {
+        type: String,
+        require: true,
     }
 });
 

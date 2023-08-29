@@ -31,6 +31,17 @@ router.get("/realtimeproducts", async (req, res) => {
   }
 });
 
+router.get("/chat", async (req, res) => {
+  try {
+    res.render("chat");
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .render("error", { status: "error", message: error.message });
+  }
+});
+
 router.get("*", (req, res) => {
   res
     .status(StatusCodes.NOT_FOUND)

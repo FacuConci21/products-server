@@ -1,0 +1,45 @@
+<div class="container">
+    <ul class="nav">
+        <div class="card-body">
+            <h1 class="text-center">Foro de chat</h1>
+        </div>
+        <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/realtimeproducts">Real Time Products</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/chat">Chat</a>
+        </li>
+    </ul>
+
+    <br>
+
+    <div class="container-fluid">
+
+        <div class="card-header">
+            <p id="logued-as"></p>
+        </div>
+
+        <div id="chat-box">
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Escribi tu mensaje
+            </div>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="messageText" id="messageText" required>
+                    <input type="submit" id="send-button" class="btn btn-primary btn-sm" value="Enviar">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/chat.js"></script>
