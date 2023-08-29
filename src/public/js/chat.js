@@ -42,7 +42,6 @@ async function postMessage(user, textContent = "") {
     if (data.status.toLowerCase() === "created") {
       socket.emit("send-message", data.payload);
       console.log('Mensaje enviado.');
-      writeMessage(message.user, message.textContent);
     } else {
       console.log("error al enviar", data.message);
     }

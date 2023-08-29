@@ -3,55 +3,81 @@ const container = document.getElementById("products-list");
 const createForm = document.getElementById("create-form");
 const accordionItem = document.getElementById("accordion");
 
-async function loadProducts(socketData) {
+function writeProduct(product) {
+  container.innerHTML += `
+    <div class="card">
+      <div class="card-header">
+        ${product.code}
+      </div>
+      
+      <div class="card-body">
+        <h5 class="card-title">${product.title}</h5>
+        <p class="card-text">${product.description}</p>
+        <p class="blockquote-footer">Stock: ${product.stock} | Precio: $${product.price} </p>
+
+        <div>
+            <input type="number" name="quantity" id="">
+            <a href="#" class="btn btn-primary">Agregar al carrito</a>
+        </div>
+
+      </div>
+
+      <div class="card-footer text-body-secondary">
+        Ultima vez actualizado: dd/mm/aaaa
+      </div>
+    </div>
+  `;
+}
+
+async function loadOneProduct(productId = "") {
   try {
-    let products;
-    if (!socketData) {
-      const response = await fetch("/api/products", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "get",
-      });
-      const data = await response.json();
-      products = data.payload || [];
+    console.log("Fetching product ...");
+
+    const response = await fetch("/api/products/" + productId);
+    const data = await response.json();
+
+    if (data.payload) {
+      const product = data.payload;
+
+      console.log(`Product loaded.`);
+
+      writeProduct(product);
     } else {
-      products = socketData.payload || [];
+      console.log(data);
+    }
+  } catch (error) {
+    console.log(error);
+    container.innerHTML = `    
+        <div class="alert alert-danger" role="alert">
+            Ha ocurrido un error...
+        </div>`;
+  }
+}
+
+async function loadProducts() {
+  try {
+    console.log("Fetching products ...");
+
+    const response = await fetch("/api/products");
+    const data = await response.json();
+    const products = data.payload || [];
+
+    console.log(`Products loaded (${products.length})`);
+
+    if (!data.payload) {
+      console.log(data);
     }
 
     if (products.length > 0) {
-      console.log("Products loaded ...", products);
       container.innerHTML = `
         <div class="alert alert-success" role="alert">
             Listado de productos disponibles...
         </div>`;
 
       products.forEach((product) => {
-        container.innerHTML += `
-                <div class="card">
-                    <div class="card-header">
-                    ${product.code}
-                    </div>
-                    <div class="card-body">
-                    <h5 class="card-title">${product.title}</h5>
-                    <p class="card-text">${product.description}</p>
-                    <p class="blockquote-footer">Stock: ${product.stock} | Precio: $${product.price} </p>
-
-                    <div>
-                        <input type="number" name="quantity" id="">
-                        <a href="#" class="btn btn-primary">Agregar al carrito</a>
-                    </div>
-
-                    </div>
-            
-                    <div class="card-footer text-body-secondary">
-                    Ultima vez actualizado: dd/mm/aaaa
-                    </div>
-                </div>
-            `;
+        writeProduct(product);
       });
     } else {
-      console.log("Products not found");
       container.innerHTML = `
         <div class="alert alert-danger" role="alert">
             No se obtuvieron productos desde el servidor 
@@ -69,31 +95,23 @@ async function loadProducts(socketData) {
 async function createProduct() {
   createForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    console.log("Creating product ...");
 
     const data = new FormData(createForm);
 
-    const obj = {};
+    data.set('status', (data.get('status') === 'on'));
 
-    data.forEach((value, key) => (obj[key] = value));
-
-    obj.status = obj.status === "on";
-    obj.stock = Number.parseInt(obj.stock);
-    obj.price = Number.parseFloat(obj.price);
-
-    console.log("data sent", obj);
-
+    console.log("Sending ...", Object.fromEntries(data.entries()));
     const response = await fetch("/api/products", {
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
       method: "Post",
-      body: data, // JSON.stringify(obj),
+      body: data,
     });
     const resData = await response.json();
-    console.log("received", resData);
+    console.log("Received", resData);
 
-    if (resData.status === "created") {
-      socket.emit("product-created");
+    if (resData.status.toLowerCase() === "created") {
+      socket.emit("product-created", resData.payload);
+
       accordionItem.innerHTML += `
         <div class="alert alert-secondary" role="alert">
             Producto creado ...
@@ -107,10 +125,11 @@ async function createProduct() {
   });
 }
 
-socket.on("get-products", (data) => {
-  console.log("socket data", data);
-  loadProducts(data);
+socket.on("new-product", (productId) => {
+  console.log("New product created.");
+  loadOneProduct(productId);
 });
 
 console.log("Client start");
+loadProducts();
 createProduct();

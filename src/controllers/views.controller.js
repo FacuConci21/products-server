@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    res.render("home");
+    res.status(StatusCodes.OK).render("home");
   } catch (error) {
     console.error(error);
     res
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 
 router.get("/realtimeproducts", async (req, res) => {
   try {
-    res.render("realtimeproducts");
+    res.status(StatusCodes.OK).render("realtimeproducts");
   } catch (error) {
     console.error(error);
     res
@@ -27,7 +27,7 @@ router.get("/realtimeproducts", async (req, res) => {
 
 router.get("/chat", async (req, res) => {
   try {
-    res.render("chat");
+    res.status(StatusCodes.OK).render("chat");
   } catch (error) {
     console.error(error);
     res

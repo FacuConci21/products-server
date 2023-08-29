@@ -42,9 +42,9 @@ router.get("/:pid", async (req, res) => {
 router.post("/", uploader.array("thumbnails"), async (req, res) => {
   try {
     const { title, description, price, code, stock, status } = req.body;
-
+    
     if (!title || !description || !price || !code || !stock) {
-      throw new Error("[addProduct] faltan uno o mas campos obligatorios >:(");
+      throw new Error("faltan uno o mas campos obligatorios >:(");
     }
 
     const productInfo = {
