@@ -1,17 +1,11 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
-const ProductManager = require("../daos/ProductManager");
 
 const router = Router();
-const productManager = new ProductManager("public/files");
 
 router.get("/", async (req, res) => {
   try {
-    const { limit } = req.query;
-
-    const products = await productManager.getProducts(Number.parseInt(limit));
-
-    res.render("home", { haveProducts: products.length > 0, products });
+    res.render("home");
   } catch (error) {
     console.error(error);
     res

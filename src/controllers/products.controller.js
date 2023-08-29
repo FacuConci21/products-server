@@ -1,12 +1,12 @@
 const { Router } = require("express");
 const { join } = require("path");
 const { StatusCodes } = require("http-status-codes");
-const ProductManager = require("../daos/ProductManager");
+// const ProductManager = require("../daos/ProductManager");
 const ProductsDao = require("../daos/products.dao");
 const uploader = require("../utils/multer");
 
 const router = Router();
-const productManager = new ProductManager("public/files");
+// const productManager = new ProductManager("public/files");
 const productsDao = new ProductsDao();
 
 router.get("/", async (req, res) => {
