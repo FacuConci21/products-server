@@ -4,6 +4,10 @@ const ProductManager = require("./daos/ProductManager");
 
 const productManager = new ProductManager("public/files");
 
+function socketlog(event, message) {
+  console.log(`[SOCKET: ON ${event}] ${message}`);
+}
+
 const emitGetProducts = async (socket) => {
   try {
     const products = await productManager.getProducts();
@@ -30,7 +34,7 @@ function realTimeServer(httpServer) {
       `[SOCKET: ON ${EVENTS.CONNECTION}] Se ha conectado un cliente (id: ${socket.id})`
     );
 
-    emitGetProducts(socket);
+    // emitGetProducts(socket);
 
     socket.on(EVENTS.PRODUCT_CREATED, () => {
       console.log(
@@ -38,6 +42,15 @@ function realTimeServer(httpServer) {
       );
       emitGetProducts(socket);
     });
+
+    socket.on(EVENTS.CHAT_CONNECT, (username) => {
+      socketlog(EVENTS.CHAT_CONNECT, `\"${username}\" se unio al chat`);
+    });
+
+    socket.on(EVENTS.SEND_MESSAGE, (username) => {
+      socketlog(EVENTS.SEND_MESSAGE, `\"${username}\" ha enviado un mensaje.`);
+    })
+
   });
 }
 
