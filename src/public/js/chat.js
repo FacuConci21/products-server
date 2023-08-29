@@ -40,17 +40,17 @@ async function postMessage(user, textContent = "") {
     const data = await response.json();
 
     if (data.status.toLowerCase() === "created") {
-      writeMessage(user, textContent);
-      console.log(`Mensaje enviado`);
+      socket.emit("send-message", data.payload);
+      console.log('Mensaje enviado.');
+      writeMessage(message.user, message.textContent);
     } else {
-      console.log('error al enviar', data.message);
+      console.log("error al enviar", data.message);
     }
   }
 }
 
-function writeMessage(user, text = "", emit = true) {
+function writeMessage(user, text = "") {
   if (text.trim().length > 0) {
-    if (emit) socket.emit("send-message", user);
     chatBox.innerHTML += chatCard(`${user}: ${text}`);
   }
 }
@@ -61,7 +61,7 @@ async function loadChatMessages() {
   const messages = data.payload;
 
   messages.forEach((msg) => {
-    writeMessage(msg.user, msg.textContent, false);
+    writeMessage(msg.user, msg.textContent);
   });
 }
 
@@ -78,7 +78,6 @@ function chat() {
   sendButton.addEventListener("click", (e) => {
     e.preventDefault();
     postMessage(loguedUser, messageInput.value);
-    // writeMessage(loguedUser, messageInput.value);
     messageInput.value = "";
   });
 
@@ -86,9 +85,17 @@ function chat() {
     e.preventDefault();
     if (e.key === "Enter") {
       postMessage(loguedUser, messageInput.value);
-      // writeMessage(loguedUser, messageInput.value);
       messageInput.value = "";
     }
+  });
+
+  socket.on("new-user", (username) => {
+    console.log(`\"${username}\" se unio al chat.`);
+  });
+
+  socket.on("new-message", (message) => {
+    console.log(`nuevo mensaje de \"${message.user}\".`);
+    writeMessage(message.user, message.textContent);
   });
 }
 

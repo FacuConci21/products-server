@@ -45,10 +45,12 @@ function realTimeServer(httpServer) {
 
     socket.on(EVENTS.CHAT_CONNECT, (username) => {
       socketlog(EVENTS.CHAT_CONNECT, `\"${username}\" se unio al chat`);
+      socket.broadcast.emit(EVENTS.NEW_USER, username);
     });
 
-    socket.on(EVENTS.SEND_MESSAGE, (username) => {
-      socketlog(EVENTS.SEND_MESSAGE, `\"${username}\" ha enviado un mensaje.`);
+    socket.on(EVENTS.SEND_MESSAGE, (message) => {
+      socketlog(EVENTS.SEND_MESSAGE, `\"${message.user}\" ha enviado un mensaje.`);
+      socket.broadcast.emit(EVENTS.NEW_MESSAGE, message);
     })
 
   });
