@@ -3,16 +3,21 @@ const { ObjectId } = require("mongoose").SchemaTypes;
 
 const collectionName = "message";
 
-const schema = new mongoose.Schema({
+const schema = new mongoose.Schema(
+  {
     textContent: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     user: {
-        type: String,
-        require: true,
-    }
-});
+      type: String,
+      require: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const Messages = mongoose.model(collectionName, schema);
 

@@ -4,17 +4,22 @@ const Products = require("./products.model");
 
 const collectionName = "cart";
 
-const schema = new mongoose.Schema({
-  id: ObjectId,
-  products: {
-    type: [
-      {
-        pid: { type: ObjectId, ref: "product" },
-        quantity: { type: Number },
-      },
-    ],
+const schema = new mongoose.Schema(
+  {
+    id: ObjectId,
+    products: {
+      type: [
+        {
+          pid: { type: ObjectId, ref: "product" },
+          quantity: { type: Number },
+        },
+      ],
+    },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const Carts = mongoose.model(collectionName, schema);
 
