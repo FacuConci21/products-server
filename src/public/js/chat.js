@@ -22,6 +22,28 @@ const askName = () => {
   return username;
 };
 
+const appendToastNotification = (message, type = "primary") => {
+  const notifContainer = document.getElementById("notif-container");
+
+  notifContainer.innerHTML = "";
+  notifContainer.innerHTML += `
+    <div id="notification" class="toast text-bg-${type}">
+      <div class="d-flex">
+          <div class="toast-body">
+              ${message}
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    `;
+};
+
+const showNotifications = () => {
+  const notificationToast = document.getElementById("notification");
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(notificationToast);
+  toastBootstrap.show();
+};
+
 async function postMessage(user, textContent = "") {
   if (textContent.trim().length > 0) {
     console.log("Enviando mensaje ...");
@@ -41,7 +63,7 @@ async function postMessage(user, textContent = "") {
 
     if (data.status.toLowerCase() === "created") {
       socket.emit("send-message", data.payload);
-      console.log('Mensaje enviado.');
+      console.log("Mensaje enviado.");
     } else {
       console.log("error al enviar", data.message);
     }
@@ -90,11 +112,15 @@ function chat() {
 
   socket.on("new-user", (username) => {
     console.log(`\"${username}\" se unio al chat.`);
+    appendToastNotification(`\"${username}\" se ha unido al chat.`);
+    showNotifications();
   });
 
   socket.on("new-message", (message) => {
     console.log(`nuevo mensaje de \"${message.user}\".`);
     writeMessage(message.user, message.textContent);
+    appendToastNotification(`Nuevo mensaje de ${message.user}`);
+    showNotifications();
   });
 }
 
