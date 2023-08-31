@@ -14,6 +14,17 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/products", async (req, res) => {
+  try {
+    res.status(StatusCodes.OK).render("products");
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .render("error", { status: "error", message: error.message });
+  }
+});
+
 router.get("/realtimeproducts", async (req, res) => {
   try {
     res.status(StatusCodes.OK).render("realtimeproducts");
