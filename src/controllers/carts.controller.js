@@ -67,7 +67,23 @@ router.put("/:cid", async (req, res) => {
 
     const result = await service.update(cid, products);
 
-    res.status(StatusCodes.ACCEPTED).json({ status: "updated", payload: result });
+    res.status(StatusCodes.OK).json({ status: "updated", payload: result });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
+router.put("/:cid/product/:pid", async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const { quantity } = req.query;
+
+    const result = await service.deleteProduct(cid, pid);
+
+    res.status(StatusCodes.OK).json({ status: "updated", payload: result });
   } catch (error) {
     console.error(error);
     res
@@ -82,9 +98,22 @@ router.delete("/:cid/product/:pid", async (req, res) => {
 
     const result = await service.deleteProduct(cid, pid);
 
+    res.status(StatusCodes.OK).json({ status: "deleted", payload: result });
+  } catch (error) {
+    console.error(error);
     res
-      .status(StatusCodes.ACCEPTED)
-      .json({ status: "deleted", payload: result });
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
+router.delete("/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+
+    const result = await service.delete(cid);
+
+    res.status(StatusCodes.OK).json({ status: "deleted", payload: result });
   } catch (error) {
     console.error(error);
     res
