@@ -1,8 +1,8 @@
 const Products = require("./models/products.model");
 
 class ProductsDao {
-  async find(filter = {}) {
-    return await Products.find(filter);
+  async find(filter = {}, limit = 10, page = 1, sort = {}) {
+    return await Products.paginate(filter, { limit, page, sort });
   }
 
   async findById(pid) {

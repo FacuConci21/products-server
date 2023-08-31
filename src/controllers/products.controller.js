@@ -10,9 +10,14 @@ const productsDao = new ProductsDao();
 
 router.get("/", async (req, res) => {
   try {
-    const { limit } = req.query;
+    const { limit, page, sort, query } = req.query;
 
-    const products = await service.find(limit);
+    const products = await service.find(
+      query,
+      Number.parseInt(limit),
+      Number.parseInt(page),
+      Number.parseInt(sort),
+    );
 
     res.status(StatusCodes.OK).json({ status: "success", payload: products });
   } catch (error) {
@@ -97,7 +102,7 @@ router.delete("/:pid", async (req, res) => {
     const { pid } = req.params;
 
     const deletedProduct = await service.delete(pid);
-    
+
     res
       .status(StatusCodes.OK)
       .json({ status: "deleted", payload: deletedProduct });

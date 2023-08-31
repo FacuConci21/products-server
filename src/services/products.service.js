@@ -4,9 +4,12 @@ const productsDao = new ProductsDao();
 
 const service = {};
 
-service.find = async (limit) => {
+service.find = async (query, limit, page, sortParam) => {
   try {
-    const products = await productsDao.find();
+    const sortQuery = {};
+    if (Number.isNaN(limit)) limit = 10;
+    if (!Number.isNaN(sortParam)) sortQuery.price = sortParam;
+    const products = await productsDao.find(query, limit, page, sortQuery);
     return products;
   } catch (error) {
     console.error(error);
