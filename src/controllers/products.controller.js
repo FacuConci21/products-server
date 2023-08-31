@@ -1,22 +1,21 @@
 const { Router } = require("express");
-const { join } = require("path");
 const { StatusCodes } = require("http-status-codes");
-const ProductsDao = require("../daos/products.dao");
 const service = require("../services/products.service");
 const uploader = require("../utils/multer");
 
 const router = Router();
-const productsDao = new ProductsDao();
 
 router.get("/", async (req, res) => {
   try {
-    const { limit, page, sort, query } = req.query;
+    const { limit, page, sort, status } = req.query;
 
+    const query = status ? { status } : {};
+    
     const products = await service.find(
       query,
       Number.parseInt(limit),
       Number.parseInt(page),
-      Number.parseInt(sort),
+      Number.parseInt(sort)
     );
 
     res.status(StatusCodes.OK).json({ status: "success", payload: products });

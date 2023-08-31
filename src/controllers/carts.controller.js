@@ -71,9 +71,15 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:cid/product/:pid", async (req, res) => {
   try {
-    res.status(StatusCodes.ACCEPTED).json({ status: "deleted", payload: {} });
+    const { cid, pid } = req.params;
+
+    const result = await service.deleteProduct(cid, pid);
+
+    res
+      .status(StatusCodes.ACCEPTED)
+      .json({ status: "deleted", payload: result });
   } catch (error) {
     console.error(error);
     res

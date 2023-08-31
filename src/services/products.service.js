@@ -1,5 +1,6 @@
 const { join } = require("path");
 const ProductsDao = require("../daos/products.dao");
+const appConfig = require("../utils/app-config");
 const productsDao = new ProductsDao();
 
 const service = {};
@@ -9,8 +10,18 @@ service.find = async (query, limit, page, sortParam) => {
     const sortQuery = {};
     if (Number.isNaN(limit)) limit = 10;
     if (!Number.isNaN(sortParam)) sortQuery.price = sortParam;
-    const products = await productsDao.find(query, limit, page, sortQuery);
-    return products;
+
+    const productsPage = await productsDao.find(query, limit, page, sortQuery);
+
+    productsPage.hasPrevPage
+      ? (productsPage.prevLink = `http://${appConfig.host}:${appConfig.port}/api/products?limit=${limit}&page=${productsPage.prevPage}`)
+      : (productsPage.prevLink = null);
+
+    productsPage.hasNextPage
+      ? (productsPage.nextLink = `http://${appConfig.host}:${appConfig.port}/api/products?limit=${limit}&page=${productsPage.nextPage}`)
+      : (productsPage.nextLink = null);
+
+    return productsPage;
   } catch (error) {
     console.error(error);
     throw error;
@@ -19,7 +30,7 @@ service.find = async (query, limit, page, sortParam) => {
 
 service.findById = async (id) => {
   try {
-    const product = (await productsDao.find({ _id: id })).pop();
+    const product = await productsDao.findById(id);
     return product;
   } catch (error) {
     console.error(error);
