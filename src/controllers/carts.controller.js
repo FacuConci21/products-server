@@ -1,18 +1,16 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
-const CartManager = require("../daos/CartsManager");
 const CartDao = require("../daos/carts.dao");
+const service = require("../services/cart.service");
 
 const router = Router();
-// const cartManager = new CartManager("public/files");
 const cartsDao = new CartDao();
 
 router.get("/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
 
-    // const cart = await cartManager.getCartById(Number.parseInt(cid));
-    const cart = await cartsDao.findById(cid);
+    const cart = await service.findById(cid);
 
     res.status(StatusCodes.OK).json({ status: "success", payload: cart });
   } catch (error) {
@@ -27,14 +25,11 @@ router.post("/", async (req, res) => {
   try {
     const { products } = req.body;
 
-    const newCart = { products: products || [] };
-
-    // const addedCart = await cartManager.addCart(newCart);
-    const addedCart = await cartsDao.create(newCart);
+    const newCart = await service.create(products);
 
     res
       .status(StatusCodes.CREATED)
-      .json({ status: "created", payload: addedCart });
+      .json({ status: "created", payload: newCart });
   } catch (error) {
     console.error(error);
     res
@@ -48,22 +43,15 @@ router.post("/:cid/product/:pid", async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.query;
 
-    const newProduct = {
-      pid: pid,
-      quantity: Number.parseInt(quantity),
-    };
-
-    // const updatedCart = await cartManager.addProductCart(Number.parseInt(cid),newProduct);
-
-    const updtCart = await cartsDao.findById(cid);
-    
-    updtCart.products.push(newProduct);
-
-    const updatedCart = await cartsDao.updateOne(cid, updtCart);
+    const result = await service.addProduct(
+      cid,
+      pid,
+      Number.parseInt(quantity)
+    );
 
     res
       .status(StatusCodes.CREATED)
-      .json({ status: "created", payload: updatedCart });
+      .json({ status: "created", payload: result });
   } catch (error) {
     console.error(error);
     res

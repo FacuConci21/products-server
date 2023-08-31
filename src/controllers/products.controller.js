@@ -1,20 +1,18 @@
 const { Router } = require("express");
 const { join } = require("path");
 const { StatusCodes } = require("http-status-codes");
-// const ProductManager = require("../daos/ProductManager");
 const ProductsDao = require("../daos/products.dao");
+const service = require("../services/products.service");
 const uploader = require("../utils/multer");
 
 const router = Router();
-// const productManager = new ProductManager("public/files");
 const productsDao = new ProductsDao();
 
 router.get("/", async (req, res) => {
   try {
     const { limit } = req.query;
 
-    // const products = await productManager.getProducts(Number.parseInt(limit));
-    const products = await productsDao.find();
+    const products = await service.find(limit);
 
     res.status(StatusCodes.OK).json({ status: "success", payload: products });
   } catch (error) {
@@ -28,8 +26,7 @@ router.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
 
-    // const product = await productManager.getProductById(Number.parseInt(pid));
-    const product = await productsDao.findById(pid);
+    const product = await service.findById(pid);
 
     res.status(StatusCodes.OK).json({ status: "success", payload: product });
   } catch (error) {
@@ -42,36 +39,18 @@ router.get("/:pid", async (req, res) => {
 router.post("/", uploader.array("thumbnails"), async (req, res) => {
   try {
     const { title, description, price, code, stock, status } = req.body;
-    
-    if (!title || !description || !price || !code || !stock) {
-      throw new Error("faltan uno o mas campos obligatorios >:(");
-    }
 
-    const productInfo = {
+    const thumbnails = req.files;
+
+    const newProduct = await service.create(
       title,
       description,
       price,
       code,
-      stock:
-        (typeof stock).toLowerCase() === "number"
-          ? stock
-          : Number.parseInt(stock),
-      status: status || true,
-      thumbnails: [],
-    };
-
-    const thumbnails = req.files;
-
-    if (thumbnails) {
-      thumbnails.forEach((imgfile) => {
-        productInfo.thumbnails.push(
-          join("src", "public", "img", imgfile.filename)
-        );
-      });
-    }
-
-    // const newProduct = await productManager.addProduct(product);
-    const newProduct = await productsDao.create(productInfo);
+      stock,
+      status,
+      thumbnails
+    );
 
     res
       .status(StatusCodes.CREATED)
@@ -87,30 +66,20 @@ router.post("/", uploader.array("thumbnails"), async (req, res) => {
 router.put("/:pid", uploader.array("thumbnails"), async (req, res) => {
   try {
     const { pid } = req.params;
-    const { title, description, price, code, stock, status } =
-      req.body;
+    const { title, description, price, code, stock, status } = req.body;
 
-    const productInfo = {
+    const thumbnails = req.files;
+
+    const updtProduct = await service.update(
+      pid,
       title,
       description,
       price,
-      thumbnails : [],
       code,
       stock,
-      status: status || true,
-    };
-    const thumbnails = req.files;
-
-    if (thumbnails) {
-      thumbnails.forEach((imgfile) => {
-        productInfo.thumbnails.push(
-          join("src", "public", "img", imgfile.filename)
-        );
-      });
-    }
-
-    // const updtProduct = await productManager.updateProduct(Number.parseInt(pid),toUpdateProduct);
-    const updtProduct = await productsDao.updateOne(pid,productInfo);
+      status,
+      thumbnails
+    );
 
     res
       .status(StatusCodes.OK)
@@ -126,9 +95,9 @@ router.put("/:pid", uploader.array("thumbnails"), async (req, res) => {
 router.delete("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    // const deletedProduct = await productManager.deleteProduct(Number.parseInt(pid));
-    const deletedProduct = await productsDao.delete(pid);
 
+    const deletedProduct = await service.delete(pid);
+    
     res
       .status(StatusCodes.OK)
       .json({ status: "deleted", payload: deletedProduct });

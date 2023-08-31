@@ -1,8 +1,8 @@
 const Carts = require("./models/cart.model");
 
 class CartsDao {
-  async find() {
-    return await Carts.find();
+  async find(filter) {
+    return await Carts.find(filter);
   }
   
   async findById(cid) {

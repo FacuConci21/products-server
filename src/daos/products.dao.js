@@ -1,8 +1,8 @@
 const Products = require("./models/products.model");
 
 class ProductsDao {
-  async find() {
-    return await Products.find();
+  async find(filter = {}) {
+    return await Products.find(filter);
   }
 
   async findById(pid) {
