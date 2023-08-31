@@ -51,12 +51,10 @@ service.addProduct = async (cid, pid, quantity = 0) => {
     );
 
     if (searchIdx >= 0) {
-      const quantitySum =
-        currentCart.products[searchIdx].quantity + newProduct.quantity;
-      if (product.stock < quantitySum) {
+      if (product.stock < newProduct.quantity) {
         throw new Error("No hay stock suficiente.");
       }
-      currentCart.products[searchIdx].quantity = quantitySum;
+      currentCart.products[searchIdx].quantity = newProduct.quantity;
     } else {
       if (product.stock < newProduct.quantity) {
         throw new Error("No hay stock suficiente.");
@@ -75,8 +73,42 @@ service.addProduct = async (cid, pid, quantity = 0) => {
   }
 };
 
-service.update = async (pid) => {
+service.update = async (cid, products) => {
   try {
+    if (!products) {
+      throw new Error("No se recibio la lista de productos.");
+    }
+
+    for (let index = 0; index < products.length; index++) {
+      const cartProd = products[index];
+      const prod = await productsDao.findById(cartProd.pid);
+
+      if (!prod) {
+        throw new Error(`El producto con id ${cartProd.pid} no existe.`);
+      }
+
+      if (prod.status === false) {
+        throw new Error(
+          `El producto con id ${cartProd.pid} no se encuentra disponible.`
+        );
+      }
+
+      if (prod.stock < cartProd.quantity) {
+        throw new Error(
+          `El producto con id ${cartProd.pid} no cuenta con stock suficiente.`
+        );
+      }
+    } 
+
+    const updtResult = await cartsDao.updateOne(cid, { products });
+
+    if ((updtResult.matchedCount = 0)) {
+      throw new Error("Carrito no encontrado.");
+    }
+
+    const updatedCart = (await cartsDao.find({ _id: cid })).pop();
+
+    return updatedCart;
   } catch (error) {
     console.error(error);
     throw error;

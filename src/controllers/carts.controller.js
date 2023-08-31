@@ -60,9 +60,14 @@ router.post("/:cid/product/:pid", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:cid", async (req, res) => {
   try {
-    res.status(StatusCodes.ACCEPTED).json({ status: "updated", payload: {} });
+    const { cid } = req.params;
+    const { products } = req.body;
+
+    const result = await service.update(cid, products);
+
+    res.status(StatusCodes.ACCEPTED).json({ status: "updated", payload: result });
   } catch (error) {
     console.error(error);
     res

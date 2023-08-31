@@ -31,6 +31,9 @@ service.find = async (query, limit, page, sortParam) => {
 service.findById = async (id) => {
   try {
     const product = await productsDao.findById(id);
+    if (!product) {
+      throw new Error("Not Found");
+    }
     return product;
   } catch (error) {
     console.error(error);
