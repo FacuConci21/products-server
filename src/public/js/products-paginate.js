@@ -1,3 +1,5 @@
+const loginForm = document.getElementById("user-login-form");
+let loguedUser;
 let productsPage;
 
 async function fetchProducts(limit, page) {
@@ -17,6 +19,49 @@ async function fetchProducts(limit, page) {
     console.error(error);
   }
 }
+
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const loginContainer = document.getElementById("login");
+  const modalFooter = document.getElementById("login-modal-footer");
+  const formData = new FormData(loginForm);
+
+  modalFooter.innerHTML = "";
+  console.log("Logueando usuario ...");
+
+  const response = await fetch(
+    `/api/users/log?username=${formData.get("username")}`
+  );
+  const data = await response.json();
+
+  if (data.payload) {
+    modalFooter.innerHTML = `
+    <div class="alert alert-success" role="alert">
+      Usuario logueado con exito.
+    </div>
+    `;
+  } else {
+    console.log("Error:", data);
+    modalFooter.innerHTML = `
+    <div class="alert alert-danger" role="alert">
+      Error al loguear usuario.
+    </div>
+    `;
+  }
+
+  if (data.payload) {
+    loguedUser = data.payload;
+    console.log(loguedUser);
+    loginContainer.innerHTML = "";
+    loginContainer.innerHTML = `
+      <div class="card">
+        <div class="card-body">
+          Logueado como ${loguedUser.username}.
+        </div>
+      </div>
+    `;
+  }
+});
 
 async function loadPaginate(prevPage, page, nextPage) {
   paginateContainer = document.getElementById("paginate");

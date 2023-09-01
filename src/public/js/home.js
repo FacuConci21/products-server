@@ -33,11 +33,6 @@ async function home() {
                     <h5 class="card-title">${prod.title}</h5>
                     <p class="card-text">${prod.description}</p>
                     <p class="blockquote-footer">Stock: ${prod.stock} | Precio: \$ ${prod.price} </p>
-
-                    <div>
-                        <input type="number" name="quantity" id="">
-                        <a href="#" class="btn btn-primary">Agregar al carrito</a>
-                    </div>
                 </div>
 
                 <div class="card-footer text-body-secondary">

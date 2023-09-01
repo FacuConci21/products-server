@@ -1,8 +1,8 @@
 const Users = require("./models/users.model");
 
 class UsersDao {
-  async find() {
-    return await Users.find();
+  async find(filter) {
+    return await Users.find(filter);
   }
 
   async findById(uid) {
