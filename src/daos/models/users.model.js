@@ -8,6 +8,7 @@ const schema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
+      unique: true,
     },
     firstName: {
       type: String,
@@ -16,6 +17,10 @@ const schema = new mongoose.Schema(
     lastName: {
       type: String,
       require: false,
+    },
+    cart: {
+      type: ObjectId,
+      ref: "cart",
     },
   },
   {

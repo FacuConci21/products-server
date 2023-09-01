@@ -7,6 +7,10 @@ const collectionName = "cart";
 const schema = new mongoose.Schema(
   {
     id: ObjectId,
+    user: {
+      type: ObjectId,
+      ref: "user",
+    },
     products: {
       type: [
         {

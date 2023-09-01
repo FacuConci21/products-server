@@ -17,6 +17,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    const user = await service.findById(uid);
+
+    res.status(StatusCodes.OK).json({ status: "success", payload: user });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     const { username, firstName, lastName } = req.body;

@@ -5,6 +5,10 @@ class UsersDao {
     return await Users.find();
   }
 
+  async findById(uid) {
+    return await Users.findById(uid).populate('cart');
+  }
+
   async create(newUserInfo) {
     return await Users.create(newUserInfo);
   }

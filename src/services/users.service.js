@@ -15,6 +15,16 @@ service.find = async () => {
   }
 };
 
+service.findById = async (uid) => {
+  try {
+    const message = await usersDao.findById(uid);
+    return message;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 service.create = async (username, firstName, lastName) => {
   try {
     const userInfo = {
