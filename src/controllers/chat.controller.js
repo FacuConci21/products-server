@@ -1,14 +1,15 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const MessgesDao = require("../daos/messages.dao");
+const service = require("../services/messages.service");
 
 const router = Router();
 const messageDao = new MessgesDao();
 
 router.get("/msgs", async (req, res) => {
   try {
-    const messages = await messageDao.find();
-    
+    const messages = await service.find();
+
     res.status(StatusCodes.OK).json({ status: "success", payload: messages });
   } catch (error) {
     console.error(error);
@@ -22,9 +23,7 @@ router.post("/msg", async (req, res) => {
   try {
     const { user, textContent } = req.body;
 
-    const messageInfo = { user, textContent };
-
-    const newMessage = await messageDao.create(messageInfo);
+    const newMessage = await service.create(user, textContent);
 
     res
       .status(StatusCodes.CREATED)
