@@ -1,59 +1,98 @@
-const prevPageTag = document.getElementById("prev-page");
-const nextPageTag = document.getElementById("next-page");
+let productsPage;
 
 async function fetchProducts(limit, page) {
   try {
     console.log("Fetching products ...");
     const response = await fetch(`/api/products?limit=${limit}&page=${page}`);
     const data = await response.json();
-    let productsPage;
+    let _productsPage;
     if (data.payload) {
       console.log(`Products loaded (${data.payload.docs.length})`);
-      productsPage = data.payload;
+      _productsPage = data.payload;
     } else {
       console.error(data);
     }
-    return productsPage;
+    return _productsPage;
   } catch (error) {
     console.error(error);
   }
 }
 
 async function loadPaginate(prevPage, page, nextPage) {
-  const paginateContainer = document.getElementById("paginate");
-  let pageItems = "";
+  paginateContainer = document.getElementById("paginate");
+  let pageItems = "",
+    prevBtn = "",
+    nextBtn = "";
 
-  if (prevPage)
+  if (prevPage) {
     pageItems += `<li class="page-item"><a class="page-link" href="#">${prevPage}</a></li>\n`;
+    prevBtn += `<button id="prev-page" type="button" class="btn btn-outline-primary">
+                  <span aria-hidden="true">&laquo;</span>
+                </button>`;
+  }
   if (page)
     pageItems += `<li class="page-item"><a class="page-link" href="#">${page}</a></li>\n`;
-  if (nextPage)
+  if (nextPage) {
     pageItems += `<li class="page-item"><a class="page-link" href="#">${nextPage}</a></li>\n`;
+    nextBtn += `<button id="next-page" type="button" class="btn btn-outline-primary">
+                  <span aria-hidden="true">&raquo;</span>
+                </button>`;
+  }
 
   paginateContainer.innerHTML = "";
   paginateContainer.innerHTML = `
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
-                    <a id="prev-page" class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+                  ${prevBtn}
                 </li>
-                ${pageItems}
+                  ${pageItems}
                 <li class="page-item">
-                    <a id="next-page"  class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
+                  ${nextBtn}
                 </li>
             </ul>
         </nav>
     `;
+
+  if (prevPage) {
+    const prevPageButton = document.getElementById("prev-page");
+
+    prevPageButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      console.log(`Previous page (going to page ${prevPage})`);
+      const productsContainer = document.getElementById("products-container");
+      productsContainer.innerHTML = `
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          `;
+      loadProducts(productsPage.limit, productsPage.prevPage);
+    });
+  }
+  if (nextPage) {
+    const nextPageButton = document.getElementById("next-page");
+
+    nextPageButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      console.log(`Next page (going to page ${nextPage})`);
+      const productsContainer = document.getElementById("products-container");
+      productsContainer.innerHTML = `
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          `;
+      loadProducts(productsPage.limit, productsPage.nextPage);
+    });
+  }
 }
 
 async function loadProducts(limit, page) {
   const productsContainer = document.getElementById("products-container");
-  const productsPage = await fetchProducts(limit, page);
-  console.log(productsPage);
+  productsPage = await fetchProducts(limit, page);
 
   loadPaginate(productsPage.prevPage, productsPage.page, productsPage.nextPage);
 
@@ -88,4 +127,4 @@ async function loadProducts(limit, page) {
   });
 }
 
-loadProducts(4, 1);
+loadProducts(3, 1);

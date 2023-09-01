@@ -60,7 +60,7 @@ async function loadProducts() {
 
     const response = await fetch("/api/products");
     const data = await response.json();
-    const products = data.payload || [];
+    const products = data.payload.docs || [];
 
     console.log(`Products loaded (${products.length})`);
 

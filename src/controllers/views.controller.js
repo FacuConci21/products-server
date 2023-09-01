@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
+const productsService = require("../services/products.service");
 
 const router = Router();
 
@@ -16,7 +17,17 @@ router.get("/", async (req, res) => {
 
 router.get("/products", async (req, res) => {
   try {
-    res.status(StatusCodes.OK).render("products");
+    const { limit, page, sort, status } = req.query;
+
+    const query = status ? { status } : {};
+
+    const productsPage = await productsService.find(
+      query,
+      Number.parseInt(limit),
+      Number.parseInt(page)
+    );
+
+    res.status(StatusCodes.OK).render("products", { productsPage });
   } catch (error) {
     console.error(error);
     res

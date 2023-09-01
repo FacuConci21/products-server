@@ -5,7 +5,7 @@ async function home() {
 
   const response = await fetch("/api/products");
   const data = await response.json();
-  const productsList = data.payload || [];
+  const productsList = data.payload.docs || [];
 
   bodyContainer.innerHTML = "";
 
