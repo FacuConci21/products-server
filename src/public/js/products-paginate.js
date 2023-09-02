@@ -51,12 +51,13 @@ loginForm.addEventListener("submit", async (e) => {
 
   if (data.payload) {
     loguedUser = data.payload;
+    console.log(loguedUser);
     loginContainer.innerHTML = "";
     loginContainer.innerHTML = `
       <div class="card">
         <div class="card-body">
           Logueado como ${loguedUser.username}.
-          <a href="#" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver carrito</a>
+          <a href="/cart/${loguedUser.cart}" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver carrito</a>
         </div>
       </div>
     `;

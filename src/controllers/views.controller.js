@@ -1,6 +1,7 @@
-const { Router } = require("express");
+const { Router, json } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const productsService = require("../services/products.service");
+const cartsService = require("../services/cart.service");
 
 const router = Router();
 
@@ -58,9 +59,18 @@ router.get("/chat", async (req, res) => {
   }
 });
 
-router.get("/cart", async (req, res) => {
+router.get("/cart/:cid", async (req, res) => {
   try {
-    res.status(StatusCodes.OK).render("cart");
+    const { cid } = req.params;
+
+    const cart = await cartsService.findById(cid);
+
+    res.status(StatusCodes.OK).render("cart", {
+      cartId: cart._id,
+      username: cart.user.firstName,
+      hasProducts: cart.products.length > 0,
+      cart: cart.toJSON(),
+    });
   } catch (error) {
     console.error(error);
     res

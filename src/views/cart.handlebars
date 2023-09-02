@@ -21,35 +21,50 @@
     <br>
 
     <div class="card">
-        <input type="hidden" value="cart-id">
+        <input type="hidden" name="cartId" value="{{cartId}}">
         <div class="card-header">
-            Carrito de "usuario"
+            Carrito de {{username}}
         </div>
+        {{#if hasProducts}}
         <ul id="products-list">
+            {{#each cart.products}}
             <li class="list-group-item">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h5 class="card-title">Titulo del producto</h5>
+                                <h5 class="card-title">{{this.title}}</h5>
                             </div>
                             <div class="col text-center">
                                 <form>
-                                    <button type="button" class="btn btn-outline-danger">-</button>
-                                    <label for="quatity" class="form-label card-body">1</label>
-                                    <button type="button" class="btn btn-outline-success">+</button>
+                                    <button id="substrackt-btn" type="button" class="btn btn-outline-danger">-</button>
+                                    <input id="quantity" name="quatity" class="text-center mx-auto w-25"
+                                        value="{{this.quatity}}" readonly>
+                                    <button id="add-btn" type="button" class="btn btn-outline-success">+</button>
                                 </form>
                             </div>
                             <div class="col text-end">
-                                $ 999999.99
+                                $ {{this.price}}
                             </div>
                         </div>
                         <div class="card-footer text-body-secondary">
-                            estado del producto
+                            {{#if this.status}}
+                            <p class="text-success">Disponible</p>
+                            {{else}}
+                            <p class="text-secondary">No disponible</p>
+                            {{/if}}
                         </div>
                     </div>
             </li>
+            {{/each}}
         </ul>
+        {{else}}
+        <div class="card">
+            <div class="card-body">
+                <p class="text-secondary">El carrito esta vacio.</p>
+            </div>
+        </div>
+        {{/if}}
     </div>
 
 </div>
