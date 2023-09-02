@@ -58,6 +58,17 @@ router.get("/chat", async (req, res) => {
   }
 });
 
+router.get("/cart", async (req, res) => {
+  try {
+    res.status(StatusCodes.OK).render("cart");
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .render("error", { status: "error", message: error.message });
+  }
+});
+
 router.get("*", (req, res) => {
   res
     .status(StatusCodes.NOT_FOUND)
