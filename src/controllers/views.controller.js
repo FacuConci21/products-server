@@ -46,6 +46,23 @@ router.get("/products", async (req, res) => {
   }
 });
 
+router.get("/products/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+
+    const product = await productsService.findById(pid);
+
+    res.status(StatusCodes.OK).render("product-detail", {
+      product: product.toJSON(),
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .render("error", { status: "error", message: error.message });
+  }
+});
+
 router.get("/realtimeproducts", async (req, res) => {
   try {
     res.status(StatusCodes.OK).render("realtimeproducts");
