@@ -28,7 +28,16 @@ router.get("/products", async (req, res) => {
       Number.parseInt(page)
     );
 
-    res.status(StatusCodes.OK).render("products", { productsPage });
+    const productsList = productsPage.docs.map((doc) => doc.toJSON());
+
+    res.status(StatusCodes.OK).render("products", {
+      products: productsList,
+      currentPage: productsPage.page,
+      hasPrevPage: productsPage.hasPrevPage,
+      hasNextPage: productsPage.hasNextPage,
+      prevPage: productsPage.prevLink,
+      nextPage: productsPage.nextLink,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -65,9 +74,9 @@ router.get("/cart/:cid", async (req, res) => {
 
     const cart = await cartsService.findById(cid);
 
-    res.status(StatusCodes.OK).render("cart", {
+    res.render("cart", {
       cartId: cart._id,
-      username: cart.user.firstName,
+      username: cart.user?.firstName,
       hasProducts: cart.products.length > 0,
       cart: cart.toJSON(),
     });

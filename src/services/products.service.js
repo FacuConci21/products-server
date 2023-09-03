@@ -14,11 +14,11 @@ service.find = async (query, limit, page, sortParam) => {
     const productsPage = await productsDao.find(query, limit, page, sortQuery);
 
     productsPage.hasPrevPage
-      ? (productsPage.prevLink = `http://${appConfig.host}:${appConfig.port}/api/products?limit=${limit}&page=${productsPage.prevPage}`)
+      ? (productsPage.prevLink = `http://${appConfig.host}:${appConfig.port}/products?limit=${limit}&page=${productsPage.prevPage}`)
       : (productsPage.prevLink = null);
 
     productsPage.hasNextPage
-      ? (productsPage.nextLink = `http://${appConfig.host}:${appConfig.port}/api/products?limit=${limit}&page=${productsPage.nextPage}`)
+      ? (productsPage.nextLink = `http://${appConfig.host}:${appConfig.port}/products?limit=${limit}&page=${productsPage.nextPage}`)
       : (productsPage.nextLink = null);
 
     return productsPage;
