@@ -71,7 +71,7 @@ service.create = async (
     if (thumbnails) {
       thumbnails.forEach((imgfile) => {
         productInfo.thumbnails.push(
-          join("src", "public", "img", imgfile.filename)
+          join("img", imgfile.filename)
         );
       });
     }

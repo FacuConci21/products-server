@@ -22,20 +22,44 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6 mb-3 mb-sm-0">
-                <div class="card">
-                    <img src="/img/cara-de-placer-meme.png" class="card-img-top w-auto" alt=""
-                        style="max-height: 300px; margin: auto;">
+                <div class="card h-100">
+                    <div id="carouselExampleFade" class="carousel slide carousel-fade">
+                        <div class="carousel-inner">
+                            {{#each product.thumbnails}}
+                            <div class="carousel-item active">
+                                <img src="/{{this}}" class="d-block w-100" alt="..."
+                                    style="max-height: 300px; margin: auto;">
+                            </div>
+                            {{/each}}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Titulo del producto</h5>
-                        <h3 class="card-title">$ 999999,99</h3>
-                        <p class="card-text">Stock 99</p>
+                        <h5 class="card-title">{{product.title}}</h5>
+                        <h3 class="card-title">$ {{product.price}}</h3>
+                        <p class="card-text">Stock {{product.stock}}</p>
+                        {{#if productStatus}}
                         <p class="text-success">Disponible</p>
+                        {{else}}
+                        <p class="text-secondary">No disponible</p>
+                        {{/if}}
                         <form id="add-cart" class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+                            <button id="add-cart-btn" type="submit" class="btn btn-primary" disabled>Agregar al
+                                carrito</button>
                         </form>
                     </div>
                 </div>
@@ -46,7 +70,7 @@
                 Descripcion
             </div>
             <div class="card-body">
-                <p class="card-text">Descripcion extendida del producto.</p>
+                <p class="card-text">{{product.description}}</p>
             </div>
         </div>
     </div>

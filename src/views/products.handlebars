@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="card-body">
-                        <h5 class="card-title">{{this.title}}</h5>
+                        <h5 class="card-title"><a href="/products/{{this._id}}">{{this.title}}</a></h5>
                         <p class="card-text">{{this.description}}</p>
                         <p class="blockquote-footer">Stock: {{this.stock}} | Precio: \$ {{this.price}} </p>
                         <form id="add-product-{{this._id}}">

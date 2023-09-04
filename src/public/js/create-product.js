@@ -11,7 +11,7 @@ function writeProduct(product) {
       </div>
       
       <div class="card-body">
-        <h5 class="card-title">${product.title}</h5>
+      <h5 class="card-title"><a href="/products/${product._id}">${product.title}</a></h5>
         <p class="card-text">${product.description}</p>
         <p class="blockquote-footer">Stock: ${product.stock} | Precio: $${product.price} </p>
 

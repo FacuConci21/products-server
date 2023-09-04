@@ -54,6 +54,7 @@ router.get("/products/:pid", async (req, res) => {
 
     res.status(StatusCodes.OK).render("product-detail", {
       product: product.toJSON(),
+      productStatus: product.status && product.stock > 0,
     });
   } catch (error) {
     console.error(error);

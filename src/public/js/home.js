@@ -21,7 +21,7 @@ async function home() {
         Listado de productos disponibles...
     </div>
     `;
-    
+
     productsList.forEach((prod) => {
       bodyContainer.innerHTML += `
             <div class="card" id="products-container">
@@ -30,7 +30,7 @@ async function home() {
                 </div>
 
                 <div class="card-body">
-                    <h5 class="card-title">${prod.title}</h5>
+                    <h5 class="card-title"><a href="/products/${prod._id}">${prod.title}</a></h5>
                     <p class="card-text">${prod.description}</p>
                     <p class="blockquote-footer">Stock: ${prod.stock} | Precio: \$ ${prod.price} </p>
                 </div>
