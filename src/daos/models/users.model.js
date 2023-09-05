@@ -10,9 +10,15 @@ const schema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    password: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     firstName: {
       type: String,
       require: true,
+      default: `user${Date.now()}`,
     },
     lastName: {
       type: String,

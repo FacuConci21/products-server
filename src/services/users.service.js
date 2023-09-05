@@ -25,29 +25,35 @@ service.findById = async (uid) => {
   }
 };
 
-service.findByUsername = async (username) => {
-  try {
-    const message = (await usersDao.find({ username })).pop();
-    return message;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 service.create = async (username, firstName, lastName) => {
   try {
     const userInfo = {
       username,
+      password,
       firstName,
       lastName,
     };
 
-    const createdMessage = await usersDao.create(userInfo);
+    const createdUser = await usersDao.create(userInfo);
 
-    return createdMessage;
+    return createdUser;
   } catch (error) {
-    console.error(error);
+    throw error;
+  }
+};
+
+service.login = async (username, password) => {
+  try {
+    const currentUser = await usersDao.findOne({ username });
+
+    const currentPassword = currentUser.password;
+
+    if (!Object.is(currentUser.password, password)) {
+      throw new Error("Contraseña incorrecta.");
+    }
+
+    return currentUser;
+  } catch (error) {
     throw error;
   }
 };

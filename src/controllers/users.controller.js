@@ -17,21 +17,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/log", async (req, res) => {
-  try {
-    const { username } = req.query;
-
-    const user = await service.findByUsername(username);
-
-    res.status(StatusCodes.OK).json({ status: "success", payload: user });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", message: error.message });
-  }
-});
-
 router.get("/:uid", async (req, res) => {
   try {
     const { uid } = req.params;
@@ -49,13 +34,34 @@ router.get("/:uid", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { username, firstName, lastName } = req.body;
+    const { username, password, firstName, lastName } = req.body;
 
-    const newUser = await service.create(username, firstName, lastName);
+    const newUser = await service.create(username, password, firstName, lastName);
 
     res
       .status(StatusCodes.CREATED)
       .json({ status: "created", payload: newUser });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await service.login(username, password);
+
+    if (user) {
+      res.status(StatusCodes.OK).json({ status: "success", payload: user });
+    } else {
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ status: "error", message: "User not found" });
+    }
   } catch (error) {
     console.error(error);
     res

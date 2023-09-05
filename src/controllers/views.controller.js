@@ -10,13 +10,26 @@ router.get("/", async (req, res) => {
     res.status(StatusCodes.OK).render("home", { pageTitle: "Home" });
   } catch (error) {
     console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+router.get("/registration", async (req, res) => {
+  try {
     res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
-      });
+      .status(StatusCodes.OK)
+      .render("user-register", { pageTitle: "Crear cuenta" });
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
@@ -45,13 +58,11 @@ router.get("/products", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
-      });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
@@ -68,13 +79,11 @@ router.get("/products/:pid", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
-      });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
@@ -85,13 +94,11 @@ router.get("/realtimeproducts", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
-      });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
@@ -100,13 +107,11 @@ router.get("/chat", async (req, res) => {
     res.status(StatusCodes.OK).render("chat", { pageTitle: "Foro del chat" });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
-      });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
@@ -125,24 +130,20 @@ router.get("/cart/:cid", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
-      });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
   }
 });
 
 router.get("*", (req, res) => {
-  res
-    .status(StatusCodes.NOT_FOUND)
-    .render("error", {
-      pageTitle: "Error",
-      status: "error",
-      message: "Page not found",
-    });
+  res.status(StatusCodes.NOT_FOUND).render("error", {
+    pageTitle: "Error",
+    status: "error",
+    message: "Page not found",
+  });
 });
 
 module.exports = router;
