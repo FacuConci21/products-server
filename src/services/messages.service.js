@@ -7,7 +7,7 @@ const service = {};
 
 service.find = async () => {
   try {
-    const messages = await messagesDao.find();
+    const messages = await messagesDao.find(4);
     return messages;
   } catch (error) {
     console.error(error);
