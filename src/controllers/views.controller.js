@@ -7,12 +7,16 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    res.status(StatusCodes.OK).render("home");
+    res.status(StatusCodes.OK).render("home", { pageTitle: "Home" });
   } catch (error) {
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", { status: "error", message: error.message });
+      .render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
   }
 });
 
@@ -31,6 +35,7 @@ router.get("/products", async (req, res) => {
     const productsList = productsPage.docs.map((doc) => doc.toJSON());
 
     res.status(StatusCodes.OK).render("products", {
+      pageTitle: "Products Page",
       products: productsList,
       currentPage: productsPage.page,
       hasPrevPage: productsPage.hasPrevPage,
@@ -42,7 +47,11 @@ router.get("/products", async (req, res) => {
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", { status: "error", message: error.message });
+      .render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
   }
 });
 
@@ -53,6 +62,7 @@ router.get("/products/:pid", async (req, res) => {
     const product = await productsService.findById(pid);
 
     res.status(StatusCodes.OK).render("product-detail", {
+      pageTitle: "Detalle de producto",
       product: product.toJSON(),
       productStatus: product.status && product.stock > 0,
     });
@@ -60,29 +70,43 @@ router.get("/products/:pid", async (req, res) => {
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", { status: "error", message: error.message });
+      .render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
   }
 });
 
 router.get("/realtimeproducts", async (req, res) => {
   try {
-    res.status(StatusCodes.OK).render("realtimeproducts");
+    res.status(StatusCodes.OK).render("realtimeproducts", {
+      pageTitle: "Productos en tiempo real",
+    });
   } catch (error) {
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", { status: "error", message: error.message });
+      .render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
   }
 });
 
 router.get("/chat", async (req, res) => {
   try {
-    res.status(StatusCodes.OK).render("chat");
+    res.status(StatusCodes.OK).render("chat", { pageTitle: "Foro del chat" });
   } catch (error) {
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", { status: "error", message: error.message });
+      .render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
   }
 });
 
@@ -93,6 +117,7 @@ router.get("/cart/:cid", async (req, res) => {
     const cart = await cartsService.findById(cid);
 
     res.render("cart", {
+      pageTitle: "Detalle del carrito",
       cartId: cart._id,
       username: cart.user?.firstName,
       hasProducts: cart.products.length > 0,
@@ -102,14 +127,22 @@ router.get("/cart/:cid", async (req, res) => {
     console.error(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .render("error", { status: "error", message: error.message });
+      .render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
   }
 });
 
 router.get("*", (req, res) => {
   res
     .status(StatusCodes.NOT_FOUND)
-    .render("error", { status: "error", message: "Page not found" });
+    .render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: "Page not found",
+    });
 });
 
 module.exports = router;
