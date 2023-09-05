@@ -25,7 +25,7 @@ service.findById = async (uid) => {
   }
 };
 
-service.create = async (username, firstName, lastName) => {
+service.create = async (username, password, firstName, lastName) => {
   try {
     const userInfo = {
       username,
