@@ -36,7 +36,12 @@ router.post("/", async (req, res) => {
   try {
     const { username, password, firstName, lastName } = req.body;
 
-    const newUser = await service.create(username, password, firstName, lastName);
+    const newUser = await service.create(
+      username,
+      password,
+      firstName,
+      lastName
+    );
 
     res
       .status(StatusCodes.CREATED)
@@ -56,6 +61,9 @@ router.post("/login", async (req, res) => {
     const user = await service.login(username, password);
 
     if (user) {
+      req.session.username = user.username;
+      req.session.userId = user._id;
+      
       res.status(StatusCodes.OK).json({ status: "success", payload: user });
     } else {
       res

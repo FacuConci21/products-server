@@ -22,7 +22,7 @@ app.use(
     store: MongoStore.create({
       mongoUrl: URI,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 5, // 24 * 60 * 60, // 24 horas de vida para la sesion
+      ttl: 24 * 60 * 60, // 24 horas de vida para la sesion
     }),
     secret: appConfig.sessionSecret,
     resave: false,

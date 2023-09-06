@@ -18,27 +18,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/session", async (req, res) => {
-  try {
-    if (req.session.counter) {
-      req.session.counter++;
-      res
-        .status(StatusCodes.OK)
-        .send("Sesiones iniciadas: " + req.session.counter);
-    } else {
-      req.session.counter = 1;
-      res.status(StatusCodes.OK).send("Bienvenido por primera vez.");
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
-      pageTitle: "Error",
-      status: "error",
-      message: error.message,
-    });
-  }
-});
-
 router.get("/registration", async (req, res) => {
   try {
     res

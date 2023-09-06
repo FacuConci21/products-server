@@ -29,13 +29,18 @@ loginForm.addEventListener("submit", async (e) => {
   const loginContainer = document.getElementById("login");
   const modalFooter = document.getElementById("login-modal-footer");
   const formData = new FormData(loginForm);
+  const bodyData = Object.fromEntries(formData.entries());
 
   modalFooter.innerHTML = "";
   console.log("Logueando usuario ...");
 
-  const response = await fetch(
-    `/api/users/log?username=${formData.get("username")}`
-  );
+  const response = await fetch(`/api/users/login`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(bodyData),
+  });
   const data = await response.json();
 
   if (data.payload) {
