@@ -1,7 +1,10 @@
 const { join } = require("path");
 const UsersDao = require("../daos/users.dao");
+const CartsDao = require("../daos/carts.dao");
 const appConfig = require("../utils/app-config");
+const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const usersDao = new UsersDao();
+const cartsDao = new CartsDao();
 
 const service = {};
 
@@ -27,14 +30,25 @@ service.findById = async (uid) => {
 
 service.create = async (username, password, firstName, lastName) => {
   try {
+    const validateUser = await usersDao.findOne({ username });
+
+    if (validateUser) {
+      throw new Error("Este nombre de usuario ya esta en uso.");
+    }
+
     const userInfo = {
       username,
-      password,
+      password: hashPassword(password),
       firstName,
       lastName,
+      cart: (await cartsDao.create({ products: [] }))._id,
     };
 
     const createdUser = await usersDao.create(userInfo);
+
+    const updateCart = await cartsDao.updateOne(createdUser.cart.toString(), {
+      user: createdUser._id.toString(),
+    });
 
     return createdUser;
   } catch (error) {
@@ -46,10 +60,14 @@ service.login = async (username, password) => {
   try {
     const currentUser = await usersDao.findOne({ username });
 
-    const currentPassword = currentUser.password;
+    if (!currentUser) {
+      throw new Error("Usuario o contraseña incorrecta.");
+    }
 
-    if (!Object.is(currentUser.password, password)) {
-      throw new Error("Contraseña incorrecta.");
+    const result = comparePasswords(password, currentUser.password);
+
+    if (!result) {
+      throw new Error("Usuario o contraseña incorrecta.");
     }
 
     return currentUser;

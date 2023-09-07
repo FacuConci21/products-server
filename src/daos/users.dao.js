@@ -6,7 +6,7 @@ class UsersDao {
   }
 
   async findOne(filter) {
-    return await Users.findOne(filter);
+    return await Users.findOne(filter).populate('cart');
   }
 
   async findById(uid) {

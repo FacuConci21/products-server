@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
 
     if (user) {
       req.session.username = user.username;
-      req.session.userId = user._id;
+      req.session.role = 'usuario';
       
       res.status(StatusCodes.OK).json({ status: "success", payload: user });
     } else {
