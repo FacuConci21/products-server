@@ -5,9 +5,20 @@
 
     <!-- Button trigger modal -->
     <div class="container-fluid" id="login">
+        {{#if isLoggedUser}}
+        <input type="hidden" name="loggedUsername" id="loggedUsername" value="{{userSession.username}}">
+        <div class="card">
+            <div id="user-logged" class="card-body">
+                Logueado como {{userSession.username}}.
+                <a id="cart-link" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver
+                    carrito</a>
+            </div>
+        </div>
+        {{else}}
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Login
         </button>
+        {{/if}}
     </div>
 
     <!-- Modal -->
@@ -83,8 +94,14 @@
                         <form id="add-cart" class="d-grid gap-2">
                             <input type="hidden" name="productId" id="productId" value="{{product._id}}">
                             <input type="number" class="text-center" name="quantity" id="quantity" value="1">
+                            {{#if isLoggedUser}}
+                            <button id="add-cart-btn" type="submit" class="btn btn-primary">Agregar al
+                                carrito</button>
+                            {{else}}
                             <button id="add-cart-btn" type="submit" class="btn btn-primary" disabled>Agregar al
                                 carrito</button>
+                            {{/if}}
+
                         </form>
                     </div>
                 </div>

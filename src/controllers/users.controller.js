@@ -6,7 +6,14 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const users = await service.find();
+    const { username } = req.query;
+    const users = await service.find(username);
+
+/*     if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ status: "error", message: `\"${username}\" not found` });
+    } */
 
     res.status(StatusCodes.OK).json({ status: "success", payload: users });
   } catch (error) {
@@ -61,9 +68,8 @@ router.post("/login", async (req, res) => {
     const user = await service.login(username, password);
 
     if (user) {
-      req.session.username = user.username;
-      req.session.role = 'usuario';
-      
+      req.session.user = { username: user.username, role: "usuario" };
+
       res.status(StatusCodes.OK).json({ status: "success", payload: user });
     } else {
       res

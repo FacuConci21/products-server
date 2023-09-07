@@ -5,9 +5,19 @@
 
     <!-- Button trigger modal -->
     <div class="container-fluid" id="login">
+        {{#if isLoggedUser}}
+        <div class="card">
+            <div class="card-body">
+                Logueado como {{userSession.username}}.
+                <a id="cart-link" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver
+                    carrito</a>
+            </div>
+        </div>
+        {{else}}
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Login
         </button>
+        {{/if}}
     </div>
 
     <!-- Modal -->

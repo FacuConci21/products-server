@@ -114,4 +114,19 @@ function addProductFormEvents() {
   });
 }
 
+async function isLoggedUser() {
+  const loginCard = document.getElementById("user-logged");
+
+  if (loginCard) {
+    const loggedUsername = document.getElementById("loggedUsername").value;
+    const cartLink = document.getElementById("cart-link");
+
+    const response = await fetch(`/api/users?username=${loggedUsername}`);
+    const data = await response.json();
+    loguedUser = data.payload.pop();
+    cartLink.href = `/cart/${loguedUser.cart}`;
+  }
+}
+
+isLoggedUser();
 addProductFormEvents();

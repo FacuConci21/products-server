@@ -79,6 +79,7 @@ loginForm.addEventListener("submit", async (e) => {
 
 addCartForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   if (loguedUser) {
     console.log("Añadiendo producto ...");
 
@@ -112,3 +113,19 @@ addCartForm.addEventListener("submit", async (e) => {
     }
   }
 });
+
+async function isLoggedUser() {
+  const loginCard = document.getElementById("user-logged");
+
+  if (loginCard) {
+    const loggedUsername = document.getElementById("loggedUsername").value;
+    const cartLink = document.getElementById("cart-link");
+
+    const response = await fetch(`/api/users?username=${loggedUsername}`);
+    const data = await response.json();
+    loguedUser = data.payload.pop();
+    console.log(loguedUser);
+    cartLink.href = `/cart/${loguedUser.cart}`;
+  }
+}
+isLoggedUser();

@@ -8,10 +8,17 @@ const cartsDao = new CartsDao();
 
 const service = {};
 
-service.find = async () => {
+service.find = async (username) => {
   try {
-    const messages = await usersDao.find();
-    return messages;
+    const filter = {};
+
+    if (username) {
+      filter.username = username;
+    }
+
+    const users = await usersDao.find(filter);
+
+    return users;
   } catch (error) {
     console.error(error);
     throw error;
@@ -22,6 +29,16 @@ service.findById = async (uid) => {
   try {
     const message = await usersDao.findById(uid);
     return message;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+service.findOne = async (username) => {
+  try {
+    const user = await usersDao.findOne({ username });
+    return user;
   } catch (error) {
     console.error(error);
     throw error;

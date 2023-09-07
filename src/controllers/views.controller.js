@@ -18,6 +18,26 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/perfil", async (req, res) => {
+  try {
+    const user = {};
+    if (req.session.user) {
+      user.username = req.session.user.username;
+      user.role = req.session.user.role;
+    } else {
+      throw new Error("Debes estar logueado para ver esta pagina.");
+    }
+    res.status(StatusCodes.OK).send(user);
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
 router.get("/registration", async (req, res) => {
   try {
     res
@@ -36,6 +56,13 @@ router.get("/registration", async (req, res) => {
 router.get("/products", async (req, res) => {
   try {
     const { limit, page, sort, status } = req.query;
+    const userSession = {};
+    let isLoggedUser = req.session.user ? true : false;
+
+    if (isLoggedUser) {
+      userSession.username = req.session.user.username;
+      userSession.role = req.session.user.role;
+    }
 
     const query = status ? { status } : {};
 
@@ -49,6 +76,8 @@ router.get("/products", async (req, res) => {
 
     res.status(StatusCodes.OK).render("products", {
       pageTitle: "Products Page",
+      isLoggedUser,
+      userSession,
       products: productsList,
       currentPage: productsPage.page,
       hasPrevPage: productsPage.hasPrevPage,
@@ -69,11 +98,20 @@ router.get("/products", async (req, res) => {
 router.get("/products/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
+    const userSession = {};
+    let isLoggedUser = req.session.user ? true : false;
+
+    if (isLoggedUser) {
+      userSession.username = req.session.user.username;
+      userSession.role = req.session.user.role;
+    }
 
     const product = await productsService.findById(pid);
 
     res.status(StatusCodes.OK).render("product-detail", {
       pageTitle: "Detalle de producto",
+      isLoggedUser,
+      userSession,
       product: product.toJSON(),
       productStatus: product.status && product.stock > 0,
     });
