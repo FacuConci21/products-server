@@ -128,5 +128,5 @@ async function isLoggedUser() {
   }
 }
 
-isLoggedUser();
 addProductFormEvents();
+isLoggedUser();

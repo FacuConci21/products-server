@@ -6,8 +6,9 @@
     <!-- Button trigger modal -->
     <div class="container-fluid" id="login">
         {{#if isLoggedUser}}
+        <input type="hidden" name="loggedUsername" id="loggedUsername" value="{{userSession.username}}">
         <div class="card">
-            <div class="card-body">
+            <div id="user-logged" class="card-body">
                 Logueado como {{userSession.username}}.
                 <a id="cart-link" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver
                     carrito</a>
