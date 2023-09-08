@@ -1,0 +1,48 @@
+<div class="container" id="login">
+
+    <br>
+
+    <div id="login-result">
+        {{#if isLoggedUser}}
+        <div class="alert alert-success" role="alert">
+            Bienvenido {{userSession.username}}, ya te encuentras logueado.
+        </div>
+        {{/if}}
+    </div>
+
+    <div id="notif-container" class="toast-container end-0">
+    </div>
+
+    <form id="user-login-form">
+        <div class="mb-3">
+            {{#if isLoggedUser}}
+            <label for="username" class="col-form-label">Nombre de usuario:</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{userSession.username}}"
+                disabled>
+            {{else}}
+            <label for="username" class="col-form-label">Nombre de usuario:</label>
+            <input type="text" class="form-control" id="username" name="username">
+            {{/if}}
+        </div>
+        <div class="mb-3">
+            {{#if isLoggedUser}}
+            <label for="password" class="col-form-label">Contraseña:</label>
+            <input type="password" class="form-control" id="password" name="password" value="fakepassword" disabled>
+            {{else}}
+            <label for="password" class="col-form-label">Contraseña:</label>
+            <input type="password" class="form-control" id="password" name="password">
+            {{/if}}
+        </div>
+        <div>
+            {{#if isLoggedUser}}
+            <a href="/products?limit=4&page=1" class="btn btn-secondary">Ver catalogo</a>
+            <button type="submit" class="btn btn-primary" disabled>Ok</button>
+            {{else}}
+            <a href="/registration" class="btn btn-secondary">Registrarme</a>
+            <button type="submit" class="btn btn-primary">Ok</button>
+            {{/if}}
+        </div>
+    </form>
+</div>
+
+<script src="/js/login.js"></script>

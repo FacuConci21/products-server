@@ -18,16 +18,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/perfil", async (req, res) => {
+router.get("/registration", async (req, res) => {
   try {
-    const user = {};
-    if (req.session.user) {
-      user.username = req.session.user.username;
-      user.role = req.session.user.role;
-    } else {
-      throw new Error("Debes estar logueado para ver esta pagina.");
-    }
-    res.status(StatusCodes.OK).send(user);
+    res
+      .status(StatusCodes.OK)
+      .render("user-register", { pageTitle: "Crear cuenta" });
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
@@ -38,11 +33,19 @@ router.get("/perfil", async (req, res) => {
   }
 });
 
-router.get("/registration", async (req, res) => {
+router.get("/login", async (req, res) => {
   try {
+    const userSession = {};
+    let isLoggedUser = req.session.user ? true : false;
+
+    if (isLoggedUser) {
+      userSession.username = req.session.user.username;
+      userSession.role = req.session.user.role;
+    }
+
     res
       .status(StatusCodes.OK)
-      .render("user-register", { pageTitle: "Crear cuenta" });
+      .render("login", { pageTitle: "Login", isLoggedUser, userSession });
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
