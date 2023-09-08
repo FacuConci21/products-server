@@ -65,6 +65,8 @@ router.get("/products", async (req, res) => {
     if (isLoggedUser) {
       userSession.username = req.session.user.username;
       userSession.role = req.session.user.role;
+    } else {
+      return res.redirect("/login");
     }
 
     const query = status ? { status } : {};
@@ -107,6 +109,8 @@ router.get("/products/:pid", async (req, res) => {
     if (isLoggedUser) {
       userSession.username = req.session.user.username;
       userSession.role = req.session.user.role;
+    } else {
+      return res.redirect("/login");
     }
 
     const product = await productsService.findById(pid);
