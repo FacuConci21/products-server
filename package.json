@@ -2,9 +2,10 @@
   "name": "products-server",
   "version": "1.0.0",
   "description": "Proyecto del curso de Backend en CoderHouse.",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start:dev": "nodemon src/server.js development",
+    "start:prod": "node src/server.js production"
   },
   "author": "Facundo Conci [GitHub: FacuConci21]",
   "license": "ISC",
