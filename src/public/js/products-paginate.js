@@ -1,4 +1,5 @@
 const loginForm = document.getElementById("user-login-form");
+const logoutBtn = document.getElementById("logout-btn");
 let loguedUser;
 
 const appendToastNotification = (message, type = "primary") => {
@@ -52,6 +53,43 @@ async function addProduct(form) {
     showNotifications();
   }
 }
+
+logoutBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const loginCard = document.getElementById("user-logged");
+
+  console.log("Loggin out ...");
+  loginCard.innerHTML += `<div class="spinner-border float-end" role="status"></div>`;
+
+  const response = await fetch(`/api/users/logout`);
+  const data = await response.json();
+
+  if (data.status.toLowerCase() === "success") {
+    const loginContainer = document.getElementById("login");
+
+    console.log("Usuario deslogueado.");
+    loginContainer.innerHTML = `
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Login
+    </button>
+    `;
+  } else {
+    console.error(data);
+    loginCard.innerHTML = `
+      <input type="hidden" name="loggedUsername" id="loggedUsername" value="${loguedUser.username}">
+      <div class="card">
+          <div id="user-logged" class="card-body">
+              Logueado como ${loguedUser.username}.
+              <a id="cart-link" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver
+                  carrito</a>
+              <button id="logout-btn" type="button" class="btn btn-primary">
+                  Logout
+              </button>
+          </div>
+      </div>
+  `;
+  }
+});
 
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();

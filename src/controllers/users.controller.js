@@ -9,13 +9,26 @@ router.get("/", async (req, res) => {
     const { username } = req.query;
     const users = await service.find(username);
 
-/*     if (!user) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ status: "error", message: `\"${username}\" not found` });
-    } */
-
     res.status(StatusCodes.OK).json({ status: "success", payload: users });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
+router.get("/logout", async (req, res) => {
+  try {
+    const { user } = req.session;
+    const session = req.session;
+    const sessionID = req.sessionID;
+
+    const result = session.destroy((err) => {
+      if (err) throw new Error("error al proposito");
+    });
+
+    res.status(StatusCodes.OK).json({ status: "success", payload: result });
   } catch (error) {
     console.error(error);
     res
