@@ -69,9 +69,9 @@ logoutBtn.addEventListener("click", async (e) => {
 
     console.log("Usuario deslogueado.");
     loginContainer.innerHTML = `
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <a href="/login" class="btn btn-primary">
         Login
-    </button>
+    </a>
     `;
   } else {
     console.error(data);
@@ -88,55 +88,6 @@ logoutBtn.addEventListener("click", async (e) => {
           </div>
       </div>
   `;
-  }
-});
-
-loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const loginContainer = document.getElementById("login");
-  const modalFooter = document.getElementById("login-modal-footer");
-  const formData = new FormData(loginForm);
-  const bodyData = Object.fromEntries(formData.entries());
-
-  modalFooter.innerHTML = "";
-  console.log("Logueando usuario ...");
-
-  const response = await fetch(`/api/users/login`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify(bodyData),
-  });
-  const data = await response.json();
-
-  if (data.payload) {
-    modalFooter.innerHTML = `
-    <div class="alert alert-success" role="alert">
-      Usuario logueado con exito.
-    </div>
-    `;
-  } else {
-    console.log("Error:", data);
-    modalFooter.innerHTML = `
-    <div class="alert alert-danger" role="alert">
-      Error al loguear usuario.
-    </div>
-    `;
-  }
-
-  if (data.payload) {
-    loguedUser = data.payload;
-    console.log("Usuario logueado.");
-    loginContainer.innerHTML = "";
-    loginContainer.innerHTML = `
-      <div class="card">
-        <div class="card-body">
-          Logueado como ${loguedUser.username}.
-          <a href="/cart/${loguedUser.cart}" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver carrito</a>
-        </div>
-      </div>
-    `;
   }
 });
 
