@@ -2,15 +2,20 @@
 
 Proyecto del curso de Backend en CoderHouse.
 
+## Run
+
+```bash
+npm run start:prod
+```
+
 ## Nota
 
-Hay dos usuarios disponibles para usar:
+Hay un usuario disponible para usar:
 
-- vimartinex
-- Alesu123
+- coderadm : adminCod3r123
 
-Ambos usuarios son ficticios.
+La base de datos tendra los datos que cargue el tutor.
 
 ## Version
 
-- v3.0 Tercera entrega del proyecto final.
+- v2.1 Segunda pre entrega del proyecto final + implementacion de login.
