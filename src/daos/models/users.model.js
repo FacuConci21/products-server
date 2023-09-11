@@ -10,6 +10,11 @@ const schema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    email: {
+      type: String,
+      match: /.+\@.+\..+/,
+      unique: true,
+    },
     password: {
       type: String,
       required: true,
@@ -17,7 +22,6 @@ const schema = new mongoose.Schema(
     },
     firstName: {
       type: String,
-      require: true,
       default: `user${Date.now()}`,
     },
     lastName: {
@@ -27,6 +31,10 @@ const schema = new mongoose.Schema(
     cart: {
       type: ObjectId,
       ref: "cart",
+    },
+    role: {
+      type: String,
+      require: true,
     },
   },
   {

@@ -54,13 +54,15 @@ router.get("/:uid", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { username, password, firstName, lastName } = req.body;
+    const { username, email, password, firstName, lastName, role } = req.body;
 
     const newUser = await service.create(
       username,
+      email,
       password,
       firstName,
-      lastName
+      lastName,
+      role
     );
 
     res

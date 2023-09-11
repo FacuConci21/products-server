@@ -2,6 +2,7 @@ const { join } = require("path");
 const UsersDao = require("../daos/users.dao");
 const CartsDao = require("../daos/carts.dao");
 const appConfig = require("../utils/app-config");
+const { roles } = require("../utils/roles");
 const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const usersDao = new UsersDao();
 const cartsDao = new CartsDao();
@@ -45,7 +46,14 @@ service.findOne = async (username) => {
   }
 };
 
-service.create = async (username, password, firstName, lastName) => {
+service.create = async (
+  username,
+  email,
+  password,
+  firstName,
+  lastName,
+  role
+) => {
   try {
     const validateUser = await usersDao.findOne({ username });
 
@@ -53,12 +61,18 @@ service.create = async (username, password, firstName, lastName) => {
       throw new Error("Este nombre de usuario ya esta en uso.");
     }
 
+    if (!roles().includes(role)) {
+      throw new Error("El rol indicado no es valido.");
+    }
+
     const userInfo = {
       username,
+      email,
       password: hashPassword(password),
       firstName,
       lastName,
       cart: (await cartsDao.create({ products: [] }))._id,
+      role,
     };
 
     const createdUser = await usersDao.create(userInfo);
