@@ -10,11 +10,26 @@
 
     <div class="container-fluid">
 
-        <div class="card-header">
-            <p id="logued-as"></p>
+        <div id="login" class="card-header">
+            {{#if isLoggedUser}}
+            <input type="hidden" name="loggedUsername" id="loggedUsername" value="{{userSession.username}}">
+            <div class="card">
+                <div id="user-logged" class="card-body">
+                    Logueado como {{userSession.username}}.
+                    <a id="cart-link" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver
+                        carrito</a>
+                    <button id="logout-btn" type="button" class="btn btn-primary">
+                        Logout
+                    </button>
+                </div>
+            </div>
+            {{/if}}
         </div>
 
         <div id="chat-box">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status"></div>
+            </div>
         </div>
 
         <div class="card">

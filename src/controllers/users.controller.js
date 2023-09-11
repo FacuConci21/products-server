@@ -83,7 +83,7 @@ router.post("/login", async (req, res) => {
     const user = await service.login(username, password);
 
     if (user) {
-      req.session.user = { username: user.username, role: "usuario" };
+      req.session.user = { username: user.username, role: user.role };
 
       res.status(StatusCodes.OK).json({ status: "success", payload: user });
     } else {

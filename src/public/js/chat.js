@@ -3,6 +3,51 @@ const chatBox = document.getElementById("chat-box");
 const messageInput = document.getElementById("messageText");
 const sendButton = document.getElementById("send-button");
 const loguedAs = document.getElementById("logued-as");
+const logoutBtn = document.getElementById("logout-btn");
+
+logoutBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const loginCard = document.getElementById("user-logged");
+
+  console.log("Loggin out ...");
+  loginCard.innerHTML += `<div class="spinner-border float-end" role="status"></div>`;
+
+  const response = await fetch(`/api/users/logout`);
+  const data = await response.json();
+
+  if (data.status.toLowerCase() === "success") {
+    const loginContainer = document.getElementById("login");
+
+    console.log("Usuario deslogueado.");
+    loginContainer.innerHTML = `
+    <a href="/login" class="btn btn-primary">
+        Login
+    </a>
+    `;
+    chatBox.innerHTML = `
+    <div class="alert alert-danger" role="alert">
+        Debes estar logueado para ver los mensajes.
+    </div>
+    `;
+    sendButton.disabled = true;
+    messageInput.disabled = true;
+  } else {
+    console.error(data);
+    loginCard.innerHTML = `
+      <input type="hidden" name="loggedUsername" id="loggedUsername" value="${loguedUser.username}">
+      <div class="card">
+          <div id="user-logged" class="card-body">
+              Logueado como ${loguedUser.username}.
+              <a id="cart-link" class="btn btn-outline-secondary btn-sm justify-content-md-end">Ver
+                  carrito</a>
+              <button id="logout-btn" type="button" class="btn btn-primary">
+                  Logout
+              </button>
+          </div>
+      </div>
+  `;
+  }
+});
 
 const chatCard = (content) => {
   return `
@@ -12,14 +57,6 @@ const chatCard = (content) => {
         </div>
     </div>
     `;
-};
-
-const askName = () => {
-  let username = "";
-  do {
-    username = prompt("Dinos tu nombre");
-  } while (username.trim().length === 0);
-  return username;
 };
 
 const appendToastNotification = (message, type = "primary") => {
@@ -43,6 +80,20 @@ const showNotifications = () => {
   const toastBootstrap = bootstrap.Toast.getOrCreateInstance(notificationToast);
   toastBootstrap.show();
 };
+
+async function fetchUser() {
+  const loggedUsername = document.getElementById("loggedUsername").value;
+
+  console.log("Fetching user data ...");
+  const response = await fetch(`/api/users?username=${loggedUsername}`);
+  const data = await response.json();
+
+  if (data.payload) {
+    return data.payload.pop();
+  } else {
+    throw new Error(data.message);
+  }
+}
 
 async function postMessage(user, textContent = "") {
   if (textContent.trim().length > 0) {
@@ -81,31 +132,33 @@ async function loadChatMessages() {
   const data = await response.json();
   const messages = data.payload;
 
+  chatBox.innerHTML = "";
+
   messages.forEach((msg) => {
     writeMessage(msg.user, msg.textContent);
   });
 }
 
-function chat() {
-  const loguedUser = askName();
-  socket.emit("chat-connect", loguedUser);
+async function chat() {
+  // const loguedUser = askName();
+  const loguedUser = await fetchUser();
 
-  console.log(`${loguedUser} se ha unido a la sala.`);
+  socket.emit("chat-connect", loguedUser.username);
 
-  loguedAs.innerText += `Logueado como: ${loguedUser}`;
+  console.log(`${loguedUser.username} se ha unido a la sala.`);
 
   loadChatMessages();
 
   sendButton.addEventListener("click", (e) => {
     e.preventDefault();
-    postMessage(loguedUser, messageInput.value);
+    postMessage(loguedUser.username, messageInput.value);
     messageInput.value = "";
   });
 
   messageInput.addEventListener("keyup", (e) => {
     e.preventDefault();
     if (e.key === "Enter") {
-      postMessage(loguedUser, messageInput.value);
+      postMessage(loguedUser.username, messageInput.value);
       messageInput.value = "";
     }
   });

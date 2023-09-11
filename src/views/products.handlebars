@@ -22,7 +22,9 @@
     <br>
 
     <div class="container-fluid" id="products-container">
+        {{#if hasProducts}}
         <ul id="products-list" style="list-style: none;">
+
             {{#each products}}
             <li>
                 <div class="card">
@@ -44,7 +46,11 @@
             </li>
             {{/each}}
         </ul>
-
+        {{else}}
+        <div class="alert alert-danger" role="alert">
+            No se obtuvieron productos desde el servidor
+        </div>
+        {{/if}}
     </div>
 
     <div class="container-fluid" id="paginate">

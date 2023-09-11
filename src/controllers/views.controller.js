@@ -84,6 +84,7 @@ router.get("/products", async (req, res) => {
       isLoggedUser,
       userSession,
       products: productsList,
+      hasProducts: productsList.length > 0,
       currentPage: productsPage.page,
       hasPrevPage: productsPage.hasPrevPage,
       hasNextPage: productsPage.hasNextPage,
@@ -149,7 +150,17 @@ router.get("/realtimeproducts", async (req, res) => {
 
 router.get("/chat", async (req, res) => {
   try {
-    res.status(StatusCodes.OK).render("chat", { pageTitle: "Foro del chat" });
+    const userSession = {};
+    let isLoggedUser = req.session.user ? true : false;
+
+    if (isLoggedUser) {
+      userSession.username = req.session.user.username;
+      userSession.role = req.session.user.role;
+    } else {
+      return res.redirect("/login");
+    }
+
+    res.status(StatusCodes.OK).render("chat", { pageTitle: "Foro del chat", isLoggedUser, userSession });
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {

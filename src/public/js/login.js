@@ -43,7 +43,6 @@ loginForm.addEventListener("submit", async (e) => {
 
   if (data.status.toLowerCase() === "success") {
     console.log("Usuario logueado.");
-    console.log(data.payload);
 
     resultContainer.innerHTML = `
     <div class="alert alert-success" role="alert">
