@@ -2,6 +2,7 @@ const { Router, json } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const productsService = require("../services/products.service");
 const cartsService = require("../services/cart.service");
+const auth = require("../utils/auth.middleware");
 
 const router = Router();
 
@@ -56,18 +57,14 @@ router.get("/login", async (req, res) => {
   }
 });
 
-router.get("/products", async (req, res) => {
+router.get("/products", auth, async (req, res) => {
   try {
     const { limit, page, sort, status } = req.query;
     const userSession = {};
     let isLoggedUser = req.session.user ? true : false;
 
-    if (isLoggedUser) {
-      userSession.username = req.session.user.username;
-      userSession.role = req.session.user.role;
-    } else {
-      return res.redirect("/login");
-    }
+    userSession.username = req.session.user.username;
+    userSession.role = req.session.user.role;
 
     const query = status ? { status } : {};
 
@@ -101,18 +98,14 @@ router.get("/products", async (req, res) => {
   }
 });
 
-router.get("/products/:pid", async (req, res) => {
+router.get("/products/:pid", auth, async (req, res) => {
   try {
     const { pid } = req.params;
     const userSession = {};
     let isLoggedUser = req.session.user ? true : false;
 
-    if (isLoggedUser) {
-      userSession.username = req.session.user.username;
-      userSession.role = req.session.user.role;
-    } else {
-      return res.redirect("/login");
-    }
+    userSession.username = req.session.user.username;
+    userSession.role = req.session.user.role;
 
     const product = await productsService.findById(pid);
 
@@ -148,19 +141,19 @@ router.get("/realtimeproducts", async (req, res) => {
   }
 });
 
-router.get("/chat", async (req, res) => {
+router.get("/chat", auth, async (req, res) => {
   try {
     const userSession = {};
     let isLoggedUser = req.session.user ? true : false;
 
-    if (isLoggedUser) {
-      userSession.username = req.session.user.username;
-      userSession.role = req.session.user.role;
-    } else {
-      return res.redirect("/login");
-    }
+    userSession.username = req.session.user.username;
+    userSession.role = req.session.user.role;
 
-    res.status(StatusCodes.OK).render("chat", { pageTitle: "Foro del chat", isLoggedUser, userSession });
+    res.status(StatusCodes.OK).render("chat", {
+      pageTitle: "Foro del chat",
+      isLoggedUser,
+      userSession,
+    });
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
