@@ -1,8 +1,8 @@
 const { join } = require("path");
 const MessagesDao = require("../daos/messages.dao");
-const appConfig = require("../utils/app-config");
-const messagesDao = new MessagesDao();
+const appConfig = require("../utils/configs/app-config");
 
+const messagesDao = new MessagesDao();
 const service = {};
 
 service.find = async () => {

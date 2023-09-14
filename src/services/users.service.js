@@ -1,8 +1,8 @@
 const { join } = require("path");
 const UsersDao = require("../daos/users.dao");
 const CartsDao = require("../daos/carts.dao");
-const appConfig = require("../utils/app-config");
-const { roles } = require("../utils/roles");
+const appConfig = require("../utils/configs/app-config");
+const { roles } = require("../utils/constants/roles");
 const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const usersDao = new UsersDao();
 const cartsDao = new CartsDao();

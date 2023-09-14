@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const passport = require("passport");
 const service = require("../services/users.service");
-const strategies = require("../utils/strategies");
+const strategies = require("../utils/constants/strategies");
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 const passport = require("passport");
 const localStrategy = require("passport-local");
-const usersService = require("../services/users.service");
-const strategies = require("./strategies");
+const usersService = require("../../services/users.service");
+const strategies = require("../constants/strategies");
 
 const LocalStrategy = localStrategy.Strategy;
 

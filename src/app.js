@@ -8,8 +8,8 @@ const { join } = require("path");
 const passport = require("passport");
 const router = require("./router");
 const { mongoConnect, URI } = require("./utils/mongoose");
-const appConfig = require("./utils/app-config");
-const initializePassport = require("./utils/passport.config");
+const appConfig = require("./utils/configs/app-config");
+const initializePassport = require("./utils/configs/passport.config");
 
 const app = express();
 const appPort = 8080;

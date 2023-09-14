@@ -1,8 +1,8 @@
 const { join } = require("path");
 const ProductsDao = require("../daos/products.dao");
-const appConfig = require("../utils/app-config");
-const productsDao = new ProductsDao();
+const appConfig = require("../utils/configs/app-config");
 
+const productsDao = new ProductsDao();
 const service = {};
 
 service.find = async (query, limit, page, sortParam) => {
