@@ -1,8 +1,10 @@
 const { Router, json } = require("express");
 const { StatusCodes } = require("http-status-codes");
+const passport = require("passport");
 const productsService = require("../services/products.service");
 const cartsService = require("../services/cart.service");
 const auth = require("../utils/auth.middleware");
+const strategies = require("../utils/strategies");
 
 const router = Router();
 
@@ -34,7 +36,7 @@ router.get("/registration", async (req, res) => {
   }
 });
 
-router.get("/login", async (req, res) => {
+router.get("/login", (req, res) => {
   try {
     const userSession = {};
     let isLoggedUser = req.session.user ? true : false;

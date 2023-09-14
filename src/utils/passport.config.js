@@ -49,7 +49,8 @@ const initializePassport = () => {
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = (await usersService.find({ _id: id })).pop();
+      const user = await usersService.findById(id);
+      console.log(user);
       return done(null, user);
     } catch (error) {
       console.error(error);

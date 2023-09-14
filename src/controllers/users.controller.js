@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
-const service = require("../services/users.service");
 const passport = require("passport");
+const service = require("../services/users.service");
 const strategies = require("../utils/strategies");
 
 const router = Router();
@@ -63,9 +63,7 @@ router.get("/:uid", async (req, res) => {
 
 router.post(
   "/",
-  passport.authenticate(strategies.register, {
-    failureRedirect: "/fail-register",
-  }),
+  passport.authenticate(strategies.register),
   async (req, res) => {
     try {
       res
@@ -80,7 +78,7 @@ router.post(
   }
 );
 
-router.post("/login",  async (req, res) => {
+router.post("/login", passport.authenticate(strategies.localLogin),  async (req, res) => {
   try {
     if (!req.user) {
       res
@@ -90,7 +88,7 @@ router.post("/login",  async (req, res) => {
 
     req.session.user = req.user;
 
-    res.status(StatusCodes.OK).json({ status: "success", payload: user });
+    res.status(StatusCodes.OK).json({ status: "success", payload: req.user });
   } catch (error) {
     console.error(error);
     res
