@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const service = require("../services/users.service");
+const passport = require("passport");
+const strategies = require("../utils/strategies");
 
 const router = Router();
 
@@ -37,6 +39,13 @@ router.get("/logout", async (req, res) => {
   }
 });
 
+router.get("/fail-register", async (req, res) => {
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    status: "error",
+    message: "Se produjo un error al registrar usuario.",
+  });
+});
+
 router.get("/:uid", async (req, res) => {
   try {
     const { uid } = req.params;
@@ -52,45 +61,36 @@ router.get("/:uid", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  try {
-    const { username, email, password, firstName, lastName, role } = req.body;
-
-    const newUser = await service.create(
-      username,
-      email,
-      password,
-      firstName,
-      lastName,
-      role
-    );
-
-    res
-      .status(StatusCodes.CREATED)
-      .json({ status: "created", payload: newUser });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", message: error.message });
-  }
-});
-
-router.post("/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    const user = await service.login(username, password);
-
-    if (user) {
-      req.session.user = { username: user.username, role: user.role };
-
-      res.status(StatusCodes.OK).json({ status: "success", payload: user });
-    } else {
+router.post(
+  "/",
+  passport.authenticate(strategies.register, {
+    failureRedirect: "/fail-register",
+  }),
+  async (req, res) => {
+    try {
       res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ status: "error", message: "User not found" });
+        .status(StatusCodes.CREATED)
+        .json({ status: "created", payload: req.user });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ status: "error", message: error.message });
     }
+  }
+);
+
+router.post("/login",  async (req, res) => {
+  try {
+    if (!req.user) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ status: "error", message: "Invalid credentials" });
+    }
+
+    req.session.user = req.user;
+
+    res.status(StatusCodes.OK).json({ status: "success", payload: user });
   } catch (error) {
     console.error(error);
     res

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongoose").SchemaTypes;
+const { role } = require("../../utils/roles");
 
 const collectionName = "user";
 
@@ -35,6 +36,7 @@ const schema = new mongoose.Schema(
     role: {
       type: String,
       require: true,
+      default: role.usuario,
     },
   },
   {

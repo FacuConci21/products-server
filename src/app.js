@@ -5,9 +5,11 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const morgan = require("morgan");
 const { join } = require("path");
+const passport = require("passport");
 const router = require("./router");
 const { mongoConnect, URI } = require("./utils/mongoose");
 const appConfig = require("./utils/app-config");
+const initializePassport = require("./utils/passport.config");
 
 const app = express();
 const appPort = 8080;
@@ -30,6 +32,9 @@ app.use(
     saveUninitialized: false,
   })
 );
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, "public")));
 

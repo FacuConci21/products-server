@@ -33,9 +33,6 @@ registrationForm.addEventListener("submit", async (e) => {
   const formData = new FormData(registrationForm);
   const bodyData = Object.fromEntries(formData.entries());
 
-  console.log(bodyData);
-  console.log(JSON.stringify(bodyData));
-
   const response = await fetch("/api/users", {
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +44,6 @@ registrationForm.addEventListener("submit", async (e) => {
 
   if (data.status.toLowerCase() === "created") {
     console.log("Usuario creado.");
-    console.log(data.payload);
 
     resultContainer.innerHTML = `
     <div class="alert alert-success" role="alert">
