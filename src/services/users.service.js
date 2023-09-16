@@ -9,9 +9,9 @@ const cartsDao = new CartsDao();
 
 const service = {};
 
-service.find = async (username) => {
+service.find = async (username, customFilter) => {
   try {
-    const filter = {};
+    const filter = customFilter || {};
 
     if (username) {
       filter.username = username;

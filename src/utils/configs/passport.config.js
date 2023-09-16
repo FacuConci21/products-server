@@ -1,9 +1,12 @@
 const passport = require("passport");
 const localStrategy = require("passport-local");
+const githubStrategy = require("passport-github2");
 const usersService = require("../../services/users.service");
 const strategies = require("../constants/strategies");
+const appConfig = require("./app-config");
 
 const LocalStrategy = localStrategy.Strategy;
+const GithubStrategy = githubStrategy.Strategy;
 
 const initializePassport = () => {
   passport.use(
@@ -43,6 +46,48 @@ const initializePassport = () => {
     })
   );
 
+  passport.use(
+    strategies.githubLogin,
+    new GithubStrategy(
+      {
+        clientID: appConfig.auth.github.clientId,
+        clientSecret: appConfig.auth.github.clientSecret,
+        callbackURL: `http://www.${appConfig.host}:${appConfig.port}/login/github`,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          /*
+          profile._json.name
+          profile._json.login
+          profile._json.email
+          profile.displayName
+          profile.username
+          */
+          const loginUsername = profile.username;
+          const user = await usersService.findOne(loginUsername);
+
+          if (!user) {
+            const newUser = await usersService.create(
+              profile.username,
+              profile._json.email,
+              "",
+              profile.displayName,
+              "",
+              "usuario"
+            );
+
+            return done(null, newUser);
+          }
+
+          return done(null, user);
+        } catch (error) {
+          console.error(error);
+          return done(error);
+        }
+      }
+    )
+  );
+
   passport.serializeUser((user, done) => {
     return done(null, user._id);
   });
@@ -50,7 +95,6 @@ const initializePassport = () => {
   passport.deserializeUser(async (id, done) => {
     try {
       const user = await usersService.findById(id);
-      console.log(user);
       return done(null, user);
     } catch (error) {
       console.error(error);

@@ -12,6 +12,13 @@ const appConfig = {
     user: process.env.MONGO_ATLAS_USER,
     pssw: process.env.MONGO_ATLAS_PASSWORD,
   },
+  auth: {
+    github: {
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      appId: process.env.GITHUB_APP_ID,
+      clientId: process.env.GITHUB_CLIENT_ID,
+    },
+  },
 };
 
 module.exports = appConfig;

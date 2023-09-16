@@ -1,4 +1,5 @@
 module.exports = {
     register: 'registrar',
-    localLogin: 'login', 
+    localLogin: 'login',
+    githubLogin: 'github-login',
 }
