@@ -22,13 +22,15 @@ router.get("/", async (req, res) => {
 
 router.get("/logout", async (req, res) => {
   try {
-    const { user } = req.session;
     const session = req.session;
-    const sessionID = req.sessionID;
 
     const result = session.destroy((err) => {
-      if (err) throw new Error("error al proposito");
+      if (err) throw err;
     });
+
+    if (req.user) {
+      req.user = undefined;
+    }
 
     res.status(StatusCodes.OK).json({ status: "success", payload: result });
   } catch (error) {
@@ -78,23 +80,27 @@ router.post(
   }
 );
 
-router.post("/login", passport.authenticate(strategies.localLogin),  async (req, res) => {
-  try {
-    if (!req.user) {
+router.post(
+  "/login",
+  passport.authenticate(strategies.localLogin),
+  async (req, res) => {
+    try {
+      if (!req.user) {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ status: "error", message: "Invalid credentials" });
+      }
+
+      req.session.user = req.user;
+
+      res.status(StatusCodes.OK).json({ status: "success", payload: req.user });
+    } catch (error) {
+      console.error(error);
       res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ status: "error", message: "Invalid credentials" });
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ status: "error", message: error.message });
     }
-
-    req.session.user = req.user;
-
-    res.status(StatusCodes.OK).json({ status: "success", payload: req.user });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", message: error.message });
   }
-});
+);
 
 module.exports = router;
