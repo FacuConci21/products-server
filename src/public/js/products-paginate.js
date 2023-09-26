@@ -69,7 +69,7 @@ logoutBtn.addEventListener("click", async (e) => {
 
     console.log("Usuario deslogueado.");
     loginContainer.innerHTML = `
-    <a href="/login" class="btn btn-primary">
+    <a href="/auth/login" class="btn btn-primary">
         Login
     </a>
     `;

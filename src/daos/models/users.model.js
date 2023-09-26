@@ -29,6 +29,7 @@ const schema = new mongoose.Schema(
       type: String,
       require: false,
     },
+    age: Number,
     cart: {
       type: ObjectId,
       ref: "cart",

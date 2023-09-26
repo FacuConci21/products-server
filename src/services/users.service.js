@@ -87,9 +87,9 @@ service.create = async (
   }
 };
 
-service.login = async (username, password) => {
+service.login = async (email, password) => {
   try {
-    const currentUser = await usersDao.findOne({ username });
+    const currentUser = await usersDao.findOne({ email });
 
     if (!currentUser) {
       throw new Error("Usuario o contraseña incorrecta.");

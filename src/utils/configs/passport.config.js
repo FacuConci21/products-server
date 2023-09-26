@@ -12,7 +12,7 @@ const initializePassport = () => {
   passport.use(
     strategies.register,
     new LocalStrategy(
-      { passReqToCallback: true },
+      { passReqToCallback: true, },
       async (req, username, password, done) => {
         const { email, firstName, lastName, role } = req.body;
 
@@ -36,7 +36,7 @@ const initializePassport = () => {
 
   passport.use(
     strategies.localLogin,
-    new LocalStrategy({}, async (username, password, done) => {
+    new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
       try {
         const currentUser = await usersService.login(username, password);
         return done(null, currentUser);
