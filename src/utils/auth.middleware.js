@@ -1,9 +1,8 @@
-const { StatusCodes } = require("http-status-codes");
 
 const auth = (req, res, next) => {
   let isLoggedUser = req.user ? true : false;
   if (!isLoggedUser) {
-    return res.redirect("/login");
+    return res.redirect("/auth/login");
   }
 
   next();

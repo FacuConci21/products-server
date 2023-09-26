@@ -52,7 +52,7 @@ const initializePassport = () => {
       {
         clientID: appConfig.auth.github.clientId,
         clientSecret: appConfig.auth.github.clientSecret,
-        callbackURL: `http://www.${appConfig.host}:${appConfig.port}/login/github`,
+        callbackURL: `http://www.${appConfig.host}:${appConfig.port}/auth/login/github`,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

@@ -21,69 +21,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/registration", async (req, res) => {
-  try {
-    res
-      .status(StatusCodes.OK)
-      .render("user-register", { pageTitle: "Crear cuenta" });
-  } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
-      pageTitle: "Error",
-      status: "error",
-      message: error.message,
-    });
-  }
-});
-
-router.get("/login", (req, res) => {
-  try {
-    const userSession = {};
-    let isLoggedUser = req.user ? true : false;
-
-    if (isLoggedUser) {
-      userSession.username = req.user.username;
-      userSession.role = req.user.role;
-    }
-
-    res
-      .status(StatusCodes.OK)
-      .render("login", { pageTitle: "Login", isLoggedUser, userSession });
-  } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
-      pageTitle: "Error",
-      status: "error",
-      message: error.message,
-    });
-  }
-});
-
-router.get(
-  "/login/github",
-  passport.authenticate(strategies.githubLogin),
-  (req, res) => {
-    try {
-      const userSession = {};
-      let isLoggedUser = req.user ? true : false;
-
-      if (isLoggedUser) {
-        userSession.username = req.user.username;
-        userSession.role = req.user.role;
-      }
-
-      res.redirect('/products?limit=4&page=1');
-    } catch (error) {
-      console.error(error);
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
-      });
-    }
-  }
-);
-
 router.get("/products", auth, async (req, res) => {
   try {
     const { limit, page, sort, status } = req.query;
