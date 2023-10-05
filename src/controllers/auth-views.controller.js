@@ -1,7 +1,7 @@
 const { Router, json } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const passport = require("passport");
-const auth = require("../utils/auth.middleware");
+const auth = require("../utils/middlewares/auth.middleware");
 const strategies = require("../utils/constants/strategies");
 
 const router = Router();

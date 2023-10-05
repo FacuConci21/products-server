@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const service = require("../services/products.service");
-const uploader = require("../utils/multer");
+const uploader = require("../utils/middlewares/uploader.middleware");
 
 const router = Router();
 
