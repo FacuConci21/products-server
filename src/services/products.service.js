@@ -1,6 +1,6 @@
 const { join } = require("path");
 const ProductsDao = require("../daos/mongodb/products-mongodb.dao");
-const appConfig = require("../utils/configs/app-config");
+const appConfig = require("../utils/configs/app.config");
 
 const productsDao = new ProductsDao();
 const service = {};

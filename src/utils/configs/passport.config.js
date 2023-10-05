@@ -3,7 +3,7 @@ const localStrategy = require("passport-local");
 const githubStrategy = require("passport-github2");
 const usersService = require("../../services/users.service");
 const strategies = require("../constants/strategies");
-const appConfig = require("./app-config");
+const appConfig = require("./app.config");
 
 const LocalStrategy = localStrategy.Strategy;
 const GithubStrategy = githubStrategy.Strategy;
