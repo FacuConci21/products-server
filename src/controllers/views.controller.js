@@ -1,10 +1,8 @@
-const { Router, json } = require("express");
+const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const productsService = require("../services/products.service");
 const cartsService = require("../services/cart.service");
 const auth = require("../utils/auth.middleware");
-const passport = require("passport");
-const strategies = require("../utils/constants/strategies");
 
 const router = Router();
 

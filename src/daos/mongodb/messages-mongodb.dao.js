@@ -1,4 +1,4 @@
-const Messages = require("./models/messages.model");
+const Messages = require("../models/messages.model");
 
 class MessagesDao {
   async find(limit = 8) {

@@ -1,9 +1,9 @@
 const { join } = require("path");
-const ProductsDao = require("../daos/products.dao");
-const CartsDao = require("../daos/carts.dao");
+const ProductsDao = require("../daos/mongodb/products-mongodb.dao");
+const CartsDao = require("../daos/mongodb/carts-mongodb.dao");
+
 const cartsDao = new CartsDao();
 const productsDao = new ProductsDao();
-
 const service = {};
 
 service.findById = async (cid) => {

@@ -1,4 +1,4 @@
-const Carts = require("./models/cart.model");
+const Carts = require("../models/cart.model");
 
 class CartsDao {
   async find(filter) {

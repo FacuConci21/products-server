@@ -1,10 +1,8 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
-const MessgesDao = require("../daos/messages.dao");
 const service = require("../services/messages.service");
 
 const router = Router();
-const messageDao = new MessgesDao();
 
 router.get("/msgs", async (req, res) => {
   try {

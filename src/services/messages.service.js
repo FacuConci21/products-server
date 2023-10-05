@@ -1,5 +1,5 @@
 const { join } = require("path");
-const MessagesDao = require("../daos/messages.dao");
+const MessagesDao = require("../daos/mongodb/messages-mongodb.dao");
 const appConfig = require("../utils/configs/app-config");
 
 const messagesDao = new MessagesDao();

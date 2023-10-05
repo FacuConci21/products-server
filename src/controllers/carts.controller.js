@@ -1,10 +1,8 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
-const CartDao = require("../daos/carts.dao");
 const service = require("../services/cart.service");
 
 const router = Router();
-const cartsDao = new CartDao();
 
 router.get("/:cid", async (req, res) => {
   try {
