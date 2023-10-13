@@ -1,7 +1,7 @@
 const fs = require("fs");
 const join = require("path").join;
 
-class ProductManager {
+class ProductFsDao {
   #_filename = "Products.json";
   #_products = [];
   #_lastId = 0;
@@ -174,4 +174,4 @@ class ProductManager {
   }
 }
 
-module.exports = ProductManager;
+module.exports = ProductFsDao;

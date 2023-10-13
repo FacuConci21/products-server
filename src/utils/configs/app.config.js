@@ -4,6 +4,7 @@ require("dotenv").config({
 });
 
 const appConfig = {
+  env: process.env.NODE_ENV,
   host: process.env.APP_HOST || "localhost",
   port: process.env.APP_PORT || 8080,
   sessionSecret: process.env.SESSION_SECRET,

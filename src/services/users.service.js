@@ -1,11 +1,11 @@
 const { join } = require("path");
-const UsersDao = require("../daos/mongodb/users-mongodb.dao");
 const CartsDao = require("../daos/mongodb/carts-mongodb.dao");
 const appConfig = require("../utils/configs/app.config");
 const { roles } = require("../utils/constants/roles");
 const { hashPassword, comparePasswords } = require("../utils/passwords.js");
+const UsersMongoDBDao = require("../daos/mongodb/users-mongodb.dao");
 
-const usersDao = new UsersDao();
+const usersDao = new UsersMongoDBDao();
 const cartsDao = new CartsDao();
 const service = {};
 

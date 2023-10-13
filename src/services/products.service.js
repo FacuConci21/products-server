@@ -1,8 +1,8 @@
 const { join } = require("path");
-const ProductsDao = require("../daos/mongodb/products-mongodb.dao");
 const appConfig = require("../utils/configs/app.config");
+const ProductsMongoDBDao = require("../daos/mongodb/products-mongodb.dao");
 
-const productsDao = new ProductsDao();
+const productsDao = new ProductsMongoDBDao();
 const service = {};
 
 service.find = async (query, limit, page, sortParam) => {

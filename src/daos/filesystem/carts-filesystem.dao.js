@@ -4,7 +4,7 @@ const ProductsManager = require("./ProductManager");
 
 const productsManager = new ProductsManager("public/files");
 
-class CartManager {
+class CartFsDao {
   #_filename = "Carts.json";
   #_carts = [];
   #_lastId = 0;
@@ -128,4 +128,4 @@ class CartManager {
   }
 }
 
-module.exports = CartManager;
+module.exports = CartFsDao;

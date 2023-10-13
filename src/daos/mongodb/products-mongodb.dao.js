@@ -1,6 +1,6 @@
 const Products = require("../models/products.model");
 
-class ProductsDao {
+class ProductsMongoDBDao {
   async find(filter = {}, limit = 10, page = 1, sort = {}) {
     return await Products.paginate(filter, { limit, page, sort });
   }
@@ -22,4 +22,4 @@ class ProductsDao {
   }
 }
 
-module.exports = ProductsDao;
+module.exports = ProductsMongoDBDao;

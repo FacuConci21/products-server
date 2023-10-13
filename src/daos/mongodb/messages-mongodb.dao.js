@@ -1,6 +1,6 @@
 const Messages = require("../models/messages.model");
 
-class MessagesDao {
+class MessagesMongoDBDao {
   async find(limit = 8) {
     return await Messages.aggregate([
       { $sort: { _id: -1 } },
@@ -22,4 +22,4 @@ class MessagesDao {
   }
 }
 
-module.exports = MessagesDao;
+module.exports = MessagesMongoDBDao;

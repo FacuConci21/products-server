@@ -18,4 +18,4 @@ La base de datos tendra los datos que cargue el tutor.
 
 ## Version
 
-- v2.3 Arquitectura por capas del servidor.
+- v3.0 Tercera entrega del proyecto final.

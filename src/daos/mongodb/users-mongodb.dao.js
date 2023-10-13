@@ -1,6 +1,6 @@
 const Users = require("../models/users.model");
 
-class UsersDao {
+class UsersMongoDBDao {
   async find(filter) {
     return await Users.find(filter);
   }
@@ -26,4 +26,4 @@ class UsersDao {
   }
 }
 
-module.exports = UsersDao;
+module.exports = UsersMongoDBDao;

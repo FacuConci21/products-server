@@ -1,6 +1,6 @@
 const Carts = require("../models/cart.model");
 
-class CartsDao {
+class CartsMongoDBDao {
   async find(filter) {
     return await Carts.find(filter);
   }
@@ -22,4 +22,4 @@ class CartsDao {
   }
 }
 
-module.exports = CartsDao;
+module.exports = CartsMongoDBDao;
