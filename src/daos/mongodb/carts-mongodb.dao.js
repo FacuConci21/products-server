@@ -1,4 +1,4 @@
-const Carts = require("../models/cart.model");
+const Carts = require("../../entities/models/cart.model");
 
 class CartsMongoDBDao {
   async find(filter) {

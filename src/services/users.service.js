@@ -1,12 +1,11 @@
-const { join } = require("path");
-const CartsDao = require("../daos/mongodb/carts-mongodb.dao");
-const appConfig = require("../utils/configs/app.config");
 const { roles } = require("../utils/constants/roles");
 const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const UsersMongoDBDao = require("../daos/mongodb/users-mongodb.dao");
+const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
+const UsersDto = require("../entities/dtos/user.dto");
 
 const usersDao = new UsersMongoDBDao();
-const cartsDao = new CartsDao();
+const cartsDao = cartsDaoFactory();
 const service = {};
 
 service.find = async (username, customFilter) => {
@@ -64,18 +63,20 @@ service.create = async (
     if (!roles().includes(role)) {
       throw new Error("El rol indicado no es valido.");
     }
-
-    const userInfo = {
-      username,
-      email,
-      password: hashPassword(password),
-      firstName,
-      lastName,
-      cart: (await cartsDao.create({ products: [] }))._id,
-      role,
-    };
-
-    const createdUser = await usersDao.create(userInfo);
+    
+    const createdUser = await usersDao.create(
+      new UsersDto(
+        username,
+        email,
+        hashPassword(password),
+        firstName,
+        lastName,
+        (
+          await cartsDao.create({ products: [] })
+        )._id,
+        role
+      )
+    );
 
     const updateCart = await cartsDao.updateOne(createdUser.cart.toString(), {
       user: createdUser._id.toString(),

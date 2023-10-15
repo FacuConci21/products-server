@@ -21,9 +21,9 @@ router.get("/:cid", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { products } = req.body;
+    const { user, products } = req.body;
 
-    const newCart = await service.create(products);
+    const newCart = await service.create(user, products);
 
     res
       .status(StatusCodes.CREATED)

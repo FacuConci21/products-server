@@ -1,8 +1,9 @@
 const { join } = require("path");
 const appConfig = require("../utils/configs/app.config");
-const ProductsMongoDBDao = require("../daos/mongodb/products-mongodb.dao");
+const productsDaoFactory = require("../daos/factories/products-dao.factory");
+const ProductDto = require("../entities/dtos/product.dto");
 
-const productsDao = new ProductsMongoDBDao();
+const productsDao = productsDaoFactory();
 const service = {};
 
 service.find = async (query, limit, page, sortParam) => {
@@ -55,24 +56,21 @@ service.create = async (
       throw new Error("faltan uno o mas campos obligatorios >:(");
     }
 
-    const productInfo = {
+    const productInfo = new ProductDto(
       title,
       description,
       price,
       code,
-      stock:
-        (typeof stock).toLowerCase() === "number"
-          ? stock
-          : Number.parseInt(stock),
-      status: _status || true,
-      thumbnails: [],
-    };
+      (typeof stock).toLowerCase() === "number"
+        ? stock
+        : Number.parseInt(stock),
+      _status || true,
+      []
+    );
 
     if (thumbnails) {
       thumbnails.forEach((imgfile) => {
-        productInfo.thumbnails.push(
-          join("img", imgfile.filename)
-        );
+        productInfo.thumbnails.push(join("img", imgfile.filename));
       });
     }
 
@@ -98,15 +96,15 @@ service.update = async (
   try {
     const currentProduct = await service.findById(pid);
 
-    const productUpdtInfo = {
-      title: _title || currentProduct.title,
-      description: _description || currentProduct.description,
-      price: _price || currentProduct.price,
-      thumbnails: [],
-      code: _code || currentProduct.code,
-      stock: _stock || currentProduct.stock,
-      status: _status || currentProduct.status,
-    };
+    const productUpdtInfo = new ProductDto(
+      _title || currentProduct.title,
+      _description || currentProduct.description,
+      _price || currentProduct.price,
+      _code || currentProduct.code,
+      _stock || currentProduct.stock,
+      _status || currentProduct.status,
+      [],
+    );
 
     if (_thumbnails) {
       _thumbnails.forEach((imgfile) => {

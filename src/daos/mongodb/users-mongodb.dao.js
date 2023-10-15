@@ -1,4 +1,4 @@
-const Users = require("../models/users.model");
+const Users = require("../../entities/models/users.model");
 
 class UsersMongoDBDao {
   async find(filter) {

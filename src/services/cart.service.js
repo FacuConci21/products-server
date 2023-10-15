@@ -1,9 +1,9 @@
-const { join } = require("path");
-const CartsMongoDBDao = require("../daos/mongodb/carts-mongodb.dao");
-const ProductsMongoDBDao = require("../daos/mongodb/products-mongodb.dao");
+const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
+const productsDaoFactory = require("../daos/factories/products-dao.factory");
+const CartDto = require("../entities/dtos/cart.dto");
 
-const cartsDao = new CartsMongoDBDao();
-const productsDao = new ProductsMongoDBDao();
+const cartsDao = cartsDaoFactory();
+const productsDao = productsDaoFactory();
 const service = {};
 
 service.findById = async (cid) => {
@@ -16,9 +16,9 @@ service.findById = async (cid) => {
   }
 };
 
-service.create = async (products = []) => {
+service.create = async (user, products = []) => {
   try {
-    const cartInfo = { products };
+    const cartInfo = new CartDto(user, products);
     const newCart = await cartsDao.create(cartInfo);
     return newCart;
   } catch (error) {

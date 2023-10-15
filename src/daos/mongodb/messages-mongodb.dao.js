@@ -1,4 +1,4 @@
-const Messages = require("../models/messages.model");
+const Messages = require("../../entities/models/messages.model");
 
 class MessagesMongoDBDao {
   async find(limit = 8) {

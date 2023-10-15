@@ -1,4 +1,4 @@
-const Products = require("../models/products.model");
+const Products = require("../../entities/models/products.model");
 
 class ProductsMongoDBDao {
   async find(filter = {}, limit = 10, page = 1, sort = {}) {

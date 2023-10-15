@@ -1,6 +1,5 @@
-const { join } = require("path");
-const appConfig = require("../utils/configs/app.config");
 const MessagesMongoDBDao = require("../daos/mongodb/messages-mongodb.dao");
+const MessagesDto = require("../entities/dtos/messages.dto");
 
 const messagesDao = new MessagesMongoDBDao();
 const service = {};
@@ -17,7 +16,7 @@ service.find = async () => {
 
 service.create = async (user, textContent) => {
   try {
-    const messageInfo = { user, textContent };
+    const messageInfo = new MessagesDto(textContent, user);
 
     const createdMessage = await messagesDao.create(messageInfo);
 
