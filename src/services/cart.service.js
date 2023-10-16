@@ -1,14 +1,16 @@
 const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
 const productsDaoFactory = require("../daos/factories/products-dao.factory");
 const CartDto = require("../entities/dtos/cart.dto");
+const CartsRepository = require("../entities/repositories/carts.repository");
+const ProductsRepository = require("../entities/repositories/products.repository");
 
-const cartsDao = cartsDaoFactory();
-const productsDao = productsDaoFactory();
+const cartsRepository = new CartsRepository(cartsDaoFactory());
+const productsRepository = new ProductsRepository(productsDaoFactory());
 const service = {};
 
 service.findById = async (cid) => {
   try {
-    const cart = await cartsDao.findById(cid);
+    const cart = await cartsRepository.findById(cid);
     return cart;
   } catch (error) {
     console.error(error);
@@ -19,7 +21,7 @@ service.findById = async (cid) => {
 service.create = async (user, products = []) => {
   try {
     const cartInfo = new CartDto(user, products);
-    const newCart = await cartsDao.create(cartInfo);
+    const newCart = await cartsRepository.create(cartInfo);
     return newCart;
   } catch (error) {
     console.error(error);
@@ -34,13 +36,13 @@ service.addProduct = async (cid, pid, quantity = 0) => {
       quantity,
     };
 
-    const product = await productsDao.findById(pid);
+    const product = await productsRepository.findById(pid);
 
     if (!product) {
       throw new Error("El producto no existe.");
     }
 
-    const currentCart = (await cartsDao.find({ _id: cid })).pop();
+    const currentCart = (await cartsRepository.find({ _id: cid })).pop();
 
     if (!currentCart) {
       throw new Error("El carrito no existe.");
@@ -62,9 +64,9 @@ service.addProduct = async (cid, pid, quantity = 0) => {
       currentCart.products.push(newProduct);
     }
 
-    const updtResult = await cartsDao.updateOne(cid, currentCart);
+    const updtResult = await cartsRepository.updateOne(cid, currentCart);
 
-    const updatedCart = await cartsDao.find({ _id: cid });
+    const updatedCart = await cartsRepository.find({ _id: cid });
 
     return updatedCart;
   } catch (error) {
@@ -80,13 +82,13 @@ service.updateProduct = async (cid, pid, quantity = 0) => {
       quantity,
     };
 
-    const product = await productsDao.findById(pid);
+    const product = await productsRepository.findById(pid);
 
     if (!product) {
       throw new Error("El producto no existe.");
     }
 
-    const currentCart = (await cartsDao.find({ _id: cid })).pop();
+    const currentCart = (await cartsRepository.find({ _id: cid })).pop();
 
     if (!currentCart) {
       throw new Error("El carrito no existe.");
@@ -110,9 +112,9 @@ service.updateProduct = async (cid, pid, quantity = 0) => {
       currentCart.products.push(updtProduct);
     }
 
-    const updtResult = await cartsDao.updateOne(cid, currentCart);
+    const updtResult = await cartsRepository.updateOne(cid, currentCart);
 
-    const updatedCart = await cartsDao.find({ _id: cid });
+    const updatedCart = await cartsRepository.find({ _id: cid });
 
     return updatedCart;
   } catch (error) {
@@ -129,7 +131,7 @@ service.update = async (cid, products) => {
 
     for (let index = 0; index < products.length; index++) {
       const cartProd = products[index];
-      const prod = await productsDao.findById(cartProd.pid);
+      const prod = await productsRepository.findById(cartProd.pid);
 
       if (!prod) {
         throw new Error(`El producto con id ${cartProd.pid} no existe.`);
@@ -148,13 +150,13 @@ service.update = async (cid, products) => {
       }
     }
 
-    const updtResult = await cartsDao.updateOne(cid, { products });
+    const updtResult = await cartsRepository.updateOne(cid, { products });
 
     if ((updtResult.matchedCount = 0)) {
       throw new Error("Carrito no encontrado.");
     }
 
-    const updatedCart = (await cartsDao.find({ _id: cid })).pop();
+    const updatedCart = (await cartsRepository.find({ _id: cid })).pop();
 
     return updatedCart;
   } catch (error) {
@@ -165,7 +167,7 @@ service.update = async (cid, products) => {
 
 service.delete = async (cid) => {
   try {
-    const currentCart = (await cartsDao.find({ _id: cid })).pop();
+    const currentCart = (await cartsRepository.find({ _id: cid })).pop();
 
     if (!currentCart) {
       throw new Error("El carrito no existe.");
@@ -173,9 +175,9 @@ service.delete = async (cid) => {
 
     currentCart.products = [];
 
-    const updtResult = await cartsDao.updateOne(cid, currentCart);
+    const updtResult = await cartsRepository.updateOne(cid, currentCart);
 
-    const updatedCart = (await cartsDao.find({ _id: cid })).pop();
+    const updatedCart = (await cartsRepository.find({ _id: cid })).pop();
 
     return updatedCart;
   } catch (error) {
@@ -186,7 +188,7 @@ service.delete = async (cid) => {
 
 service.deleteProduct = async (cid, pid) => {
   try {
-    const currentCart = (await cartsDao.find({ _id: cid })).pop();
+    const currentCart = (await cartsRepository.find({ _id: cid })).pop();
 
     const productsFiltered = currentCart.products.filter(
       (cartProd) => !Object.is(cartProd.pid.toString(), pid)
@@ -194,9 +196,9 @@ service.deleteProduct = async (cid, pid) => {
 
     currentCart.products = productsFiltered;
 
-    const updtResult = await cartsDao.updateOne(cid, currentCart);
+    const updtResult = await cartsRepository.updateOne(cid, currentCart);
 
-    const updatedCart = (await cartsDao.find({ _id: cid })).pop();
+    const updatedCart = (await cartsRepository.find({ _id: cid })).pop();
 
     return updatedCart;
   } catch (error) {

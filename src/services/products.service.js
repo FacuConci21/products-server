@@ -1,9 +1,10 @@
 const { join } = require("path");
 const appConfig = require("../utils/configs/app.config");
+const ProductsRepository = require("../entities/repositories/products.repository");
 const productsDaoFactory = require("../daos/factories/products-dao.factory");
 const ProductDto = require("../entities/dtos/product.dto");
 
-const productsDao = productsDaoFactory();
+const productsRepository = new ProductsRepository(productsDaoFactory());
 const service = {};
 
 service.find = async (query, limit, page, sortParam) => {
@@ -12,7 +13,12 @@ service.find = async (query, limit, page, sortParam) => {
     if (Number.isNaN(limit)) limit = 10;
     if (!Number.isNaN(sortParam)) sortQuery.price = sortParam;
 
-    const productsPage = await productsDao.find(query, limit, page, sortQuery);
+    const productsPage = await productsRepository.find(
+      query,
+      limit,
+      page,
+      sortQuery
+    );
 
     productsPage.hasPrevPage
       ? (productsPage.prevLink = `http://${appConfig.host}:${appConfig.port}/products?limit=${limit}&page=${productsPage.prevPage}`)
@@ -31,7 +37,7 @@ service.find = async (query, limit, page, sortParam) => {
 
 service.findById = async (id) => {
   try {
-    const product = await productsDao.findById(id);
+    const product = await productsRepository.findById(id);
     if (!product) {
       throw new Error("Not Found");
     }
@@ -74,7 +80,7 @@ service.create = async (
       });
     }
 
-    const products = await productsDao.create(productInfo);
+    const products = await productsRepository.create(productInfo);
 
     return products;
   } catch (error) {
@@ -103,7 +109,7 @@ service.update = async (
       _code || currentProduct.code,
       _stock || currentProduct.stock,
       _status || currentProduct.status,
-      [],
+      []
     );
 
     if (_thumbnails) {
@@ -114,7 +120,10 @@ service.update = async (
       });
     }
 
-    const updtProduct = await productsDao.updateOne(pid, productUpdtInfo);
+    const updtProduct = await productsRepository.updateOne(
+      pid,
+      productUpdtInfo
+    );
 
     const result = await service.findById(pid);
 
@@ -142,7 +151,7 @@ service.delete = async (pid) => {
 
 service.permaDelete = async (pid) => {
   try {
-    const result = await productsDao.delete(pid);
+    const result = await productsRepository.delete(pid);
     return result;
   } catch (error) {
     console.error(error);
