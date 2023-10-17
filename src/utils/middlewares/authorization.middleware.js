@@ -2,15 +2,22 @@ const { StatusCodes } = require("http-status-codes");
 
 const authorize = (roles = []) => {
   return (req, res, next) => {
-    const { role } = req.user;
+    try {
+      if (!req.user) {
+        throw new Error("Authentication required.");
+      }
 
-    if (roles.includes(role)) {
-      next();
-    } else {
-      console.error("No permitido");
+      const { role } = req.user;
+      
+      if (roles.includes(role)) {
+        next();
+      } else {
+        throw new Error("No tiene permitido esta accion.");
+      }
+    } catch (error) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         status: "error",
-        message: "No tiene permitido esta accion.",
+        message: error.message,
       });
     }
   };

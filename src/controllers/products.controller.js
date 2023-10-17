@@ -45,7 +45,6 @@ router.get("/:pid", async (req, res) => {
 
 router.post(
   "/",
-  auth,
   authorize([role.admin]),
   uploader.array("thumbnails"),
   async (req, res) => {
@@ -76,36 +75,41 @@ router.post(
   }
 );
 
-router.put("/:pid", uploader.array("thumbnails"), async (req, res) => {
-  try {
-    const { pid } = req.params;
-    const { title, description, price, code, stock, status } = req.body;
+router.put(
+  "/:pid",
+  authorize([role.admin]),
+  uploader.array("thumbnails"),
+  async (req, res) => {
+    try {
+      const { pid } = req.params;
+      const { title, description, price, code, stock, status } = req.body;
 
-    const thumbnails = req.files;
+      const thumbnails = req.files;
 
-    const updtProduct = await service.update(
-      pid,
-      title,
-      description,
-      price,
-      code,
-      stock,
-      status,
-      thumbnails
-    );
+      const updtProduct = await service.update(
+        pid,
+        title,
+        description,
+        price,
+        code,
+        stock,
+        status,
+        thumbnails
+      );
 
-    res
-      .status(StatusCodes.OK)
-      .json({ status: "updated", payload: updtProduct });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", message: error.message });
+      res
+        .status(StatusCodes.OK)
+        .json({ status: "updated", payload: updtProduct });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ status: "error", message: error.message });
+    }
   }
-});
+);
 
-router.delete("/:pid", async (req, res) => {
+router.delete("/:pid", authorize([role.admin]), async (req, res) => {
   try {
     const { pid } = req.params;
 

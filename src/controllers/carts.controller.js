@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const service = require("../services/cart.service");
+const authorize = require("../utils/middlewares/authorization.middleware");
+const { role } = require("../utils/constants/roles");
 
 const router = Router();
 
@@ -36,27 +38,31 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post("/:cid/product/:pid", async (req, res) => {
-  try {
-    const { cid, pid } = req.params;
-    const { quantity } = req.query;
+router.post(
+  "/:cid/product/:pid",
+  authorize([role.usuario]),
+  async (req, res) => {
+    try {
+      const { cid, pid } = req.params;
+      const { quantity } = req.query;
 
-    const result = await service.addProduct(
-      cid,
-      pid,
-      Number.parseInt(quantity)
-    );
+      const result = await service.addProduct(
+        cid,
+        pid,
+        Number.parseInt(quantity)
+      );
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ status: "created", payload: result });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", message: error.message });
+      res
+        .status(StatusCodes.CREATED)
+        .json({ status: "created", payload: result });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ status: "error", message: error.message });
+    }
   }
-});
+);
 
 router.post("/:cid/purchase", async (req, res) => {
   try {

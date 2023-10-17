@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const service = require("../services/messages.service");
+const authorize = require("../utils/middlewares/authorization.middleware");
+const { role } = require("../utils/constants/roles");
 
 const router = Router();
 
@@ -17,7 +19,7 @@ router.get("/msgs", async (req, res) => {
   }
 });
 
-router.post("/msg", async (req, res) => {
+router.post("/msg", authorize([role.usuario]), async (req, res) => {
   try {
     const { user, textContent } = req.body;
 
