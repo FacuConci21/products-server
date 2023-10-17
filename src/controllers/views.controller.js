@@ -88,7 +88,7 @@ router.get("/products/:pid", auth, async (req, res) => {
   }
 });
 
-router.get("/realtimeproducts", async (req, res) => {
+router.get("/realtimeproducts", auth, async (req, res) => {
   try {
     res.status(StatusCodes.OK).render("realtimeproducts", {
       pageTitle: "Productos en tiempo real",

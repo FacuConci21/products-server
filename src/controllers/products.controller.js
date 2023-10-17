@@ -2,6 +2,9 @@ const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const service = require("../services/products.service");
 const uploader = require("../utils/middlewares/uploader.middleware");
+const { role } = require("../utils/constants/roles");
+const authorize = require("../utils/middlewares/authorization.middleware");
+const auth = require("../utils/middlewares/auth.middleware");
 
 const router = Router();
 
@@ -10,7 +13,7 @@ router.get("/", async (req, res) => {
     const { limit, page, sort, status } = req.query;
 
     const query = status ? { status } : {};
-    
+
     const products = await service.find(
       query,
       Number.parseInt(limit),
@@ -40,32 +43,38 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.post("/", uploader.array("thumbnails"), async (req, res) => {
-  try {
-    const { title, description, price, code, stock, status } = req.body;
+router.post(
+  "/",
+  auth,
+  authorize([role.admin]),
+  uploader.array("thumbnails"),
+  async (req, res) => {
+    try {
+      const { title, description, price, code, stock, status } = req.body;
 
-    const thumbnails = req.files;
+      const thumbnails = req.files;
 
-    const newProduct = await service.create(
-      title,
-      description,
-      price,
-      code,
-      stock,
-      status,
-      thumbnails
-    );
+      const newProduct = await service.create(
+        title,
+        description,
+        price,
+        code,
+        stock,
+        status,
+        thumbnails
+      );
 
-    res
-      .status(StatusCodes.CREATED)
-      .json({ status: "created", payload: newProduct });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", message: error.message });
+      res
+        .status(StatusCodes.CREATED)
+        .json({ status: "created", payload: newProduct });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ status: "error", message: error.message });
+    }
   }
-});
+);
 
 router.put("/:pid", uploader.array("thumbnails"), async (req, res) => {
   try {
