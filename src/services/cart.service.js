@@ -1,11 +1,10 @@
-const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
-const productsDaoFactory = require("../daos/factories/products-dao.factory");
 const CartDto = require("../entities/dtos/cart.dto");
+const ProductDto = require("../entities/dtos/product.dto");
 const CartsRepository = require("../entities/repositories/carts.repository");
 const ProductsRepository = require("../entities/repositories/products.repository");
 
-const cartsRepository = new CartsRepository(cartsDaoFactory());
-const productsRepository = new ProductsRepository(productsDaoFactory());
+const cartsRepository = new CartsRepository();
+const productsRepository = new ProductsRepository();
 const service = {};
 
 service.findById = async (cid) => {
@@ -69,6 +68,43 @@ service.addProduct = async (cid, pid, quantity = 0) => {
     const updatedCart = await cartsRepository.find({ _id: cid });
 
     return updatedCart;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+service.createTicket = async (cid) => {
+  try {
+    const cart = await cartsRepository.findById(cid);
+    const cartProducts = cart.products;
+
+    if (!cart) {
+      throw new Error("No se encontro el carrito.");
+    }
+
+    if (cart.products.length === 0) {
+      throw new Error("La lista de productos esta vacia.");
+    }
+
+    for (let i = 0; i < cartProducts.length; i++) {
+      const currentProduct = cartProducts[i].pid;
+
+      const product = await productsRepository.findById(
+        currentProduct._id.toString()
+      );
+
+      if (currentProduct.stock >= product.stock) {
+        throw new Error(
+          `El producto de codigo ${product.code} no tiene stock suficiente.`
+        );
+      }
+
+      const currentStock = currentProduct.stock;
+      const realStock = product.stock;
+      const newStock = Math.abs(realStock - currentStock);
+    }
+    
   } catch (error) {
     console.error(error);
     throw error;

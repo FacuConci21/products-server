@@ -1,6 +1,8 @@
+const cartsDaoFactory = require("../../daos/factories/carts-dao.factory");
+
 class CartsRepository {
-  constructor(daoInstance) {
-    this.dao = daoInstance;
+  constructor() {
+    this.dao = cartsDaoFactory();
   }
 
   async find(filter) {

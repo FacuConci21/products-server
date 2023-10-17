@@ -58,6 +58,21 @@ router.post("/:cid/product/:pid", async (req, res) => {
   }
 });
 
+router.post("/:cid/purchase", async (req, res) => {
+  try {
+    // const { cid } = req.params;
+    // const result = await service.createTicket(cid);
+    res
+      .status(StatusCodes.NOT_IMPLEMENTED)
+      .json({ status: "created", payload: {} });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
 router.put("/:cid", async (req, res) => {
   try {
     const { cid } = req.params;

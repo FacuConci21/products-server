@@ -2,8 +2,8 @@ const productsController = require("./controllers/products.controller");
 const cartsController = require("./controllers/carts.controller");
 const chatController = require("./controllers/chat.controller");
 const usersController = require("./controllers/users.controller");
-const viewsController = require("./controllers/views.controller");
 const ticketsController = require("./controllers/tickets.controller");
+const viewsController = require("./controllers/views.controller");
 const authViewsController = require("./controllers/auth-views.controller");
 
 const router = (app) => {
