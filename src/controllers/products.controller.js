@@ -4,9 +4,23 @@ const service = require("../services/products.service");
 const uploader = require("../utils/middlewares/uploader.middleware");
 const { role } = require("../utils/constants/roles");
 const authorize = require("../utils/middlewares/authorization.middleware");
-const auth = require("../utils/middlewares/auth.middleware");
+const { generateManyProducts } = require("../utils/mocks/products.mock");
 
 const router = Router();
+
+router.get("/mockingproducts", async (req, res) => {
+  try {
+    const { quantity } = req.query;
+
+    const products = generateManyProducts(quantity || 100);
+
+    res.status(StatusCodes.OK).json({ status: "success", payload: products });
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
 
 router.get("/", async (req, res) => {
   try {

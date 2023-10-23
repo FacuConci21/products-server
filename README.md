@@ -18,4 +18,4 @@ La base de datos tendra los datos que cargue el tutor.
 
 ## Version
 
-- v3.0 Tercera entrega del proyecto final.
+- v3.1 Mocking y manejo de errores.
