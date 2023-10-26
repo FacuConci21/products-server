@@ -2,6 +2,10 @@ const CartDto = require("../entities/dtos/cart.dto");
 const ProductDto = require("../entities/dtos/product.dto");
 const CartsRepository = require("../entities/repositories/carts.repository");
 const ProductsRepository = require("../entities/repositories/products.repository");
+const CustomError = require("../utils/handlers/custom-error");
+const ErrorCodes = require("../utils/constants/ErrorCodes");
+const ErrorMsgs = require("../utils/constants/ErrorMsgs");
+const ErrorTypes = require("../utils/constants/ErrorTypes");
 
 const cartsRepository = new CartsRepository();
 const productsRepository = new ProductsRepository();
@@ -53,12 +57,20 @@ service.addProduct = async (cid, pid, quantity = 0) => {
 
     if (searchIdx >= 0) {
       if (product.stock < newProduct.quantity) {
-        throw new Error("No hay stock suficiente.");
+        CustomError.create({
+          name: ErrorTypes.UPDATE_CART_VALIDATION,
+          message: ErrorMsgs.STOCK_NOT_AVAILABLE,
+          code: ErrorCodes.STOCK_NOT_AVAILABLE,
+        });
       }
       currentCart.products[searchIdx].quantity = newProduct.quantity;
     } else {
       if (product.stock < newProduct.quantity) {
-        throw new Error("No hay stock suficiente.");
+        CustomError.create({
+          name: ErrorTypes.UPDATE_CART_VALIDATION,
+          message: ErrorMsgs.STOCK_NOT_AVAILABLE,
+          code: ErrorCodes.STOCK_NOT_AVAILABLE,
+        });
       }
       currentCart.products.push(newProduct);
     }
@@ -84,7 +96,12 @@ service.createTicket = async (cid) => {
     }
 
     if (cart.products.length === 0) {
-      throw new Error("La lista de productos esta vacia.");
+      CustomError.create({
+        name: ErrorTypes.CREATE_CART_VALIDATION,
+        message: ErrorMsgs.EMPTY_FIELD,
+        code: ErrorCodes.EMPTY_FIELD,
+        cause: "La lista de productos esta vacia",
+      });
     }
 
     for (let i = 0; i < cartProducts.length; i++) {
@@ -95,16 +112,18 @@ service.createTicket = async (cid) => {
       );
 
       if (currentProduct.stock >= product.stock) {
-        throw new Error(
-          `El producto de codigo ${product.code} no tiene stock suficiente.`
-        );
+        CustomError.create({
+          name: ErrorTypes.CREATE_CART_VALIDATION,
+          message: ErrorMsgs.STOCK_NOT_AVAILABLE,
+          code: ErrorCodes.STOCK_NOT_AVAILABLE,
+          cause: `El producto de codigo ${product.code} no tiene stock suficiente.`,
+        });
       }
 
       const currentStock = currentProduct.stock;
       const realStock = product.stock;
       const newStock = Math.abs(realStock - currentStock);
     }
-    
   } catch (error) {
     console.error(error);
     throw error;
@@ -138,12 +157,20 @@ service.updateProduct = async (cid, pid, quantity = 0) => {
       const sum =
         currentCart.products[searchIdx].quantity + updtProduct.quantity;
       if (product.stock < sum) {
-        throw new Error("No hay stock suficiente.");
+        CustomError.create({
+          name: ErrorTypes.UPDATE_CART_VALIDATION,
+          message: ErrorMsgs.STOCK_NOT_AVAILABLE,
+          code: ErrorCodes.STOCK_NOT_AVAILABLE,
+        });
       }
       currentCart.products[searchIdx].quantity = sum;
     } else {
       if (product.stock < updtProduct.quantity) {
-        throw new Error("No hay stock suficiente.");
+        CustomError.create({
+          name: ErrorTypes.UPDATE_CART_VALIDATION,
+          message: ErrorMsgs.STOCK_NOT_AVAILABLE,
+          code: ErrorCodes.STOCK_NOT_AVAILABLE,
+        });
       }
       currentCart.products.push(updtProduct);
     }
@@ -162,7 +189,12 @@ service.updateProduct = async (cid, pid, quantity = 0) => {
 service.update = async (cid, products) => {
   try {
     if (!products) {
-      throw new Error("No se recibio la lista de productos.");
+      CustomError.create({
+        name: ErrorTypes.UPDATE_CART_VALIDATION,
+        message: ErrorMsgs.EMPTY_FIELD,
+        code: ErrorCodes.EMPTY_FIELD,
+        cause: "No se recibio la lista de productos.",
+      });
     }
 
     for (let index = 0; index < products.length; index++) {
@@ -174,15 +206,21 @@ service.update = async (cid, products) => {
       }
 
       if (prod.status === false) {
-        throw new Error(
-          `El producto con id ${cartProd.pid} no se encuentra disponible.`
-        );
+        CustomError.create({
+          name: ErrorTypes.UPDATE_CART_VALIDATION,
+          message: ErrorMsgs.RESOURSE_NOT_AVAILABLE,
+          code: ErrorCodes.RESOURSE_NOT_AVAILABLE,
+          cause: `El producto con id ${cartProd.pid} no se encuentra disponible.`,
+        });
       }
 
       if (prod.stock < cartProd.quantity) {
-        throw new Error(
-          `El producto con id ${cartProd.pid} no cuenta con stock suficiente.`
-        );
+        CustomError.create({
+          name: ErrorTypes.UPDATE_CART_VALIDATION,
+          message: ErrorMsgs.STOCK_NOT_AVAILABLE,
+          code: ErrorCodes.STOCK_NOT_AVAILABLE,
+          cause: `El producto con id ${cartProd.pid} no cuenta con stock suficiente.`,
+        });
       }
     }
 

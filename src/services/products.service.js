@@ -3,6 +3,10 @@ const appConfig = require("../utils/configs/app.config");
 const ProductsRepository = require("../entities/repositories/products.repository");
 const productsDaoFactory = require("../daos/factories/products-dao.factory");
 const ProductDto = require("../entities/dtos/product.dto");
+const CustomError = require("../utils/handlers/custom-error");
+const ErrorCodes = require("../utils/constants/ErrorCodes");
+const ErrorMsgs = require("../utils/constants/ErrorMsgs");
+const ErrorTypes = require("../utils/constants/ErrorTypes");
 
 const productsRepository = new ProductsRepository(productsDaoFactory());
 const service = {};
@@ -59,7 +63,11 @@ service.create = async (
 ) => {
   try {
     if (!title || !description || !price || !code || !stock) {
-      throw new Error("faltan uno o mas campos obligatorios >:(");
+      CustomError.create({
+        name: ErrorTypes.CREATE_PRODUCT_VALIDATION,
+        message: ErrorMsgs.REQUIRED_FIELD_MISSING,
+        code: ErrorCodes.REQUIRED_FIELD_MISSING,
+      });
     }
 
     const productInfo = new ProductDto(

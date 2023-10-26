@@ -3,6 +3,10 @@ const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const UsersMongoDBDao = require("../daos/mongodb/users-mongodb.dao");
 const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
 const UsersDto = require("../entities/dtos/user.dto");
+const CustomError = require("../utils/handlers/custom-error");
+const ErrorCodes = require("../utils/constants/ErrorCodes");
+const ErrorMsgs = require("../utils/constants/ErrorMsgs");
+const ErrorTypes = require("../utils/constants/ErrorTypes");
 
 const usersDao = new UsersMongoDBDao();
 const cartsDao = cartsDaoFactory();
@@ -21,7 +25,7 @@ service.find = async (username, customFilter) => {
     return users;
   } catch (error) {
     console.error(error);
-    throw error;
+    CustomError.create({name: ErrorTypes.UNEXPECTED_EXCEPTION, message: error.message});
   }
 };
 
@@ -57,13 +61,22 @@ service.create = async (
     const validateUser = await usersDao.findOne({ username });
 
     if (validateUser) {
-      throw new Error("Este nombre de usuario ya esta en uso.");
+      CustomError.create({
+        name: ErrorTypes.CREATE_USER_VALIDATION,
+        cause: "Este nombre de usuario ya esta en uso",
+        code: ErrorCodes.RESOURSE_ALREADY_EXISTS,
+        message: ErrorMsgs.RESOURSE_ALREADY_EXISTS,
+      });
     }
 
     if (!roles().includes(role)) {
-      throw new Error("El rol indicado no es valido.");
+      CustomError.create({
+        name: ErrorTypes.CREATE_USER_VALIDATION,
+        code: ErrorCodes.INVALID_ROLE,
+        message: ErrorMsgs.INVALID_ROLE,
+      });
     }
-    
+
     const createdUser = await usersDao.create(
       new UsersDto(
         username,
@@ -93,13 +106,23 @@ service.login = async (email, password) => {
     const currentUser = await usersDao.findOne({ email });
 
     if (!currentUser) {
-      throw new Error("Usuario o contraseña incorrecta.");
+      CustomError.create({
+        name: ErrorTypes.CREATE_USER_VALIDATION,
+        message: ErrorMsgs.INVALID_CREDENTIALS,
+        code: ErrorCodes.INVALID_CREDENTIALS,
+        cause: 'Email no encontrado',
+      });
     }
 
     const result = comparePasswords(password, currentUser.password);
 
     if (!result) {
-      throw new Error("Usuario o contraseña incorrecta.");
+      CustomError.create({
+        name: ErrorTypes.CREATE_USER_VALIDATION,
+        message: ErrorMsgs.INVALID_CREDENTIALS,
+        code: ErrorCodes.INVALID_CREDENTIALS,
+        cause: 'password incorrecta',
+      });
     }
 
     return currentUser;
