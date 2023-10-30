@@ -10,6 +10,7 @@ const router = require("./router");
 const { mongoConnect, URI } = require("./utils/persistance/mongoose");
 const appConfig = require("./utils/configs/app.config");
 const initializePassport = require("./utils/configs/passport.config");
+const logger = require(`./utils/middlewares/${appConfig.env}-logger.middleware`);
 
 const app = express();
 const appPort = 8080;
@@ -17,6 +18,7 @@ const appPort = 8080;
 app.set("port", appPort);
 
 app.use(morgan("dev"));
+app.use(logger);
 app.use(express.json());
 app.use(cookieParser());
 app.use(
