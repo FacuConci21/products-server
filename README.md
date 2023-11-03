@@ -18,4 +18,4 @@ La base de datos tendra los datos que cargue el tutor.
 
 ## Version
 
-- v3.1 Mocking y manejo de errores.
+- v3.2 Logging y testing de performance.
