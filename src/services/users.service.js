@@ -3,10 +3,13 @@ const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const UsersMongoDBDao = require("../daos/mongodb/users-mongodb.dao");
 const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
 const UsersDto = require("../entities/dtos/user.dto");
-const CustomError = require("../utils/handlers/custom-error");
-const ErrorCodes = require("../utils/constants/ErrorCodes");
-const ErrorMsgs = require("../utils/constants/ErrorMsgs");
-const ErrorTypes = require("../utils/constants/ErrorTypes");
+const { logger } = require("../utils/middlewares/logger.middleware.js");
+const {
+  CustomError,
+  ErrorCodes,
+  ErrorMsgs,
+  ErrorTypes,
+} = require("../utils/handlers/custom-error");
 
 const usersDao = new UsersMongoDBDao();
 const cartsDao = cartsDaoFactory();
@@ -24,8 +27,8 @@ service.find = async (username, customFilter) => {
 
     return users;
   } catch (error) {
-    console.error(error);
-    CustomError.create({name: ErrorTypes.UNEXPECTED_EXCEPTION, message: error.message});
+    logger.error(error);
+    throw error;
   }
 };
 
@@ -34,7 +37,7 @@ service.findById = async (uid) => {
     const message = await usersDao.findById(uid);
     return message;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -44,7 +47,7 @@ service.findOne = async (username) => {
     const user = await usersDao.findOne({ username });
     return user;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -97,6 +100,7 @@ service.create = async (
 
     return createdUser;
   } catch (error) {
+    logger.error(error);
     throw error;
   }
 };
@@ -110,7 +114,7 @@ service.login = async (email, password) => {
         name: ErrorTypes.CREATE_USER_VALIDATION,
         message: ErrorMsgs.INVALID_CREDENTIALS,
         code: ErrorCodes.INVALID_CREDENTIALS,
-        cause: 'Email no encontrado',
+        cause: "Email no encontrado",
       });
     }
 
@@ -121,12 +125,13 @@ service.login = async (email, password) => {
         name: ErrorTypes.CREATE_USER_VALIDATION,
         message: ErrorMsgs.INVALID_CREDENTIALS,
         code: ErrorCodes.INVALID_CREDENTIALS,
-        cause: 'password incorrecta',
+        cause: "password incorrecta",
       });
     }
 
     return currentUser;
   } catch (error) {
+    logger.error(error);
     throw error;
   }
 };

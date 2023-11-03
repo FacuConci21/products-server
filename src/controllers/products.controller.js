@@ -59,7 +59,7 @@ router.get("/:pid", async (req, res) => {
 
 router.post(
   "/",
-  authorize([role.admin]),
+  // authorize([role.admin]),
   uploader.array("thumbnails"),
   async (req, res) => {
     try {

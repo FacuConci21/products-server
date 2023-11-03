@@ -1,11 +1,14 @@
 const CartDto = require("../entities/dtos/cart.dto");
-const ProductDto = require("../entities/dtos/product.dto");
 const CartsRepository = require("../entities/repositories/carts.repository");
 const ProductsRepository = require("../entities/repositories/products.repository");
-const CustomError = require("../utils/handlers/custom-error");
-const ErrorCodes = require("../utils/constants/ErrorCodes");
-const ErrorMsgs = require("../utils/constants/ErrorMsgs");
-const ErrorTypes = require("../utils/constants/ErrorTypes");
+const { logger } = require("../utils/middlewares/logger.middleware.js");
+
+const {
+  CustomError,
+  ErrorCodes,
+  ErrorMsgs,
+  ErrorTypes,
+} = require("../utils/handlers/custom-error");
 
 const cartsRepository = new CartsRepository();
 const productsRepository = new ProductsRepository();
@@ -16,7 +19,7 @@ service.findById = async (cid) => {
     const cart = await cartsRepository.findById(cid);
     return cart;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -27,7 +30,7 @@ service.create = async (user, products = []) => {
     const newCart = await cartsRepository.create(cartInfo);
     return newCart;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -81,7 +84,7 @@ service.addProduct = async (cid, pid, quantity = 0) => {
 
     return updatedCart;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -125,7 +128,7 @@ service.createTicket = async (cid) => {
       const newStock = Math.abs(realStock - currentStock);
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -181,7 +184,7 @@ service.updateProduct = async (cid, pid, quantity = 0) => {
 
     return updatedCart;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -234,7 +237,7 @@ service.update = async (cid, products) => {
 
     return updatedCart;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -255,7 +258,7 @@ service.delete = async (cid) => {
 
     return updatedCart;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -276,7 +279,7 @@ service.deleteProduct = async (cid, pid) => {
 
     return updatedCart;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };

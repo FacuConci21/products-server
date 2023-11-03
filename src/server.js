@@ -4,16 +4,17 @@ process.env.NODE_ENV = argv[2];
 
 const app = require("./app");
 const realTimeServer = require("./socket");
+const { logger } = require("./utils/middlewares/logger.middleware");
 
 function main() {
-  console.log(`env: ${process.env.NODE_ENV}`);
-  
+  logger.info(`running env: ${process.env.NODE_ENV}`);
+
   const httpServer = app.listen(app.get("port"), (error) => {
     if (error) {
-      console.error(error);
+      logger.error(error);
       return;
     }
-    console.log(`La aplicacion se ejecuto en el puerto ${app.get("port")}`);
+    logger.info(`La aplicacion se ejecuto en el puerto ${app.get("port")}`);
   });
 
   realTimeServer(httpServer);

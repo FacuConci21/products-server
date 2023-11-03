@@ -3,10 +3,13 @@ const appConfig = require("../utils/configs/app.config");
 const ProductsRepository = require("../entities/repositories/products.repository");
 const productsDaoFactory = require("../daos/factories/products-dao.factory");
 const ProductDto = require("../entities/dtos/product.dto");
-const CustomError = require("../utils/handlers/custom-error");
-const ErrorCodes = require("../utils/constants/ErrorCodes");
-const ErrorMsgs = require("../utils/constants/ErrorMsgs");
-const ErrorTypes = require("../utils/constants/ErrorTypes");
+const { logger } = require("../utils/middlewares/logger.middleware");
+const {
+  CustomError,
+  ErrorCodes,
+  ErrorMsgs,
+  ErrorTypes,
+} = require("../utils/handlers/custom-error");
 
 const productsRepository = new ProductsRepository(productsDaoFactory());
 const service = {};
@@ -34,7 +37,7 @@ service.find = async (query, limit, page, sortParam) => {
 
     return productsPage;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -92,7 +95,7 @@ service.create = async (
 
     return products;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -137,7 +140,7 @@ service.update = async (
 
     return { updtProduct, ...{ result } };
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -162,7 +165,7 @@ service.permaDelete = async (pid) => {
     const result = await productsRepository.delete(pid);
     return result;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };

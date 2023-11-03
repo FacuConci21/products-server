@@ -1,5 +1,6 @@
 const MessagesMongoDBDao = require("../daos/mongodb/messages-mongodb.dao");
 const MessagesDto = require("../entities/dtos/messages.dto");
+const { logger } = require("../utils/middlewares/logger.middleware.js");
 
 const messagesDao = new MessagesMongoDBDao();
 const service = {};
@@ -9,7 +10,7 @@ service.find = async () => {
     const messages = await messagesDao.find(4);
     return messages;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };
@@ -22,7 +23,7 @@ service.create = async (user, textContent) => {
 
     return createdMessage;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 };

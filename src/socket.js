@@ -1,8 +1,5 @@
 const { Server } = require("socket.io");
 const { EVENTS } = require("./utils/constants/socket-events");
-// const ProductManager = require("./daos/ProductManager");
-
-// const productManager = new ProductManager("public/files");
 
 function socketlog(event, message) {
   console.log(`[SOCKET: ON ${event}] ${message}`);
