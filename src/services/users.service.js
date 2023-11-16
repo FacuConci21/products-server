@@ -10,9 +10,11 @@ const {
   ErrorMsgs,
   ErrorTypes,
 } = require("../utils/handlers/custom-error");
+const MailAdapter = require("../utils/mail.adapter.js");
 
 const usersDao = new UsersMongoDBDao();
 const cartsDao = cartsDaoFactory();
+const mailAdapter = new MailAdapter();
 const service = {};
 
 service.find = async (username, customFilter) => {
@@ -97,6 +99,21 @@ service.create = async (
     const updateCart = await cartsDao.updateOne(createdUser.cart.toString(), {
       user: createdUser._id.toString(),
     });
+
+    if (createdUser) {
+      await mailAdapter.sendMail({
+        userEmail: createdUser.email,
+        subjectMail: `Te damos la bienvenida ${createdUser.firstName}!!!`,
+        bodyMail: `
+        Nos da gusto tenerte en nuestro equipo...
+
+        Ya tenes tu cuenta activada para que difrutes de los mejores precios!!.
+
+        Ante cualquier consulta estamos a disposición desde nuestro equipo de soporte!.
+        Contactate al siguiente numero: +51 9 011 123-4567.
+        `,
+      });
+    }
 
     return createdUser;
   } catch (error) {
