@@ -1,0 +1,66 @@
+openapi: "3.0.0"
+info:
+  title: API Users
+  version: "1.0"
+paths:
+  /api/products:
+    get:
+      summary: Obtiene todos los productos de manera paginada.
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Se obtiene una pagina con una lista de N productos
+          content:
+            application/json:
+              schema:
+               type: array
+               items:
+                $ref: "#/components/schemas/Products"
+        "500":
+          description: Ocurrio un error inesperado durante la operacion
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id de producto (autogenerado por mongo)
+        title:
+          type: string
+          description: Nombre de producto
+        description:
+          type: string
+          description: Descripcion de producto
+        price:
+          type: number
+          description: precio del producto
+        code:
+          type: string
+          description: codigo unico de producto
+        stock:
+          type: number
+          description: stock de producto
+        status:
+          type: boolean
+          description: disponibilidad del producto
+        thumbnails:
+          type: array
+          description: paths de las imagenes del producto
+      
+      example:
+        _id: ObjectId(64f5234ace0e1f9800390f1f),
+        title: xiaomi mi band 7,
+        description: La Mi Band marca Xiaomi con pulsioxímetro, podómetro, sensor hr, acelerómetro, giroscopio, bateria de 14 dias, malla intercambiable, proteccion IP68, memoria interna de 1MB, bluetooth, pantalla AMOLED.,
+        price: 31689,
+        code: xmb7IP68,
+        stock: 10,
+        status: true,
+        thumbnails: [
+            "img\\mi-band-7-img1.jpg",
+            "img\\mi-band-7-img2.png",
+            "img\\mi-band-7-img3.jpg"
+        ]
+            
