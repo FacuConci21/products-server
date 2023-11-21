@@ -8,6 +8,27 @@ paths:
       summary: Obtiene todos los productos de manera paginada.
       tags:
         - Products
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: cantidad de productos en una pagina
+        - in: query
+          name: page
+          schema:
+            type: number
+          description: numero de pagina que desea obtener 
+        - in: query
+          name: sort
+          schema:
+            type: object
+          description: propiedades de productos para filtrar
+        - in: query
+          name: status
+          schema:
+            type: boolean
+          description: poner true para obtener productos disponibles
       responses:
         "200":
           description: Se obtiene una pagina con una lista de N productos
@@ -19,6 +40,96 @@ paths:
                 $ref: "#/components/schemas/Products"
         "500":
           description: Ocurrio un error inesperado durante la operacion
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              $ref: "#/components/schemas/Products"
+      responses:
+        201: 
+          description: Nuevo producto creado
+      
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un unico producto
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Id del producto a consultar
+      responses:
+        "200":
+          description: El producto con ese ID unico
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Products"
+        "500":
+          description: Un error inesperado
+          content:
+            application/json:
+              schema:
+                type: object
+
+    put:
+      summary: Actualiza un unico producto
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Id del producto a consultar
+      responses:
+        "200":
+          description: El producto actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Products"
+        "500":
+          description: Un error inesperado
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      summary: Elimina un unico producto 
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Id del producto a consultar
+      responses:
+        "200":
+          description: El producto se elimino OK
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Un error inesperado
+          content:
+            application/json:
+              schema:
+                type: object
 
 components:
   schemas:
