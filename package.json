@@ -4,8 +4,9 @@
   "description": "Proyecto del curso de Backend en CoderHouse.",
   "main": "server.js",
   "scripts": {
-    "start:dev": "nodemon src/server.js development",
-    "start:prod": "node src/server.js production"
+    "start:dev": "nodemon --watch src src/server.js development",
+    "start:prod": "node src/server.js production",
+    "test": "mocha"
   },
   "author": "Facundo Conci [GitHub: FacuConci21]",
   "license": "ISC",
@@ -33,5 +34,10 @@
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.1",
     "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }
