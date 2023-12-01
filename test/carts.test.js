@@ -1,4 +1,4 @@
-const chai = require("chai");
+
 const supertest = require("supertest");
 const expect = require("chai").expect;
 

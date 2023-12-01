@@ -1,5 +1,3 @@
-const chai = require("chai");
-const { EXPECTATION_FAILED } = require("http-status-codes");
 const supertest = require("supertest");
 const expect = require("chai").expect;
 
