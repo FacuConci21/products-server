@@ -39,6 +39,18 @@ const schema = new mongoose.Schema(
       require: true,
       default: role.usuario,
     },
+    documents: {
+      type: [
+        {
+          name: String,
+          references: String,
+        },
+      ],
+    },
+    lastConnection: {
+      type: Date,
+      default: new Date(),
+    },
   },
   {
     timestamps: true,
