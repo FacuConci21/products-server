@@ -124,6 +124,8 @@ service.create = async (
 
 service.login = async (email, password) => {
   try {
+    logger.info(`Login user con email ${email}`);
+
     const currentUser = await usersDao.findOne({ email });
 
     if (!currentUser) {
@@ -146,7 +148,26 @@ service.login = async (email, password) => {
       });
     }
 
-    return currentUser;
+    const updtUserInfo = new UsersDto(
+      currentUser.username,
+      currentUser.email,
+      currentUser.password,
+      currentUser.firstName,
+      currentUser.lastName,
+      currentUser.cart,
+      currentUser.role,
+      new Date()
+    );
+
+    logger.info("Registrando login de usuario");
+    const updtUser = await usersDao.updateOne(currentUser._id, updtUserInfo);
+
+    const updatedUser = await usersDao.findById(currentUser._id);
+
+    logger.info(`Usuario ${updatedUser.username} logueado`);
+    logger.info(JSON.stringify(updtUser));
+    
+    return updatedUser;
   } catch (error) {
     logger.error(error);
     throw error;
@@ -185,7 +206,8 @@ service.updateToPremium = async (uid) => {
       currentUser.firstName,
       currentUser.lastName,
       currentUser.cart,
-      role.premiumUsr
+      role.premiumUsr,
+      currentUser.lastConnection
     );
 
     const updtUser = await usersDao.updateOne(currentUser._id, userInfo);
