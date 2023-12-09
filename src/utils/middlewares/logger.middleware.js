@@ -1,14 +1,22 @@
 const winston = require("winston");
 const { join } = require("path");
-const { levels } = require("../constants/logger-options");
 const appConfig = require("../configs/app.config");
+
+const levels = {
+  fatal: 0,
+  error: 1,
+  warning: 2,
+  debug: 3,
+  info: 4,
+  http: 5,
+};
 
 const transports = () => {
   switch (appConfig.env) {
     case "development":
       return [
         new winston.transports.Console({
-          level: "debug",
+          level: "info",
         }),
       ];
     case "production":
@@ -26,7 +34,7 @@ const transports = () => {
 };
 
 const logger = winston.createLogger({
-  levels: levels,
+  levels,
   transports: transports(),
   format: winston.format.combine(
     winston.format.colorize(),

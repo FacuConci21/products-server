@@ -1,4 +1,4 @@
-const { roles } = require("../utils/constants/roles");
+const { roles, role } = require("../utils/constants/roles");
 const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const UsersMongoDBDao = require("../daos/mongodb/users-mongodb.dao");
 const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
@@ -147,6 +147,57 @@ service.login = async (email, password) => {
     }
 
     return currentUser;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
+service.updateToPremium = async (uid) => {
+  try {
+    const currentUser = await usersDao.findById(uid);
+
+    if (!currentUser) {
+      return;
+    }
+
+    logger.info(
+      `Actualizando cuenta del usuario ${currentUser.username} to premium`
+    );
+
+    const currentRole = currentUser.role;
+
+    if (currentRole === role.premiumUsr) {
+      throw new Error("El usuario ya es premium");
+    }
+
+    // Aca deberia procesar el pago
+    logger.info(`Procesando el pago para subir a categoria premium`);
+
+    // Aca debo verificar que se proceso el pago
+    logger.info(`Pago procesado con exito`);
+
+    logger.info(`Actualizando estado de la cuenta`);
+    const userInfo = new UsersDto(
+      currentUser.username,
+      currentUser.email,
+      currentUser.password,
+      currentUser.firstName,
+      currentUser.lastName,
+      currentUser.cart,
+      role.premiumUsr
+    );
+
+    const updtUser = await usersDao.updateOne(currentUser._id, userInfo);
+
+    const updatedUser = await usersDao.findById(currentUser._id);
+
+    logger.info(
+      `Usuario ${updatedUser.username} actualizado a premium con exito`
+    );
+    logger.info(JSON.stringify(updtUser));
+
+    return updatedUser;
   } catch (error) {
     logger.error(error);
     throw error;

@@ -1,5 +1,6 @@
 const role = {
   usuario: "usuario",
+  premiumUsr: "usuario-premium",
   admin: "admin",
 };
 
