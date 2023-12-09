@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const service = require("../services/messages.service");
 const authorize = require("../utils/middlewares/authorization.middleware");
-const { role } = require("../utils/constants/roles");
+const { role } = require("../utils/constants");
 
 const router = Router();
 

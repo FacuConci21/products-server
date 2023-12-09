@@ -2,8 +2,8 @@ const passport = require("passport");
 const localStrategy = require("passport-local");
 const githubStrategy = require("passport-github2");
 const usersService = require("../../services/users.service");
-const strategies = require("../constants/strategies");
 const appConfig = require("./app.config");
+const { strategies } = require("../constants");
 
 const LocalStrategy = localStrategy.Strategy;
 const GithubStrategy = githubStrategy.Strategy;
@@ -12,7 +12,7 @@ const initializePassport = () => {
   passport.use(
     strategies.register,
     new LocalStrategy(
-      { passReqToCallback: true, },
+      { passReqToCallback: true },
       async (req, username, password, done) => {
         const { email, firstName, lastName, role } = req.body;
 
@@ -36,14 +36,17 @@ const initializePassport = () => {
 
   passport.use(
     strategies.localLogin,
-    new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
-      try {
-        const currentUser = await usersService.login(username, password);
-        return done(null, currentUser);
-      } catch (error) {
-        return done(error);
+    new LocalStrategy(
+      { usernameField: "email" },
+      async (username, password, done) => {
+        try {
+          const currentUser = await usersService.login(username, password);
+          return done(null, currentUser);
+        } catch (error) {
+          return done(error);
+        }
       }
-    })
+    )
   );
 
   passport.use(

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongoose").SchemaTypes;
-const { role } = require("../../utils/constants/roles");
+const { role } = require("../../utils/constants");
 
 const collectionName = "user";
 

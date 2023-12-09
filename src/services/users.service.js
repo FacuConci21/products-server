@@ -1,8 +1,8 @@
-const { roles, role } = require("../utils/constants/roles");
-const { hashPassword, comparePasswords } = require("../utils/passwords.js");
 const UsersMongoDBDao = require("../daos/mongodb/users-mongodb.dao");
 const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
 const UsersDto = require("../entities/dtos/user.dto");
+const { hashPassword, comparePasswords } = require("../utils/passwords.js");
+const { roles, role } = require("../utils/constants");
 const { logger } = require("../utils/middlewares/logger.middleware.js");
 const {
   CustomError,

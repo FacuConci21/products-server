@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { EVENTS } = require("./utils/constants/socket-events");
+const { EVENTS } = require("./utils/constants");
 
 function socketlog(event, message) {
   console.log(`[SOCKET: ON ${event}] ${message}`);
