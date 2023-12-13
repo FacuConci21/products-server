@@ -1,3 +1,4 @@
+const { join } = require("node:path");
 const UsersMongoDBDao = require("../daos/mongodb/users-mongodb.dao");
 const cartsDaoFactory = require("../daos/factories/carts-dao.factory");
 const UsersDto = require("../entities/dtos/user.dto");
@@ -166,7 +167,53 @@ service.login = async (email, password) => {
 
     logger.info(`Usuario ${updatedUser.username} logueado`);
     logger.info(JSON.stringify(updtUser));
-    
+
+    return updatedUser;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
+service.addDocuments = async (uid, documents) => {
+  try {
+    const currentUser = (await usersDao.findById(uid)).toJSON();
+
+    if (!currentUser) return;
+
+    logger.info(`Agregando documento/s al usuario ${currentUser.username}`);
+
+    const { profiles } = documents;
+    const newDocuments = [];
+    const currentDocument = currentUser.documents;
+
+    profiles.forEach((document) => {
+      newDocuments.push({
+        name: "profile/" + document.filename,
+        reference: document.path,
+        docType: "profile",
+      });
+    });
+
+    const updtUserInfo = new UsersDto(
+      currentUser.username,
+      currentUser.email,
+      currentUser.password,
+      currentUser.firstName,
+      currentUser.lastName,
+      currentUser.cart,
+      currentDocument.concat(newDocuments),
+      currentUser.role,
+      currentUser.lastConnection
+    );
+
+    const updtUser = await usersDao.updateOne(currentUser._id, updtUserInfo);
+
+    const updatedUser = await usersDao.findById(currentUser._id);
+
+    logger.info(`Documento/s agregados a ${updatedUser.username}`);
+    logger.info("result", JSON.stringify(updtUser));
+
     return updatedUser;
   } catch (error) {
     logger.error(error);

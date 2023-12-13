@@ -4,6 +4,7 @@ const passport = require("passport");
 const service = require("../services/users.service");
 const { strategies } = require("../utils/constants");
 const { logger } = require("../utils/middlewares/logger.middleware");
+const uploader = require("../utils/middlewares/uploader.middleware");
 
 const router = Router();
 
@@ -104,10 +105,34 @@ router.post(
   }
 );
 
+router.post(
+  "/:uid/documents",
+  passport.authenticate(strategies.localLogin),
+  uploader.fields([{name: "profiles", maxCount: 1}, {name:"products", maxCount: 6}]),
+  async (req, res) => {
+    try {
+      const { uid } = req.params;
+
+      const documents = req.files;
+
+      const user = await service.addDocuments(uid, documents);
+
+      return res
+        .status(StatusCodes.OK)
+        .json({ status: "success", payload: user });
+    } catch (error) {
+      logger.error(error);
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ status: "error", message: error.message });
+    }
+  }
+);
+
 router.patch(
   "/premium/:uid",
-  // passport.authenticate(strategies.localLogin),
-  // authorize(["usuario", "admin"]),
+  passport.authenticate(strategies.localLogin),
+  authorize(["usuario", "admin"]),
   async (req, res) => {
     try {
       const { uid } = req.params;

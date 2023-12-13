@@ -43,7 +43,11 @@ const schema = new mongoose.Schema(
       type: [
         {
           name: String,
-          references: String,
+          reference: String,
+          docType: {
+            type: String,
+            enum: ["profile", "product"],
+          },
         },
       ],
     },
