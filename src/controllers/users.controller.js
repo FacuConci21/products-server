@@ -5,6 +5,7 @@ const service = require("../services/users.service");
 const { strategies } = require("../utils/constants");
 const { logger } = require("../utils/middlewares/logger.middleware");
 const uploader = require("../utils/middlewares/uploader.middleware");
+const authorize = require("../utils/middlewares/authorization.middleware");
 
 const router = Router();
 
@@ -107,8 +108,12 @@ router.post(
 
 router.post(
   "/:uid/documents",
-  passport.authenticate(strategies.localLogin),
-  uploader.fields([{name: "profiles", maxCount: 1}, {name:"products", maxCount: 6}]),
+  // passport.authenticate(strategies.localLogin),
+  uploader.fields([
+    { name: "profiles", maxCount: 1 },
+    { name: "addressProof", maxCount: 1 },
+    { name: "accountProof", maxCount: 1 },
+  ]),
   async (req, res) => {
     try {
       const { uid } = req.params;

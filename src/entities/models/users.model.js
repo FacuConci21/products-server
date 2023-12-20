@@ -46,7 +46,7 @@ const schema = new mongoose.Schema(
           reference: String,
           docType: {
             type: String,
-            enum: ["profile", "product"],
+            enum: ["profile", "address", "account"],
           },
         },
       ],

@@ -3,8 +3,17 @@ const { join } = require("path");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.debug(req.files);
-    cb(null, join(process.cwd(), "src", "public", "img"));
+    const { fieldname } = file;
+    switch (fieldname) {
+      case "thumbnails": {
+        cb(null, join(process.cwd(), "src", "public", "img", "products"));
+        break;
+      }
+      default: {
+        cb(null, join(process.cwd(), "src", "public", "img", "profiles"));
+        break;
+      }
+    }
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);

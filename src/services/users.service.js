@@ -183,17 +183,31 @@ service.addDocuments = async (uid, documents) => {
 
     logger.info(`Agregando documento/s al usuario ${currentUser.username}`);
 
-    const { profiles } = documents;
+    const { profiles, addressProof, accountProof } = documents;
     const newDocuments = [];
     const currentDocument = currentUser.documents;
 
-    profiles.forEach((document) => {
+    if (profiles) {
       newDocuments.push({
-        name: "profile/" + document.filename,
+        name: document.filename,
         reference: document.path,
         docType: "profile",
       });
-    });
+    }
+    if (accountProof) {
+      newDocuments.push({
+        name: document.filename,
+        reference: document.path,
+        docType: "account",
+      });
+    }
+    if (addressProof) {
+      newDocuments.push({
+        name: document.filename,
+        reference: document.path,
+        docType: "address",
+      });
+    }
 
     const updtUserInfo = new UsersDto(
       currentUser.username,
@@ -212,7 +226,7 @@ service.addDocuments = async (uid, documents) => {
     const updatedUser = await usersDao.findById(currentUser._id);
 
     logger.info(`Documento/s agregados a ${updatedUser.username}`);
-    logger.info("result", JSON.stringify(updtUser));
+    logger.info("result: ", JSON.stringify(updtUser));
 
     return updatedUser;
   } catch (error) {
