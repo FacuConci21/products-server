@@ -12,7 +12,8 @@ const appConfig = {
     appMail: process.env.APP_GMAIL,
     appPassword: process.env.APP_GMAIL_PASSWORD,
   },
-  mongodbAtlas: {
+  mongo: {
+    host: process.env.MONGO_DB_HOST,
     dbname: process.env.MONGO_ATLAS_DATABASE,
     user: process.env.MONGO_ATLAS_USER,
     pssw: process.env.MONGO_ATLAS_PASSWORD,

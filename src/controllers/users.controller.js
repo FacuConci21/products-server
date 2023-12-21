@@ -2,10 +2,10 @@ const { Router } = require("express");
 const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const passport = require("passport");
 const service = require("../services/users.service");
-const { strategies } = require("../utils/constants");
+const { strategies, role } = require("../utils/constants");
 const { logger } = require("../utils/middlewares/logger.middleware");
 const uploader = require("../utils/middlewares/uploader.middleware");
-const authorize = require("../utils/middlewares/authorization.middleware");
+const { authorize } = require("../utils/middlewares/auth.middleware");
 
 const router = Router();
 
@@ -108,7 +108,8 @@ router.post(
 
 router.post(
   "/:uid/documents",
-  // passport.authenticate(strategies.localLogin),
+  passport.authenticate(strategies.localLogin),
+  authorize([role.usuario, role.admin]),
   uploader.fields([
     { name: "profiles", maxCount: 1 },
     { name: "addressProof", maxCount: 1 },

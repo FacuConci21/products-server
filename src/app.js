@@ -27,7 +27,7 @@ app.use(
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 24 * 60 * 60, // 24 horas de vida para la sesion
     }),
-    dbName: appConfig.mongodbAtlas.dbname,
+    dbName: appConfig.mongo.dbname,
     secret: appConfig.sessionSecret,
     resave: false,
     saveUninitialized: false,

@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const productsService = require("../services/products.service");
 const cartsService = require("../services/cart.service");
-const auth = require("../utils/middlewares/auth.middleware");
+const {authenticate} = require("../utils/middlewares/auth.middleware");
 
 const router = Router();
 
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/products", auth, async (req, res) => {
+router.get("/products", authenticate, async (req, res) => {
   try {
     const { limit, page, sort, status } = req.query;
     const userSession = {};
@@ -60,7 +60,7 @@ router.get("/products", auth, async (req, res) => {
   }
 });
 
-router.get("/products/:pid", auth, async (req, res) => {
+router.get("/products/:pid", authenticate, async (req, res) => {
   try {
     const { pid } = req.params;
     const userSession = {};
@@ -88,7 +88,7 @@ router.get("/products/:pid", auth, async (req, res) => {
   }
 });
 
-router.get("/realtimeproducts", auth, async (req, res) => {
+router.get("/realtimeproducts", authenticate, async (req, res) => {
   try {
     res.status(StatusCodes.OK).render("realtimeproducts", {
       pageTitle: "Productos en tiempo real",
@@ -103,7 +103,7 @@ router.get("/realtimeproducts", auth, async (req, res) => {
   }
 });
 
-router.get("/chat", auth, async (req, res) => {
+router.get("/chat", authenticate, async (req, res) => {
   try {
     const userSession = {};
     let isLoggedUser = req.user ? true : false;

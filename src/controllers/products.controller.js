@@ -3,7 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const service = require("../services/products.service");
 const uploader = require("../utils/middlewares/uploader.middleware");
 const { role } = require("../utils/constants");
-const authorize = require("../utils/middlewares/authorization.middleware");
+const { authorize } = require("../utils/middlewares/auth.middleware");
 const { generateManyProducts } = require("../utils/mocks/products.mock");
 
 const router = Router();
@@ -59,7 +59,7 @@ router.get("/:pid", async (req, res) => {
 
 router.post(
   "/",
-  // authorize([role.admin]),
+  authorize([role.admin]),
   uploader.array("thumbnails"),
   async (req, res) => {
     try {
