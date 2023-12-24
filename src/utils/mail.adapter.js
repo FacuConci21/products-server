@@ -21,9 +21,10 @@ class MailAdapter {
         subject: subjectMail,
         text: bodyMail,
       });
-      logger.info(`Mail sent to ${userEmail}`);
+      logger.info(`Mail enviado a ${userEmail}`);
     } catch (error) {
-      logger.error(error);
+      logger.error("No se pudo enviar el mail - error: " + error.message);
+      throw error;
     }
   }
 }

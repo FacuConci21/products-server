@@ -302,4 +302,81 @@ service.updateToPremium = async (uid) => {
   }
 };
 
+service.getSessions = async () => {
+  try {
+    logger.info(
+      `Consultando los usuarios que no se conectaron los ultimos 2 dias.`
+    );
+
+    const lastDays = new Date();
+    lastDays.setDate(lastDays.getDate() - 2);
+
+    const users = await usersDao.find({ lastConnection: { $lt: lastDays } });
+
+    return users;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
+service.deleteInactiveUsers = async () => {
+  try {
+    const batchErrors = [];
+    let rowsAffected = 0;
+
+    const lastDays = new Date();
+    lastDays.setDate(lastDays.getDate() - 2);
+
+    const users = await usersDao.find({ lastConnection: { $lt: lastDays } });
+
+    logger.info(`Eliminando los usuarios inactivos, total: ${users.length}`);
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i].toJSON();
+
+      try {
+        logger.info(`Eliminando usuario ${user.username}`);
+        const result = await usersDao.delete(user._id);
+        rowsAffected++;
+
+        logger.info(`Usuario ${user.username} borrado permanentemente`);
+        logger.info(JSON.stringify(result));
+
+        logger.info(`Enviando mail al usuario ${user.username}`);
+        await mailAdapter.sendMail({
+          userEmail: user.email,
+          subjectMail: `COMUNICADO IMPORTANTE ${user.firstName}!!!`,
+          bodyMail: `
+        Lamentamos que esto deba ser asi.
+
+        Tu cuenta fue eliminada debido a inactividad!!.
+
+        Pero no te preocupes, podes volver a registrarte en cualquier momento que desees.
+        Si crees que esto fue un error, contactate al siguiente numero: +51 9 011 123-4567.
+
+        QEPD: ${user.username}
+
+        Adios vaquero...
+        `,
+        });
+      } catch (error) {
+        logger.error(`Error eliminando ${user.username}`);
+        batchErrors.push({ user: user.username, error: error.message });
+      }
+    }
+
+    logger.info(`Usuarios procesados: ${users.length}`);
+
+    const response = {
+      rowsAffected,
+      batchErrors,
+    };
+
+    return response;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
 module.exports = service;

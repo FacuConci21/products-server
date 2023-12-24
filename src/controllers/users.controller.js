@@ -44,6 +44,19 @@ router.get("/logout", async (req, res) => {
   }
 });
 
+router.get("/sessions", async (req, res) => {
+  try {
+    const sessions = await service.getSessions();
+
+    res.status(StatusCodes.OK).json({ status: "success", payload: sessions });
+  } catch (error) {
+    logger.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
 router.get("/fail-register", async (req, res) => {
   res.status(StatusCodes.UNAUTHORIZED).json({
     status: "error",
@@ -170,5 +183,19 @@ router.patch(
     }
   }
 );
+
+router.delete("/", async (req, res) => {
+  try {
+    const result = await service.deleteInactiveUsers();
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: "success", payload: result });
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
 
 module.exports = router;

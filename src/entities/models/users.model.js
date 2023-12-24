@@ -53,7 +53,6 @@ const schema = new mongoose.Schema(
     },
     lastConnection: {
       type: Date,
-      default: new Date(),
     },
   },
   {
