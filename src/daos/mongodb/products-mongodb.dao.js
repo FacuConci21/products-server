@@ -6,7 +6,7 @@ class ProductsMongoDBDao {
   }
 
   async findById(pid) {
-    return await Products.findById(pid);
+    return await Products.findById(pid).populate("user");
   }
 
   async create(newProductInfo) {

@@ -63,7 +63,7 @@ router.post(
   uploader.array("thumbnails"),
   async (req, res) => {
     try {
-      const { title, description, price, code, stock, status } = req.body;
+      const { title, description, price, code, stock, status, user } = req.body;
 
       const thumbnails = req.files;
 
@@ -74,7 +74,8 @@ router.post(
         code,
         stock,
         status,
-        thumbnails
+        thumbnails,
+        user
       );
 
       res
@@ -123,7 +124,30 @@ router.put(
   }
 );
 
-router.delete("/:pid", authorize([role.admin]), async (req, res) => {
+router.delete("/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+
+    const deletedProduct = await service.permaDelete(pid);
+
+    if (!deletedProduct) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ status: "error", payload: "NOT FOUND" });
+    }
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: "deleted", payload: deletedProduct });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
+router.delete("/cancel/:pid", authorize([role.admin]), async (req, res) => {
   try {
     const { pid } = req.params;
 

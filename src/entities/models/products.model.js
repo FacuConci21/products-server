@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongoose").SchemaTypes;
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const collectionName = "product";
 
@@ -33,6 +33,10 @@ const schema = new mongoose.Schema(
     },
     thumbnails: {
       type: [String],
+    },
+    user: {
+      type: ObjectId,
+      ref: "user",
     },
   },
   {

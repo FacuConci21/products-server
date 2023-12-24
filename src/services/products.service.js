@@ -10,8 +10,11 @@ const {
   ErrorMsgs,
   ErrorTypes,
 } = require("../utils/handlers/custom-error");
+const { role } = require("../utils/constants");
+const MailAdapter = require("../utils/mail.adapter");
 
 const productsRepository = new ProductsRepository(productsDaoFactory());
+const mailAdapter = new MailAdapter();
 const service = {};
 
 service.find = async (query, limit, page, sortParam) => {
@@ -62,7 +65,8 @@ service.create = async (
   code,
   stock,
   _status,
-  thumbnails
+  thumbnails,
+  user
 ) => {
   try {
     if (!title || !description || !price || !code || !stock) {
@@ -82,7 +86,8 @@ service.create = async (
         ? stock
         : Number.parseInt(stock),
       _status || true,
-      []
+      [],
+      user
     );
 
     if (thumbnails) {
@@ -162,7 +167,43 @@ service.delete = async (pid) => {
 
 service.permaDelete = async (pid) => {
   try {
+    logger.info(`Validando producto ${pid}`);
+    const currentProduct = (await productsRepository.findById(pid)).toJson();
+
+    if (!currentProduct) {
+      logger.error(`Producto ${pid} no encontrado`);
+      return;
+    }
+
+    logger.info(`Eliminando el producto ${pid} permanentemente`);
     const result = await productsRepository.delete(pid);
+
+    logger.info(`Producto ${pid} eliminado`);
+    logger.info(`${JSON.stringify(result)}`);
+
+    const isPremium =
+      currentProduct.user && currentProduct.user.role === role.premiumUsr;
+
+    if (isPremium) {
+      logger.info(`Enviando mail al usuario ${currentProduct.user.username}`);
+      try {
+        await mailAdapter.sendMail({
+          userEmail: currentProduct.user.email,
+          subjectMail: `COMUNICADO IMPORTANTE PARA ${currentProduct.user.firstName}!!!`,
+          bodyMail: `
+      Te queremos informar que el producto ${currentProduct.title} ha sido eliminado de forma permanente.
+
+      Si esto fue un error por favor comuniquese con nuestro soporte: +54 9 011 123-4567
+
+      Muchas gracias!.
+      Saludos.
+      `,
+        });
+      } catch (error) {
+        logger.error(error);
+      }
+    }
+
     return result;
   } catch (error) {
     logger.error(error);
