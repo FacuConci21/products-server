@@ -38,8 +38,8 @@ service.find = async (username, customFilter) => {
 
 service.findById = async (uid) => {
   try {
-    const message = await usersDao.findById(uid);
-    return message;
+    const user = await usersDao.findById(uid);
+    return user;
   } catch (error) {
     logger.error(error);
     throw error;

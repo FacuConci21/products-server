@@ -2,7 +2,8 @@ const { Router } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const productsService = require("../services/products.service");
 const cartsService = require("../services/cart.service");
-const {authenticate} = require("../utils/middlewares/auth.middleware");
+const usersService = require("../services/users.service");
+const { authenticate } = require("../utils/middlewares/auth.middleware");
 
 const router = Router();
 
@@ -12,6 +13,31 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+router.get("/profile/modify/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    const user = (await usersService.findById(uid)).toJSON();
+
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .render("modify-user", { userExists: false });
+    }
+
+    return res
+      .status(StatusCodes.OK)
+      .render("modify-user", { userExists: true, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
       pageTitle: "Error",
       status: "error",
       message: error.message,

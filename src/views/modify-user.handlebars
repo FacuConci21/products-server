@@ -1,0 +1,55 @@
+<div class="container">
+
+    <br>
+
+    <div id="modify-result"></div>
+
+    <div id="notif-container" class="toast-container end-0">
+    </div>
+
+    {{#if userExists }}
+    <form id="register-form">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{user.email}}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label">Nombre de usuario</label>
+            <input type="text" name="username" id="username" class="form-control" value="{{user.username}}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="firstName" class="form-label">Tu Nombre</label>
+            <input type="text" name="firstName" id="firstName" class="form-control" value="{{user.firstName}}">
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Tu Apellido</label>
+            <input type="text" name="lastName" id="lastName" class="form-control" value="{{user.lastName}}">
+        </div>
+        <div class="mb-3">
+            <label for="age" class="form-label">Edad</label>
+            <input type="number" name="age" id="age" class="form-control" value="{{user.age}}">
+        </div>
+
+        <div class="mb-3">
+            <label for="age" class="form-label">Rol</label>
+            <input type="text" name="role" id="role" class="form-control" value="{{user.role}}">
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Aplicar</button>
+        </div>
+    </form>
+
+    <div id="spinner"></div>
+    {{else}}
+    <form id="register-form">
+        <div class="alert alert-danger" role="alert">
+            Usuario no encontrado.
+        </div>
+    </form>
+    {{/if}}
+
+</div>
+
+{{!--
+<script src="/js/user-register.js"></script> --}}
