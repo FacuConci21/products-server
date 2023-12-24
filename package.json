@@ -1,6 +1,6 @@
 {
   "name": "products-server",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "Proyecto del curso de Backend en CoderHouse.",
   "main": "server.js",
   "scripts": {
