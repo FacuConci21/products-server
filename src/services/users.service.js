@@ -250,6 +250,43 @@ service.addDocuments = async (uid, documents) => {
   }
 };
 
+service.updateUser = async (uid, userInfo) => {
+  try {
+    logger.info(`Validando usuario para actualizar ${uid}`);
+    const currentUser = await usersDao.findOne({ _id: uid });
+
+    if (!currentUser) {
+      logger.error("Not found");
+      return;
+    }
+
+    logger.info(`Actualizando usuario ${currentUser.username}`);
+    const updtUserInfo = new UsersDto();
+
+    updtUserInfo.username = userInfo.username || currentUser.username;
+    updtUserInfo.email = userInfo.email || currentUser.email;
+    updtUserInfo.password = currentUser.password;
+    updtUserInfo.firstName = userInfo.firstName || currentUser.firstName;
+    updtUserInfo.lastName = userInfo.lastName || currentUser.lastName;
+    updtUserInfo.cart = userInfo.cart || currentUser.cart._id;
+    updtUserInfo.documents = currentUser.documents;
+    updtUserInfo.role = userInfo.role || currentUser.role;
+    updtUserInfo.lastConnection = currentUser.lastConnection;
+
+    const result = await usersDao.updateOne(currentUser._id, updtUserInfo);
+
+    logger.info(`Usuario ${currentUser.username} actualizado`);
+    logger.info(`${JSON.stringify(result)}`);
+
+    const updatedUser = await usersDao.findById(currentUser._id);
+
+    return updatedUser;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
 service.updateToPremium = async (uid) => {
   try {
     const currentUser = await usersDao.findById(uid);

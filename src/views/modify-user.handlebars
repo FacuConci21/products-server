@@ -8,7 +8,10 @@
     </div>
 
     {{#if userExists }}
-    <form id="register-form">
+    <form id="modify-form">
+        
+        <input type="hidden" name="userId" id="userId" value="{{user._id}}">
+
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" name="email" id="email" class="form-control" value="{{user.email}}" readonly>
@@ -51,5 +54,4 @@
 
 </div>
 
-{{!--
-<script src="/js/user-register.js"></script> --}}
+<script src="/js/modify-user.js"></script>

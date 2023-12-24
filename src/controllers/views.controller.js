@@ -29,7 +29,10 @@ router.get("/profile/modify/:uid", async (req, res) => {
     if (!user) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .render("modify-user", { userExists: false });
+        .render("modify-user", {
+          pageTitle: "Modificar Usuario",
+          userExists: false,
+        });
     }
 
     return res

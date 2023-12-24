@@ -159,6 +159,33 @@ router.post(
   }
 );
 
+router.put("/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    const { username, email, firstName, lastName, cart, role } =
+      req.body;
+
+    const user = await service.updateUser(uid, {
+      username,
+      email,
+      firstName,
+      lastName,
+      cart,
+      role,
+    });
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: "success", payload: user });
+  } catch (error) {
+    logger.error(error);
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ status: "error", message: error.message });
+  }
+});
+
 router.patch(
   "/premium/:uid",
   passport.authenticate(strategies.localLogin),
