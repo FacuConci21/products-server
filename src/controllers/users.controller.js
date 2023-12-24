@@ -45,9 +45,16 @@ router.get("/logout", async (req, res) => {
 });
 
 router.get("/fail-register", async (req, res) => {
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+  res.status(StatusCodes.UNAUTHORIZED).json({
     status: "error",
-    message: "Se produjo un error al registrar usuario.",
+    message: "Error al registrar usuario.",
+  });
+});
+
+router.get("/fail-login", async (req, res) => {
+  res.status(StatusCodes.UNAUTHORIZED).json({
+    status: "error",
+    message: "Error logueando usuario.",
   });
 });
 
@@ -68,7 +75,9 @@ router.get("/:uid", async (req, res) => {
 
 router.post(
   "/",
-  passport.authenticate(strategies.register),
+  passport.authenticate(strategies.register, {
+    failureRedirect: "/fail-register",
+  }),
   async (req, res) => {
     try {
       res
@@ -85,7 +94,9 @@ router.post(
 
 router.post(
   "/login",
-  passport.authenticate(strategies.localLogin),
+  passport.authenticate(strategies.localLogin, {
+    failureRedirect: "/fail-login",
+  }),
   async (req, res) => {
     try {
       if (!req.user) {

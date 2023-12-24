@@ -14,9 +14,9 @@ const initializePassport = () => {
     new LocalStrategy(
       { passReqToCallback: true },
       async (req, username, password, done) => {
-        const { email, firstName, lastName, role } = req.body;
-
         try {
+          const { email, firstName, lastName, role } = req.body;
+
           const newUser = await usersService.create(
             username,
             email,
@@ -26,9 +26,11 @@ const initializePassport = () => {
             role
           );
 
-          return done(null, newUser.toJSON());
+          const user = newUser.toJSON();
+
+          return done(null, user);
         } catch (error) {
-          return done(error);
+          return done(null, false);
         }
       }
     )
@@ -43,7 +45,7 @@ const initializePassport = () => {
           const currentUser = await usersService.login(username, password);
           return done(null, currentUser);
         } catch (error) {
-          return done(error);
+          return done(null, false);
         }
       }
     )

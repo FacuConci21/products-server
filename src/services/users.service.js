@@ -12,6 +12,7 @@ const {
   ErrorTypes,
 } = require("../utils/handlers/custom-error");
 const MailAdapter = require("../utils/mail.adapter.js");
+const CartDto = require("../entities/dtos/cart.dto.js");
 
 const usersDao = new UsersMongoDBDao();
 const cartsDao = cartsDaoFactory();
@@ -64,6 +65,9 @@ service.create = async (
   role
 ) => {
   try {
+    logger.info(`Creando ${username}`);
+
+    logger.info(`Validando que ${username} no exista.`);
     const validateUser = await usersDao.findOne({ username });
 
     if (validateUser) {
@@ -75,6 +79,7 @@ service.create = async (
       });
     }
 
+    logger.info(`Validando el rol de ${username}`);
     if (!roles().includes(role)) {
       CustomError.create({
         name: ErrorTypes.CREATE_USER_VALIDATION,
@@ -83,25 +88,33 @@ service.create = async (
       });
     }
 
-    const createdUser = await usersDao.create(
-      new UsersDto(
-        username,
-        email,
-        hashPassword(password),
-        firstName,
-        lastName,
-        (
-          await cartsDao.create({ products: [] })
-        )._id,
-        role
-      )
+    logger.info(`Se registra usuario ${username} en la base de datos`);
+    const newUserInfo = new UsersDto(
+      username,
+      email,
+      hashPassword(password),
+      firstName,
+      lastName,
+      null,
+      [],
+      role
     );
 
-    const updateCart = await cartsDao.updateOne(createdUser.cart.toString(), {
-      user: createdUser._id.toString(),
-    });
+    const createdUser = await usersDao.create(newUserInfo);
 
-    if (createdUser) {
+    logger.info(`Se crea carrito de compras para ${username}`);
+    const newCartInfo = new CartDto(createdUser._id);
+    const newUserCart = await cartsDao.create(newCartInfo);
+
+    logger.info(`Se actualiza carrito para ${username}`);
+    newUserInfo.cart = newUserCart._id;
+    const updtUser = await usersDao.updateOne(createdUser._id, newUserInfo);
+    logger.info(`Se actualizo carrito para ${username} exitosamente`);
+    logger.info(`${JSON.stringify(updtUser)}`);
+
+    const updatedUser = await usersDao.findById(createdUser._id);
+
+    /*     if (createdUser) {
       await mailAdapter.sendMail({
         userEmail: createdUser.email,
         subjectMail: `Te damos la bienvenida ${createdUser.firstName}!!!`,
@@ -114,9 +127,10 @@ service.create = async (
         Contactate al siguiente numero: +51 9 011 123-4567.
         `,
       });
-    }
+    } */
 
-    return createdUser;
+    logger.info(`Usuario ${username} creado con exito.`);
+    return updatedUser;
   } catch (error) {
     logger.error(error);
     throw error;
@@ -156,6 +170,7 @@ service.login = async (email, password) => {
       currentUser.firstName,
       currentUser.lastName,
       currentUser.cart,
+      currentUser.documents,
       currentUser.role,
       new Date()
     );

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongoose").SchemaTypes;
-const Products = require("./products.model");
 
 const collectionName = "cart";
 
@@ -10,6 +9,7 @@ const schema = new mongoose.Schema(
     user: {
       type: ObjectId,
       ref: "user",
+      required: true,
     },
     products: {
       type: [
