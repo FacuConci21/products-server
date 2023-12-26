@@ -3,7 +3,11 @@ const { StatusCodes } = require("http-status-codes");
 const productsService = require("../services/products.service");
 const cartsService = require("../services/cart.service");
 const usersService = require("../services/users.service");
-const { authenticate } = require("../utils/middlewares/auth.middleware");
+const {
+  authenticate,
+  authorize,
+} = require("../utils/middlewares/auth.middleware");
+const { role } = require("../utils/constants");
 
 const router = Router();
 
@@ -20,33 +24,64 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/profile/modify/:uid", async (req, res) => {
-  try {
-    const { uid } = req.params;
+router.get(
+  "/admin",
+  authenticate,
+  authorize([role.admin]),
+  async (req, res) => {
+    try {
+      const { user } = req;
+      const users = await usersService.find();
 
-    const user = (await usersService.findById(uid)).toJSON();
+      res.status(StatusCodes.OK).render("admin-panel", {
+        pageTitle: "Panel de Administrador",
+        user,
+        hasUsers: users.length > 0,
+        users: users.map((user) => user.toJSON()),
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+);
 
-    if (!user) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .render("modify-user", {
+router.get(
+  "/profile/modify/:uid",
+  authenticate,
+  authorize([role.admin]),
+  async (req, res) => {
+    try {
+      const { uid } = req.params;
+
+      const user = (await usersService.findById(uid)).toJSON();
+
+      if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).render("modify-user", {
           pageTitle: "Modificar Usuario",
           userExists: false,
         });
-    }
+      }
 
-    return res
-      .status(StatusCodes.OK)
-      .render("modify-user", { userExists: true, user });
-  } catch (error) {
-    console.error(error);
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
-      pageTitle: "Error",
-      status: "error",
-      message: error.message,
-    });
+      return res.status(StatusCodes.OK).render("modify-user", {
+        pageTitle: "Modificar Usuario",
+        userExists: true,
+        user,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
+    }
   }
-});
+);
 
 router.get("/products", authenticate, async (req, res) => {
   try {
