@@ -48,15 +48,7 @@ loginForm.addEventListener("submit", async (e) => {
     <div class="alert alert-success" role="alert">
         Usuario ${data.payload.username} logueado con éxito!.
     </div>
-    <div class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
     `;
-    setTimeout(() => {
-      window.location = "http://localhost:8080/products?limit=4&page=1";
-    }, 2000);
   } else {
     console.error(data);
     resultContainer.innerHTML = "";

@@ -1,0 +1,64 @@
+<div class="container" id="login">
+
+    <br>
+
+    <div id="login-result">
+        {{#if isLoggedUser}}
+        <div class="alert alert-success" role="alert">
+            Bienvenido {{userSession.username}}, ya te encuentras logueado.
+        </div>
+        {{/if}}
+    </div>
+
+    <div id="notif-container" class="toast-container end-0">
+    </div>
+
+    <form id="main-form">
+        <label for="userId" class="col-form-label">ID de usuario a modificar</label>
+        <input type="text" name="userId" id="userId">
+        <button type="submit" class="btn btn-secondary">Modificar</button>
+    </form>
+
+    <p class="d-inline-flex gap-1">
+        <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button"
+            aria-expanded="false" aria-controls="multiCollapseExample1">Listado de usuarios</a>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="multiCollapseExample1">
+                <div id="users-list">
+                    {{#if hasUsers}}
+                    {{#each users}}
+                    <div class="card">
+                        <div class="card-header">
+                            {{this._id}}
+                        </div>
+                        <div class="card-body">
+                            {{this.username}} : {{this.firstName}} {{this.lastName}}
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{else}}
+                    <div class="alert alert-danger" role="alert">
+                        No se pudo obtener la lista de usuarios.
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    document.getElementById('main-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const userId = document.getElementById("userId").value;
+        console.log("redirigiento a /profile/modify/" + userId);
+        window.location = "http://localhost:8080/profile/modify/" + userId;
+    });
+</script>
+
+{{!--
+<script src="/js/.js"></script> --}}
