@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start:dev": "nodemon --watch src src/server.js development",
-    "start:prod": "node src/server.js production",
+    "start": "node src/server.js production",
     "test": "mocha"
   },
   "author": "Facundo Conci [GitHub: FacuConci21]",
