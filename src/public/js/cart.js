@@ -49,7 +49,7 @@ btnBuyAll.addEventListener("click", async () => {
     appendToastNotification(`Compra exitosa ...`, "success");
     showNotifications();
     btnsContainer.innerHTML = `
-        <a href="/api/ticket/${resData.payload.ticket.code}" class="btn btn-outline-success">Ver ticket de compra</a>
+        <a href="/cart/ticket/${resData.payload.ticket.code}" class="btn btn-outline-success">Ver ticket de compra</a>
         `;
   } else {
     appendToastNotification(`Ocurrio un error.`, "danger");

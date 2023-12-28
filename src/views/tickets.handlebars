@@ -1,0 +1,30 @@
+<div class="container" id="login">
+    <br>
+
+    <div id="notif-container" class="toast-container end-0">
+    </div>
+
+    {{#if hasTicket}}
+    <div id="ticket-container">
+        <div class="card">
+            <div class="card-header">
+                Codigo: {{ticket.code}}
+            </div>
+
+            <div class="card-body">
+                <p class="card-text"> Fecha de emision: {{ticket.purchaseDatetime}}</p>
+                <p class="card-text"> Total: $ {{ticket.amount}} </p>
+                {{#each productsTicket}}
+                <p class="blockquote-footer">({{this.code}}) {{this.title}} : ${{this.price}} x {{this.quantity}} </p>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div id="ticket-container">
+        <div class="alert alert-danger" role="alert">
+            Ticket no encontrado.
+        </div>
+    </div>
+    {{/if}}
+</div>
