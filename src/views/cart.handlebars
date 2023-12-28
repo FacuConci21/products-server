@@ -2,6 +2,9 @@
 
     <br>
 
+    <div id="notif-container" class="toast-container end-0">
+    </div>
+
     <div class="card">
         <input type="hidden" id="cartId" name="cartId" value="{{cartId}}">
         <div class="card-header">
@@ -40,6 +43,9 @@
             </li>
             {{/each}}
         </ul>
+        <div id="btns-container" class="btn-group" role="group" aria-label="Basic outlined example">
+            <button id="btn-buy-all" type="button" class="btn btn-outline-primary">Comprar Todo</button>
+        </div>
         {{else}}
         <div class="card">
             <div class="card-body">

@@ -153,7 +153,7 @@ service.update = async (
 service.updateStock = async (pid, newStock) => {
   try {
     logger.info("Actualizando stock de producto: " + pid);
-    const currentProduct = (await productsRepository.findById(pid)).toJSON();
+    const currentProduct = (await productsRepository.findById(pid))?.toJSON();
 
     if (!currentProduct) return;
 

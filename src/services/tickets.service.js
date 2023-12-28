@@ -88,7 +88,7 @@ service.create = async (cid) => {
     }
 
     const response = {
-      newTicket,
+      ticket: newTicket,
       errorProducts: products,
       updatedCart,
     };
