@@ -10,37 +10,46 @@ router.get("/", async (req, res) => {
     .json({ status: "error", message: {} });
 });
 
-router.get("/:tid", async (req, res) => {
+router.get("/:code", async (req, res) => {
   try {
-    const { tid } = req.params;
-    const ticket = await service.findById(tid);
+    const { code } = req.params;
+    const ticket = await service.findByCode(code);
 
-    res.status(StatusCodes.OK).json({ status: "success", payload: ticket });
+    if (!ticket) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ status: "error", message: "Not found" });
+    }
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: "success", payload: ticket });
   } catch (error) {
     console.error(error);
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ status: "error", message: error.message });
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/:cid", async (req, res) => {
   try {
-    const { code, purchaseDatetime, amount, purchaser } = req.body;
+    const { cid } = req.params;
 
-    const newTicket = await service.create(
-      code,
-      purchaseDatetime,
-      amount,
-      purchaser
-    );
+    const newTicket = await service.create(cid);
 
-    res
+    if (!newTicket) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ status: "error", message: "not found" });
+    }
+
+    return res
       .status(StatusCodes.CREATED)
       .json({ status: "created", payload: newTicket });
   } catch (error) {
     console.error(error);
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ status: "error", message: error.message });
   }

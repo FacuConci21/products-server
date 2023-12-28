@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
 
 router.post(
   "/:cid/product/:pid",
-  authorize([role.usuario]),
+  authorize([role.admin, role.premiumUsr, role.usuario]),
   async (req, res) => {
     try {
       const { cid, pid } = req.params;
