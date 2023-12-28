@@ -8,8 +8,8 @@
     </div>
 
     {{#if userExists }}
-    <form id="modify-form">
-        
+    <div id="profile-container">
+
         <input type="hidden" name="userId" id="userId" value="{{user._id}}">
 
         <div class="mb-3">
@@ -39,19 +39,17 @@
         </div>
 
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Aplicar</button>
+            <a href="/profile/modify/{{user._id}}" class="btn btn-primary">Modificar</button>
         </div>
-    </form>
+    </div>
 
     <div id="spinner"></div>
     {{else}}
-    <form id="modify-form">
+    <div id="profile-container">
         <div class="alert alert-danger" role="alert">
             Usuario no encontrado.
         </div>
-    </form>
+    </div>
     {{/if}}
 
 </div>
-
-<script src="/js/modify-user.js"></script>
