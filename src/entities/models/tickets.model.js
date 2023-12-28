@@ -23,6 +23,16 @@ const schema = new mongoose.Schema(
       match: /.+\@.+\..+/,
       required: true,
     },
+    products: {
+      type: [
+        {
+          title: String,
+          price: Number,
+          code: String,
+          quantity: Number,
+        },
+      ],
+    },
   },
   {
     timestamps: true,

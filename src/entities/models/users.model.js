@@ -51,6 +51,13 @@ const schema = new mongoose.Schema(
         },
       ],
     },
+    tickets: {
+      type: [
+        {
+          tid: { type: ObjectId, ref: "ticket" },
+        },
+      ],
+    },
     lastConnection: {
       type: Date,
     },

@@ -15,7 +15,7 @@ router.get("/:code", async (req, res) => {
     const { code } = req.params;
     const ticket = await service.findByCode(code);
 
-    if (!ticket) {
+    if (ticket.length <= 0) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ status: "error", message: "Not found" });

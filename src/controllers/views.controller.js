@@ -3,6 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const productsService = require("../services/products.service");
 const cartsService = require("../services/cart.service");
 const usersService = require("../services/users.service");
+const ticketsService = require("../services/tickets.service");
 const {
   authenticate,
   authorize,
@@ -50,37 +51,33 @@ router.get(
   }
 );
 
-router.get(
-  "/profile/:uid",
-  authenticate,
-  async (req, res) => {
-    try {
-      const { uid } = req.params;
+router.get("/profile/:uid", authenticate, async (req, res) => {
+  try {
+    const { uid } = req.params;
 
-      const user = (await usersService.findById(uid)).toJSON();
+    const user = (await usersService.findById(uid)).toJSON();
 
-      if (!user) {
-        return res.status(StatusCodes.NOT_FOUND).render("profile", {
-          pageTitle: "Perfil de Usuario" ,
-          userExists: false,
-        });
-      }
-
-      return res.status(StatusCodes.OK).render("profile", {
-        pageTitle: `${user.firstName} ${user.lastName}`,
-        userExists: true,
-        user,
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
-        pageTitle: "Error",
-        status: "error",
-        message: error.message,
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).render("profile", {
+        pageTitle: "Perfil de Usuario",
+        userExists: false,
       });
     }
+
+    return res.status(StatusCodes.OK).render("profile", {
+      pageTitle: `${user.firstName} ${user.lastName}`,
+      userExists: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
   }
-);
+});
 
 router.get(
   "/profile/modify/:uid",
@@ -222,7 +219,7 @@ router.get("/chat", authenticate, async (req, res) => {
   }
 });
 
-router.get("/cart/:cid", async (req, res) => {
+router.get("/cart/:cid", authenticate, async (req, res) => {
   try {
     const { cid } = req.params;
 
@@ -234,6 +231,36 @@ router.get("/cart/:cid", async (req, res) => {
       username: cart.user?.firstName,
       hasProducts: cart.products.length > 0,
       cart: cart.toJSON(),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+      pageTitle: "Error",
+      status: "error",
+      message: error.message,
+    });
+  }
+});
+
+router.get("/cart/ticket/:code", authenticate, async (req, res) => {
+  try {
+    const { code } = req.params;
+
+    /* {"_id":"658db7412fdc37b538c0fcb7","purchaseDatetime":"2023-12-28T17:58:25.726Z","amount":8000,"purchaser":"elrubiusomg@gimeil.com","code":"0000385611","createdAt":"2023-12-28T17:58:25.734Z","updatedAt":"2023-12-28T17:58:25.734Z","__v":0} */
+    const ticket = (await ticketsService.findByCode(code)).pop();
+
+    if (!ticket) {
+      return res.render("tickets", {
+        pageTitle: `Detalle de ticket`,
+        hasTickets: false,
+      });
+    }
+
+    return res.render("tickets", {
+      pageTitle: `Detalle de ticket`,
+      hasTicket: true,
+      ticket: ticket.toJSON(),
+      productsTicket: ticket.toJSON().products,
     });
   } catch (error) {
     console.error(error);

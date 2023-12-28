@@ -2,6 +2,7 @@ const TicketDto = require("../entities/dtos/ticket.dto");
 const TicketsRepository = require("../entities/repositories/tickets.repository");
 const productsService = require("../services/products.service.js");
 const cartsService = require("../services/cart.service.js");
+const usersService = require("../services/users.service.js");
 const { logger } = require("../utils/middlewares/logger.middleware.js");
 
 const ticketRepository = new TicketsRepository();
@@ -66,11 +67,23 @@ service.create = async (cid) => {
       }
     }
 
-    const prices = productsOk.map((product) => product.price);
+    const prices = productsOk.map((product) => product.price * product.quantity);
     const amount = prices.reduce((a, b) => a + b, 0);
 
     logger.info("Creando ticket de compra para el usuario: " + user.username);
-    const newTicketInfo = new TicketDto(new Date(), amount, user.email);
+    const newTicketInfo = new TicketDto(
+      new Date(),
+      amount,
+      user.email,
+      productsOk.map((product) => {
+        return {
+          title: product.title,
+          price: product.price,
+          code: product.code,
+          quantity: product.quantity,
+        };
+      })
+    );
     const newTicket = await ticketRepository.create(newTicketInfo);
 
     logger.info("Actualizando carrito del usuario: " + user.username);
@@ -78,6 +91,13 @@ service.create = async (cid) => {
     logger.info(JSON.stringify(updtCart));
 
     const updatedCart = await cartsService.findById(cid);
+
+    logger.info(
+      `Agregando ticket ${newTicket.code} al usuario: ${user.username}`
+    );
+    user.tickets.push(newTicket.code);
+    const updtUser = await usersService.updateUser(user._id, user);
+    logger.info(JSON.stringify(updtUser));
 
     logger.info(`Actualizando stock de los productos`);
     for (let i = 0; i < productsOk.length; i++) {
