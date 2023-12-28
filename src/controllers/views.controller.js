@@ -51,6 +51,38 @@ router.get(
 );
 
 router.get(
+  "/profile/:uid",
+  authenticate,
+  async (req, res) => {
+    try {
+      const { uid } = req.params;
+
+      const user = (await usersService.findById(uid)).toJSON();
+
+      if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).render("profile", {
+          pageTitle: "Perfil de Usuario" ,
+          userExists: false,
+        });
+      }
+
+      return res.status(StatusCodes.OK).render("profile", {
+        pageTitle: `${user.firstName} ${user.lastName}`,
+        userExists: true,
+        user,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).render("error", {
+        pageTitle: "Error",
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+);
+
+router.get(
   "/profile/modify/:uid",
   authenticate,
   authorize([role.admin]),

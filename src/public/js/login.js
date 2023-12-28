@@ -48,7 +48,16 @@ loginForm.addEventListener("submit", async (e) => {
     <div class="alert alert-success" role="alert">
         Usuario ${data.payload.username} logueado con éxito!.
     </div>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
     `;
+
+    setTimeout(() => {
+      window.location = `/profile/${data.payload._id}`;
+    }, 5000);
   } else {
     console.error(data);
     resultContainer.innerHTML = "";
