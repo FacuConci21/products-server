@@ -16,8 +16,7 @@ const service = {};
 
 service.findById = async (cid) => {
   try {
-    const cart = await cartsRepository.findById(cid);
-    return cart;
+    return await cartsRepository.findById(cid);
   } catch (error) {
     logger.error(error);
     throw error;

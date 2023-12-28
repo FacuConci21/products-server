@@ -1,6 +1,5 @@
 class TicketDto {
-  constructor(code, purchaseDatetime, amount, purchaser) {
-    this.code = code;
+  constructor(purchaseDatetime, amount, purchaser) {
     this.purchaseDatetime = purchaseDatetime;
     this.amount = amount;
     this.purchaser = purchaser;
