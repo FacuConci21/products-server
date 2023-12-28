@@ -21,7 +21,6 @@ const schema = new mongoose.Schema(
     purchaser: {
       type: String,
       match: /.+\@.+\..+/,
-      unique: true,
       required: true,
     },
   },

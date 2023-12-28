@@ -150,6 +150,36 @@ service.update = async (
   }
 };
 
+service.updateStock = async (pid, newStock) => {
+  try {
+    logger.info("Actualizando stock de producto: " + pid);
+    const currentProduct = (await productsRepository.findById(pid)).toJSON();
+
+    if (!currentProduct) return;
+
+    if (newStock < 0) {
+      throw new Error("El stock no puede ser negativo");
+    }
+
+    if (newStock === 0) {
+      currentProduct.status = false;
+    }
+
+    currentProduct.stock = newStock;
+    const updtProduct = await productsRepository.updateOne(pid, currentProduct);
+
+    logger.info("Producto actualizado: " + currentProduct._id);
+    logger.info(JSON.stringify(updtProduct));
+
+    const updatedProduct = await productsRepository.findById(pid);
+
+    return updatedProduct;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
 service.delete = async (pid) => {
   try {
     const deleteProd = await service.findById(pid);

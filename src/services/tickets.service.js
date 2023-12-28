@@ -1,6 +1,6 @@
 const TicketDto = require("../entities/dtos/ticket.dto");
 const TicketsRepository = require("../entities/repositories/tickets.repository");
-const usersService = require("../services/users.service.js");
+const productsService = require("../services/products.service.js");
 const cartsService = require("../services/cart.service.js");
 const { logger } = require("../utils/middlewares/logger.middleware.js");
 
@@ -62,7 +62,7 @@ service.create = async (cid) => {
           message: "No hay suficiente stock.",
         });
       } else {
-        productsOk.push(product);
+        productsOk.push({ quantity, ...product });
       }
     }
 
@@ -78,6 +78,14 @@ service.create = async (cid) => {
     logger.info(JSON.stringify(updtCart));
 
     const updatedCart = await cartsService.findById(cid);
+
+    logger.info(`Actualizando stock de los productos`);
+    for (let i = 0; i < productsOk.length; i++) {
+      const product = productsOk[i];
+      const newStock = product.stock - product.quantity;
+      const result = await productsService.updateStock(product._id, newStock);
+      logger.info(JSON.stringify(result));
+    }
 
     const response = {
       newTicket,
